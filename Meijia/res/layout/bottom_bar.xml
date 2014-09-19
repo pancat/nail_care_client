@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center_vertical"
+    android:gravity="bottom|center_horizontal"
+    android:orientation="horizontal" >
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_weight="0.25"
+        android:background="#0087cb"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="首页"
+        android:id="@+id/btn_home"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:onClick="onClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_weight="0.25"
+        android:background="#ddd"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="订单 "
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:id="@+id/btn_order"
+        android:onClick="onClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_weight="0.25"
+        android:background="#ddd"
+        android:text="我的"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:id="@+id/btn_me"
+        android:onClick="onClick"  />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:background="#ddd"
+        android:layout_weight="0.25"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="客服"
+        android:textColor="#000"
+        android:id="@+id/btn_service"
+        android:textSize="18sp" 
+        android:onClick="onClick" />
+
+</LinearLayout>
