@@ -17,4 +17,6 @@ public class Constants {
 			.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
 	
 	public static final int channel =1;
+	
+	public static final String BASE_URL = "http://54.169.66.69/fanrong/index.php";
 }

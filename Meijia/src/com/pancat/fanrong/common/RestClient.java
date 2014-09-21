@@ -14,18 +14,32 @@ import com.pancat.fanrong.util.PhoneUtils;
  */
 public class RestClient {
 	
-	public static final String BASE_URL = "http://54.169.66.69/fanrong/index.php";
+	private static RestClient instance;
+	
+	private RestClient(){}
+	public static synchronized RestClient getInstance(){
+		if(instance == null){
+			instance = new RestClient();
+		}
+		return instance;
+	}
 	
 	private static AsyncHttpClient client = new AsyncHttpClient();
 	
-	public static void get(Context context,String url,RequestParams params,
+	public void get(Context context,String url,RequestParams params,
 			AsyncHttpResponseHandler responseHandler){
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
-		client.post(getAbsoluteUrl(url), params, responseHandler);
+		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
 	
-	private static String getAbsoluteUrl(String relativeUrl){
-		return BASE_URL + relativeUrl;
+	public void post(Context context,String url,RequestParams params,
+			AsyncHttpResponseHandler responseHandler){
+		client.setUserAgent(PhoneUtils.getUserAgent(context));
+		client.post(getAbsoluteUrl(url), params,responseHandler);
+	}
+	
+	private String getAbsoluteUrl(String relativeUrl){
+		return Constants.BASE_URL + relativeUrl;
 	}
 	
 	public static interface CallBaskFromHttp{
