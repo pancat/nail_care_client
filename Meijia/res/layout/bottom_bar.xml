@@ -48,9 +48,9 @@
         android:background="#ddd"
         android:layout_weight="0.25"
         android:gravity="center_vertical|center_horizontal"
-        android:text="客服"
+        android:text="圈子"
         android:textColor="#000"
-        android:id="@+id/btn_service"
+        android:id="@+id/btn_moment"
         android:textSize="18sp" 
         android:onClick="onClick" />
 
