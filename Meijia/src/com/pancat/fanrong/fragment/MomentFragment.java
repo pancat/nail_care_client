@@ -6,6 +6,7 @@ import java.util.List;
 import com.pancat.fanrong.R;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ListFragment;
 import android.os.Bundle;
@@ -29,12 +30,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 @SuppressLint("NewApi")
-public class MomentFragment extends ListFragment{
+public class MomentFragment extends ListFragment implements OnScrollListener{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_moment, container, false);
+		
+		View view = inflater.inflate(R.layout.fragment_moment, container, false);
+		return view;
 	}
 	
 	
@@ -45,10 +48,14 @@ public class MomentFragment extends ListFragment{
     	List<String> items = getItemList();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, items);
 		setListAdapter(adapter);
-		
-		//getListView().setOnScrollListener(this);
-        
     }
+	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		getListView().setOnScrollListener(this);
+	}
 	
 	protected List<String> getItemList()
 	{
@@ -64,6 +71,7 @@ public class MomentFragment extends ListFragment{
 		Log.e("log","" + position + ", " + id);
 	}
 
+	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
@@ -71,6 +79,7 @@ public class MomentFragment extends ListFragment{
 		Log.e("scroll", "" + firstVisibleItem + ", " + visibleItemCount + ", " + totalItemCount);
 	}
 
+	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
 		
