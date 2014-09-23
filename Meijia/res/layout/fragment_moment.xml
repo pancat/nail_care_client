@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-<TextView 
-    android:layout_height="0dp"
-    android:layout_width="fill_parent"
-    android:layout_weight="1"
-    android:text="this is moment page"
-    />
+	<ListView
+        android:id="@+id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+    </ListView>
+    
 </LinearLayout>
