@@ -1,57 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|center_vertical"
-    android:gravity="bottom|center_horizontal"
-    android:orientation="horizontal" >
+    android:layout_height="55dp"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/bottom_bar"
+    >
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        >
+        <LinearLayout 
+            android:id="@+id/tab_home"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:descendantFocusability="beforeDescendants"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_tab_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#0000"
+                android:clickable="false"
+                android:src="@drawable/tab_weixin_pressed"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:text="首页"
+                />
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/tab_order"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:descendantFocusability="beforeDescendants"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_tab_order"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="#0000"
+                android:clickable="false"
+                android:src="@drawable/tab_find_frd_normal"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:text="订单"
+                />
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:id="@+id/tab_me"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:descendantFocusability="beforeDescendants"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_tab_me"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="#0000"
+                android:clickable="false"
+                android:src="@drawable/tab_address_normal"
+                />
+            <TextView 
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="#ffffff"
+                android:text="个人"
+                />
+            
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:id="@+id/tab_moment"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:descendantFocusability="beforeDescendants"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_tab_moment"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:background="#0000"
+                android:clickable="false"
+                android:src="@drawable/tab_settings_normal"
+                />
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="#ffffff"
+                android:text="圈子"
+                />
+        </LinearLayout>
+    </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dip"
-        android:layout_weight="0.25"
-        android:background="#0087cb"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="首页"
-        android:id="@+id/btn_home"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:onClick="onClick" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dip"
-        android:layout_weight="0.25"
-        android:background="#ddd"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="订单 "
-        android:textColor="#000"
-        android:textSize="18sp"
-        android:id="@+id/btn_order"
-        android:onClick="onClick" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dip"
-        android:layout_weight="0.25"
-        android:background="#ddd"
-        android:text="我的"
-        android:gravity="center_vertical|center_horizontal"
-        android:textColor="#000"
-        android:textSize="18sp"
-        android:id="@+id/btn_me"
-        android:onClick="onClick"  />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dip"
-        android:background="#ddd"
-        android:layout_weight="0.25"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="圈子"
-        android:textColor="#000"
-        android:id="@+id/btn_moment"
-        android:textSize="18sp" 
-        android:onClick="onClick" />
-
-</LinearLayout>
+</RelativeLayout>

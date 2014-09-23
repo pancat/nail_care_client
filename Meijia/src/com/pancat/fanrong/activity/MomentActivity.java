@@ -23,7 +23,7 @@ public class MomentActivity extends ListActivity implements OnScrollListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_moment);
+//		setContentView(R.layout.activity_moment);
 		
 		List<String> items = getItemList();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, items);

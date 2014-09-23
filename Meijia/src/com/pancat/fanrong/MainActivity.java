@@ -1,174 +1,182 @@
 package com.pancat.fanrong;
 
-
-import android.app.ActivityGroup;
-import android.content.Intent;
-import android.graphics.Color;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.pancat.fanrong.activity.HomeActivity;
-import com.pancat.fanrong.activity.MeActivity;
-import com.pancat.fanrong.activity.MomentActivity;
-import com.pancat.fanrong.activity.OrderActivity;
-import com.pancat.fanrong.activity.ServiceActivity;
+import com.pancat.fanrong.fragment.HomeFragment;
+import com.pancat.fanrong.fragment.MeFragment;
+import com.pancat.fanrong.fragment.MomentFragment;
+import com.pancat.fanrong.fragment.OrderFragment;
 
-@SuppressWarnings("deprecation")
-public class MainActivity extends ActivityGroup {
 
-	private LinearLayout container;
-	private Button btnHome,btnOrder,btnMoment,btnMe;
-	private Window subActivity;
-	private int segment = 1;
+public class MainActivity extends Activity implements OnClickListener{
+
+	private HomeFragment home;
+	private OrderFragment order;
+	private MeFragment me;
+	private MomentFragment moment;
 	
+	//底部四个按钮
+	private LinearLayout tabHome;
+	private LinearLayout tabOrder;
+	private LinearLayout tabMe;
+	private LinearLayout tabMoment;
+	
+	//用于对Fragment进行管理
+	private FragmentManager fragmentManager;
+	
+	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		container = (LinearLayout)findViewById(R.id.container);
-		initBottomBar();
-		segment = getIntent().getIntExtra("segment", 1);
-		btnHome.setClickable(false);
+		initViews();
+		fragmentManager = getFragmentManager();
+		setTabSelection(0);
 	}
 	
-	private void addView(){
-		container.removeAllViews();
-		Intent intent = new Intent();
-		if(segment == 1){
-			intent.setClass(MainActivity.this, HomeActivity.class);
-			subActivity = getLocalActivityManager().startActivity("subActivity1", intent);
-		}
-		else if(segment == 2){
-			intent.setClass(MainActivity.this, OrderActivity.class);
-			subActivity = getLocalActivityManager().startActivity("subActivity2", intent);
-		}
-		else if(segment == 3){
-			intent.setClass(MainActivity.this, MeActivity.class);
-			subActivity = getLocalActivityManager().startActivity("subActivity3", intent);
-		}
-		else if(segment == 4){
-			intent.setClass(MainActivity.this, MomentActivity.class);
-			subActivity = getLocalActivityManager().startActivity("subActivity4", intent);
-		}
-		container.addView(subActivity.getDecorView());
+	/**
+	 * 初始化组件
+	 */
+	private void initViews(){
+		tabHome = (LinearLayout) findViewById(R.id.tab_home);
+		tabOrder = (LinearLayout) findViewById(R.id.tab_order);
+		tabMe = (LinearLayout) findViewById(R.id.tab_me);
+		tabMoment = (LinearLayout) findViewById(R.id.tab_moment);
+		
+		tabHome.setOnClickListener(this);
+		tabOrder.setOnClickListener(this);
+		tabMe.setOnClickListener(this);
+		tabMoment.setOnClickListener(this);
 	}
 	
-	
-	
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		addView();
-	}
 
-	private void initBottomBar(){
-		btnHome = (Button)findViewById(R.id.btn_home);
-		btnOrder = (Button)findViewById(R.id.btn_order);
-		btnMe = (Button)findViewById(R.id.btn_me);
-		btnMoment = (Button)findViewById(R.id.btn_moment);
-	}
-	
-	public void onClick(View v){
-		container.removeAllViews();
-		Intent intent = new Intent();
+	@Override
+	public void onClick(View v) {
 		switch(v.getId()){
-		case R.id.btn_home:
-			btnHome.setBackgroundColor(Color.parseColor("#0087cb"));
-			btnOrder.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnMe.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnMoment.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnHome.setTextColor(Color.WHITE);
-			btnOrder.setTextColor(Color.BLACK);
-			btnMe.setTextColor(Color.BLACK);
-			btnMoment.setTextColor(Color.BLACK);
-			btnHome.setClickable(false);
-			btnOrder.setClickable(true);
-			btnMe.setClickable(true);
-			btnMoment.setClickable(true);
-			intent.setClass(MainActivity.this, HomeActivity.class);
-			subActivity = getLocalActivityManager().startActivity(
-					"subActivity1", intent);
-			container.addView(subActivity.getDecorView());
-			segment = 1;
+		case R.id.tab_home:
+			setTabSelection(0);
 			break;
-		case R.id.btn_order:
-			btnHome.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnOrder.setBackgroundColor(Color.parseColor("#0087cb"));
-			btnMe.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnMoment.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnHome.setTextColor(Color.BLACK);
-			btnOrder.setTextColor(Color.WHITE);
-			btnMe.setTextColor(Color.BLACK);
-			btnMoment.setTextColor(Color.BLACK);
-			btnHome.setClickable(true);
-			btnOrder.setClickable(false);
-			btnMe.setClickable(true);
-			btnMoment.setClickable(true);
-			intent.setClass(MainActivity.this, OrderActivity.class);
-			subActivity = getLocalActivityManager().startActivity(
-					"subActivity2", intent);
-			container.addView(subActivity.getDecorView());
-			segment = 2;
+		case R.id.tab_order:
+			setTabSelection(1);
 			break;
-		case R.id.btn_me:
-			btnHome.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnOrder.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnMe.setBackgroundColor(Color.parseColor("#0087cb"));
-			btnMoment.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnHome.setTextColor(Color.BLACK);
-			btnOrder.setTextColor(Color.BLACK);
-			btnMe.setTextColor(Color.WHITE);
-			btnMoment.setTextColor(Color.BLACK);
-			btnHome.setClickable(true);
-			btnOrder.setClickable(true);
-			btnMe.setClickable(false);
-			btnMoment.setClickable(true);
-			intent.setClass(MainActivity.this, MeActivity.class);
-			subActivity = getLocalActivityManager().startActivity(
-					"subActivity3", intent);
-			container.addView(subActivity.getDecorView());
-			segment = 3;
+		
+		case R.id.tab_me:
+			setTabSelection(2);
 			break;
-		case R.id.btn_moment:
-			btnHome.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnOrder.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnMe.setBackgroundColor(Color.parseColor("#dddddd"));
-			btnMoment.setBackgroundColor(Color.parseColor("#0087cb"));
-			btnHome.setTextColor(Color.BLACK);
-			btnOrder.setTextColor(Color.BLACK);
-			btnMe.setTextColor(Color.BLACK);
-			btnMoment.setTextColor(Color.WHITE);
-			btnHome.setClickable(true);
-			btnOrder.setClickable(true);
-			btnMe.setClickable(true);
-			btnMoment.setClickable(false);
-			intent.setClass(MainActivity.this, MomentActivity.class);
-			subActivity = getLocalActivityManager().startActivity(
-					"subActivity4", intent);
-			container.addView(subActivity.getDecorView());
-			segment = 4;
+		case R.id.tab_moment:
+			setTabSelection(3);
 			break;
 		default:break;
 		}
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		getLocalActivityManager().getCurrentActivity().onTouchEvent(event);
-		return true;
+	/**
+	 * 根据传入的index来设置选中的tab页
+	 * @param index tab索引
+	 */
+	@SuppressLint("NewApi")
+	private void setTabSelection(int index){
+		//重置按钮
+		resetBtn();
+		//开启一个Fragment事务
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		//先隐藏掉所有的Fragment，防止多个Fragment显示在界面上
+		hideFragment(transaction);
+		switch(index){
+		case 0:
+			//改变控件的图片和文字颜色
+			ImageButton btnTabHome = (ImageButton)tabHome.findViewById(R.id.btn_tab_home);
+			btnTabHome.setImageResource(R.drawable.tab_weixin_pressed);
+			if(home == null){
+				//如果MessageFragment为空，则创建一个并添加到界面上
+				home = new HomeFragment();
+				
+				transaction.add(R.id.content, home);
+			}
+			else{
+				//MessageFragment不为空，直接显示出来
+				transaction.show(home);
+			}
+			break;
+		case 1:
+			ImageButton btnTabOrder = (ImageButton)tabOrder.findViewById(R.id.btn_tab_order);
+			btnTabOrder.setImageResource(R.drawable.tab_find_frd_pressed);
+			if(order == null){
+				order = new OrderFragment();
+				transaction.add(R.id.content, order);
+			}
+			else{
+				transaction.show(order);
+			}
+			break;
+		case 2:
+			ImageButton btnTabMe = (ImageButton)tabMe.findViewById(R.id.btn_tab_me);
+			btnTabMe.setImageResource(R.drawable.tab_address_pressed);
+			if(me == null){
+				me = new MeFragment();
+				transaction.add(R.id.content, me);
+			}
+			else{
+				transaction.show(me);
+			}
+			break;
+		case 3:
+			ImageButton btnTabMoment = (ImageButton)tabMoment.findViewById(R.id.btn_tab_moment);
+			btnTabMoment.setImageResource(R.drawable.tab_settings_pressed);
+			if(moment == null){
+				moment = new MomentFragment();
+				transaction.add(R.id.content, moment);
+			}
+			else{
+				transaction.show(moment);
+			}
+			break;
+		default:break;
+		}
+		transaction.commit();
 	}
-	
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		
-		return true;
+
+	/**
+	 * 清除按钮选中状态
+	 */
+	private void resetBtn() {
+		((ImageButton)tabHome.findViewById(R.id.btn_tab_home))
+			.setImageResource(R.drawable.tab_weixin_normal);
+		((ImageButton)tabOrder.findViewById(R.id.btn_tab_order))
+			.setImageResource(R.drawable.tab_find_frd_normal);
+		((ImageButton)tabMe.findViewById(R.id.btn_tab_me))
+			.setImageResource(R.drawable.tab_address_normal);
+		((ImageButton)tabMoment.findViewById(R.id.btn_tab_moment))
+			.setImageResource(R.drawable.tab_settings_normal);
 	}
-	
+
+	/**
+	 * 将所有的Fragment置为隐藏状态
+	 * @param transaction 操作Fragment的事务
+	 */
+	@SuppressLint("NewApi")
+	private void hideFragment(FragmentTransaction transaction) {
+		if(home != null){
+			transaction.hide(home);
+		}
+		if(order != null){
+			transaction.hide(order);
+		}
+		if(me != null){
+			transaction.hide(me);
+		}
+		if(moment != null){
+			transaction.hide(moment);
+		}
+	}
 
 }
