@@ -86,12 +86,8 @@
             android:label="@string/title_activity_moment" >
         </activity>
         <activity
-            android:name=".activity.MomentActivity"
-            android:label="@string/title_activity_moment" >
-        </activity>
-        <activity
-            android:name="com.pancat.fanrong.activity.MomentActivity"
-            android:label="@string/title_activity_moment" >
+            android:name=".activity.AdvertiseActivity"
+            android:theme="@style/AppTheme" >
         </activity>
     </application>
 
