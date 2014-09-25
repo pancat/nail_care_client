@@ -1,6 +1,6 @@
 package com.pancat.fanrong;
 
-import android.R;
+import com.pancat.fanrong.R;
 import android.app.ActivityGroup;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
-import com.j256.ormlite.logger.Log;
+import android.util.Log;
 import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.MeActivity;
 import com.pancat.fanrong.activity.MomentActivity;
