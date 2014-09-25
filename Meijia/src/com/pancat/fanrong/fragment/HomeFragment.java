@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.activity.AdvertiseActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,13 +29,17 @@ import android.widget.LinearLayout.LayoutParams;
 @SuppressLint("NewApi")
 public class HomeFragment extends Fragment implements OnPageChangeListener{
 	
+	private static final String TAG = "state";
+	private  Handler handler = new Handler();
+	
+	private Thread autoMoveThread;
 	private View contextView;
 	private List<ImageView> imageList;
 	private TextView tvDescription;
 	private LinearLayout ll;
 	private int preEnablePosition = 0;//前一个被选中的点的索引位置默认设置为0
 	private String[] description = {"巩俐不低俗，我就不能低俗", "朴树又回来了，再唱经典老歌引万人大合唱",
-			"揭秘北京电影如何升级", "乐视网TV版大派对", "热血屌丝的反击"};
+			"揭秘北京电影如何升级", "乐视网TV版大派送", "热血屌丝的反杀" };
 	private ViewPager viewPager;
 	private boolean isStop = false;//是否停止子线程
 
@@ -40,30 +48,31 @@ public class HomeFragment extends Fragment implements OnPageChangeListener{
 			Bundle savedInstanceState) {
 		contextView = inflater.inflate(R.layout.fragment_home, container, false);
 		init();
-		Thread autoMoveThread = new Thread(new Runnable() {
-			
+		startAutoMoveThread();
+		
+		return contextView;
+	}
+	
+	private void startAutoMoveThread() {
+		autoMoveThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
 				while(!isStop){
 					//每过3秒钟发一条消息到主线程，更新viewpager
 					SystemClock.sleep(3000);
-					getActivity().runOnUiThread(new Runnable() {
-						
+					handler.post(new Runnable() {
 						@Override
 						public void run() {
 							int newIndex = viewPager.getCurrentItem() + 1;
 							viewPager.setCurrentItem(newIndex);
-							
 						}
 					});
 				}
 			}
 		}); 
 		autoMoveThread.start();
-		return contextView;
 	}
-	
+
 	private void init() {
 		viewPager = (ViewPager)contextView.findViewById(R.id.view_pager);
 		ll = (LinearLayout)contextView.findViewById(R.id.ll_point_group);
@@ -79,6 +88,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener{
 			iv.setBackgroundResource(id);
 			imageList.add(iv);
 			
+			//循环一次添加一个圆点
 			view = new View(getActivity());
 			view.setBackgroundResource(R.drawable.point_background);
 			params = new LayoutParams(15, 15);
@@ -101,8 +111,12 @@ public class HomeFragment extends Fragment implements OnPageChangeListener{
 	
 	@Override
 	public void onResume() {
-//		Log.e(TAG, "resume");
+		Log.e(TAG, "resume");
 		isStop = false;
+		if(autoMoveThread.getState() == Thread.State.TERMINATED){
+			startAutoMoveThread();
+		}
+		
 		super.onResume();
 	}
 	
@@ -110,9 +124,28 @@ public class HomeFragment extends Fragment implements OnPageChangeListener{
 
 	@Override
 	public void onPause() {
-//		Log.e(TAG, "pause");
-		System.exit(0);
+		Log.e(TAG, "pause");
+		isStop = true;
 		super.onPause();
+	}
+	
+	@Override
+	public void onStop(){
+		Log.e(TAG,"stop");
+		super.onStop();
+	}
+	
+	@Override
+	public void onStart(){
+		Log.e(TAG,"start");
+		super.onStart();
+	}
+	
+	@Override
+	public void onDestroy(){
+		Log.e(TAG,"destroy");
+		System.exit(0);
+		super.onDestroy(); 
 	}
 
 	@Override
@@ -149,12 +182,14 @@ public class HomeFragment extends Fragment implements OnPageChangeListener{
 		public Object instantiateItem(ViewGroup container, final int position) {
 			
 			container.addView(imageList.get(position%imageList.size()));
-			//点击图片操作在这里实现
+			//点击banner图片跳转到相应的广告页面
 			imageList.get(position%imageList.size()).setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 //					Log.e("click","image"+position%imageList.size()+" is clicking");
+					Intent intent = new Intent(getActivity(),AdvertiseActivity.class);
+					startActivity(intent);
 				}
 			});
 			return imageList.get(position%imageList.size());
