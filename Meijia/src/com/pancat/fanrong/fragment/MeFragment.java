@@ -1,7 +1,7 @@
 package com.pancat.fanrong.fragment;
 
 
-import com.pancat.fanrong.R;
+
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
