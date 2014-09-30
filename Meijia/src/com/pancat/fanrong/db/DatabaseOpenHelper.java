@@ -9,6 +9,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.pancat.fanrong.bean.AdBannerItem;
 import com.pancat.fanrong.bean.User;
 
 /**
@@ -22,6 +23,7 @@ public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper{
 	private static final int DATABASE_VERSION = 	2;
 	
 	private Dao<User,Integer> userDao;
+	private Dao<AdBannerItem, Integer> adBannerItemDao;
 	
 	public DatabaseOpenHelper(Context ctx){
 		super(ctx,DATABASE_NAME,null,DATABASE_VERSION);
@@ -31,6 +33,7 @@ public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper{
 	public void onCreate(SQLiteDatabase arg0, ConnectionSource arg1) {
 		try {
 			TableUtils.createTable(arg1, User.class);
+			TableUtils.createTable(arg1, AdBannerItem.class);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -58,5 +61,17 @@ public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper{
 			}
 		}
 		return userDao;
+	}
+	
+	public Dao<AdBannerItem, Integer> getAdBannerItemDao()
+	{
+		if(adBannerItemDao == null){
+			try {
+				adBannerItemDao = getDao(AdBannerItem.class);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return adBannerItemDao;
 	}
 }

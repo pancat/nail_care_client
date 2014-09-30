@@ -16,29 +16,18 @@ import com.pancat.fanrong.bean.User;
 public class DatabaseManager {
 	
 	private static  DatabaseManager instance;
-	private static Context ctx;
+	private static Context context;
 	private DatabaseOpenHelper helper;
-	
-	/**
-	 * 初始化管理器
-	 * @param ctx
-	 */
-	static public void init(Context ctx){
-		if(instance == null){
-			instance = new DatabaseManager(ctx);
-			instance.ctx = ctx;
-		}
-	}
 	
 	/**
 	 * 获取管理器
 	 * @return
 	 */
-	static public DatabaseManager getInstance(){
+	static public DatabaseManager getInstance(Context context){
 		if(instance == null){
-			init(ctx);
+			instance = new DatabaseManager(context);
+			DatabaseManager.context = context;
 		}
-		System.out.println(instance);
 		return instance;
 	}
 	
@@ -46,8 +35,13 @@ public class DatabaseManager {
 		helper = new DatabaseOpenHelper(ctx);
 	}
 	
-	private DatabaseOpenHelper getHelper(){
+	public DatabaseOpenHelper getHelper(){
 		return helper;
+	}
+	
+	public static DatabaseOpenHelper getHelper(Context context){
+		DatabaseManager inst = getInstance(context);
+		return inst.helper;
 	}
 	
 	/**

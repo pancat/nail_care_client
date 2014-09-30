@@ -10,39 +10,46 @@ import com.pancat.fanrong.util.PhoneUtils;
 /**
  * 
  * @author trhuo
- *
+ * 
  */
 public class RestClient {
-	
+
 	private static RestClient instance;
-	
-	private RestClient(){}
-	public static synchronized RestClient getInstance(){
-		if(instance == null){
+
+	private RestClient() {
+	}
+
+	public static synchronized RestClient getInstance() {
+		if (instance == null) {
 			instance = new RestClient();
 		}
 		return instance;
 	}
-	
+
 	private static AsyncHttpClient client = new AsyncHttpClient();
-	
-	public void get(Context context,String url,RequestParams params,
-			AsyncHttpResponseHandler responseHandler){
+
+	public void get(Context context, String url, RequestParams params,
+			AsyncHttpResponseHandler responseHandler) {
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
 		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
-	
-	public void post(Context context,String url,RequestParams params,
-			AsyncHttpResponseHandler responseHandler){
+
+	public void post(Context context, String url, RequestParams params,
+			AsyncHttpResponseHandler responseHandler) {
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
-		client.post(getAbsoluteUrl(url), params,responseHandler);
+		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
-	
-	private String getAbsoluteUrl(String relativeUrl){
-		return Constants.BASE_URL + relativeUrl;
+
+	private String getAbsoluteUrl(String relativeUrl) {
+		if (relativeUrl.toLowerCase().startsWith("http://")
+				|| relativeUrl.toLowerCase().startsWith("https://")) {
+			return relativeUrl;
+		} else {
+			return Constants.BASE_URL + relativeUrl;
+		}
 	}
-	
-	public static interface CallBaskFromHttp{
+
+	public static interface CallBaskFromHttp {
 		void callback();
 	}
 }
