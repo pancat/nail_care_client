@@ -1,28 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/logbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="登录" >
-        </Button>
-
-        <Button
-            android:id="@+id/regbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注册" />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/log"
@@ -46,10 +26,10 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="手机" />
+                    android:text="手机:" />
 
                 <EditText
-                    android:id="@+id/editText1"
+                    android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -66,106 +46,41 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="密码" />
+                    android:text="密码:" />
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPassword" />
             </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRow3"
+          
+        </TableLayout>
+        
+          <TextView
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right" >
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="忘记密码" />
-            </TableRow>
-        </TableLayout>
-
-       
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="80dp"
+                android:text="忘记密码" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/reg"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/log"
         android:gravity="center"
-        android:orientation="vertical" >
-        
-        <TableLayout 
-            android:layout_width="fill_parent"
-      	 	 android:layout_height="wrap_content"
-      		  android:gravity="center"
-            >
-            <TableRow >
-                <EditText 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/phonenum"
-                    android:hint="点击输入注册的手机号码"
-                    />
-                
-            </TableRow>
-            
-            <TableRow >
-                <EditText 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="输入六位验证码"
-                    android:id="@+id/testnum"
-                    />
-                <Button 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="获取验证码"
-                    android:id="@+id/testnumbtn"
-                    />
-                
-            </TableRow>
-            
-            <TableRow >
-                <EditText 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="请输入新密码"
-                    android:id="@+id/passwd"
-                    />
-                
-            </TableRow>
-            
-            <TableRow >
-                <EditText 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="请输入新密码"
-                    android:id="@+id/repasswd"
-                    />
-                
-            </TableRow>
-            
-        </TableLayout>
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/loginbtn"
+            android:layout_width="@dimen/logbtnw"
+            android:layout_height="@dimen/logbtnh"
+            android:background="@color/pink"
+            android:text="登录" />
     </LinearLayout>
-    
-     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/loginbtn"
-                android:layout_width="@dimen/logbtnw"
-                android:layout_height="@dimen/logbtnh"
-                android:background="@color/pink"
-                android:text="登录" />
-        </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

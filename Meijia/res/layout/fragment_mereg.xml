@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:id="@+id/reg"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center" >
+
+        <TableRow>
+
+            <TextView android:layout_width="55dp" />
+
+            <EditText
+                android:layout_span="2"
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="点击输入注册的手机号码" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:layout_width="5dp" />
+
+            <EditText
+                android:id="@+id/testnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="输入五位验证码" />
+
+            <Button
+                android:id="@+id/testnumbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取验证码" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:layout_width="5dp" />
+
+            <EditText
+                android:layout_span="2"
+                android:id="@+id/passwd"
+                android:inputType="textPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="请输入新密码" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:layout_width="5dp" />
+
+            <EditText
+                android:layout_span="2"
+                android:id="@+id/repasswd"
+                android:inputType="textPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="请输入新密码" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/reg"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/regbtn"
+            android:layout_width="@dimen/logbtnw"
+            android:layout_height="@dimen/logbtnh"
+            android:background="@color/pink"
+            android:text="注册" />
+    </LinearLayout>
+
+</RelativeLayout>
