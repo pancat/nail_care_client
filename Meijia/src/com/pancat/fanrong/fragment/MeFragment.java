@@ -100,8 +100,7 @@ public class MeFragment extends Fragment {
 								Toast.LENGTH_LONG).show();
 					}
 					 @Override
-				     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
-				 error)
+				     public void onFailure(Throwable error, String content)
 				 {
 				         // Response failed :(
 				     }
