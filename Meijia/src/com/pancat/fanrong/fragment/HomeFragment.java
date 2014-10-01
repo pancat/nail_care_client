@@ -2,6 +2,7 @@ package com.pancat.fanrong.fragment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,9 +11,13 @@ import com.j256.ormlite.dao.Dao;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.AdvertiseActivity;
 import com.pancat.fanrong.bean.AdBannerItem;
+import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.db.DatabaseOpenHelper;
 import com.pancat.fanrong.handler.HandlerFactory;
+import com.pancat.fanrong.http.AsyncHttpResponseHandler;
+import com.pancat.fanrong.http.RequestParams;
+
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
@@ -30,7 +35,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
+
+import org.json.*;
 
 @SuppressLint("NewApi")
 public class HomeFragment extends Fragment implements OnPageChangeListener {
@@ -50,9 +58,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		contextView = inflater
 				.inflate(R.layout.fragment_home, container, false);
 		
-		setViewPagerFromDB();
-		
-		startAdBannerPlayTimer();
+		requestAdsFromServer();
 		
 		return contextView;
 	}
@@ -85,57 +91,67 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		return adBannerPlayTimer;
 	}
 
-	private Timer getAdBannerPlayTimer() {
-		return startAdBannerPlayTimer();
-	}
+	final AsyncHttpResponseHandler adBannerReadyHandler = new AsyncHttpResponseHandler() {
 
-	final Handler adBannerReadyHandler = new Handler() {
 		@Override
-		public void handleMessage(Message msg) {
-			setViewPagerFromDB();
+		public void onFailure(Throwable error, String content) {
+			super.onFailure(error, content);
+		}
+
+		@Override
+		public void onSuccess(String content) {
+			DatabaseOpenHelper helper = DatabaseManager.getHelper(getActivity()
+					.getApplicationContext());
+			Dao<AdBannerItem, Integer> dao = helper.getAdBannerItemDao();
+			
+			try {
+				List<AdBannerItem> list = dao.queryForAll();
+				dao.delete(list);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				JSONArray jsonArray = new JSONArray(content);
+				for (int i = 0; i < jsonArray.length(); ++i)
+				{
+					JSONObject itemObj = jsonArray.getJSONObject(i);
+					try {
+						int productID = itemObj.getInt("p_id");
+						String imgUrl = itemObj.getString("image_uri");
+						String desc = itemObj.getString("discribe");
+						Log.d("item ", productID + " " + imgUrl + " " + desc );
+						if (imgUrl != "null")
+						{
+							AdBannerItem item = new AdBannerItem();
+							item.setProductID(productID);
+							item.setImgUrl(imgUrl);
+							item.setDesc(desc);
+							try {
+								dao.create(item);
+							} catch (SQLException e) {
+							//	e.printStackTrace();
+							}
+						}
+					}catch (Exception e)
+					{
+					//	e.printStackTrace();
+					}
+				}
+				
+				// update from db
+				setViewPagerFromDB();
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
 		}
 	};
 
-	private Timer requestAdsFromServerTimer = null;
-
 	private void requestAdsFromServer() {
-		TimerTask task = new TimerTask() {
-			@Override
-			public void run() {
-				requestAdsFromServerTimer.cancel();
-				requestAdsFromServerTimer = null;
-
-				DatabaseOpenHelper helper = DatabaseManager
-						.getHelper(getActivity().getApplicationContext());
-				Dao<AdBannerItem, Integer> dao = helper.getAdBannerItemDao();
-
-				//
-				try {
-					List<AdBannerItem> list = dao.queryForAll();
-					dao.delete(list);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				for (int i = 0; i < 6; ++i) {
-					AdBannerItem item = new AdBannerItem();
-					item.setProductID(i);
-					item.setImgUrl("http://www.itstrike.cn/content/logo.png");
-					item.setDesc("这个谁呀");
-					try {
-						dao.create(item);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				adBannerReadyHandler.sendEmptyMessage(0);
-			}
-		};
-		requestAdsFromServerTimer = new Timer();
-		requestAdsFromServerTimer.schedule(task, 1000, 1000000);
+		String url = "product/get_product_list";
+		RestClient.getInstance().get(url, new RequestParams(), adBannerReadyHandler);
 	}
 	
 	private void setViewPagerFromDB()
@@ -150,6 +166,8 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		startAdBannerPlayTimer();
 	}
 
 	private void initViewPager(List<AdBannerItem> list) {
@@ -198,6 +216,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		requestAdsFromServer();
 	}
 
 	@Override
@@ -271,6 +290,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		public Object instantiateItem(ViewGroup container, int position) {
 			int idx = position % this.mListViews.size();
 			ImageView view = mListViews.get(idx);
+			container.removeView(view);
 			container.addView(view);
 
 			view.setOnClickListener(new OnClickListener() {
