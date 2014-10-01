@@ -10,16 +10,12 @@ import com.j256.ormlite.dao.Dao;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.AdvertiseActivity;
 import com.pancat.fanrong.bean.AdBannerItem;
-import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.db.DatabaseOpenHelper;
-import com.pancat.fanrong.http.BinaryHttpResponseHandler;
-import com.pancat.fanrong.http.RequestParams;
-
+import com.pancat.fanrong.handler.HandlerFactory;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -174,7 +170,8 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			imageList.add(imageView);
 			
 			String url = item.getImgUrl();
-			RestClient.getInstance().get(getActivity().getApplicationContext(), url, new RequestParams(), new ImageResponseHandler(imageView));
+			
+			HandlerFactory.setLoadImageHandler(url, true, imageView);
 
 			// 循环一次添加一个圆点
 			View point = new View(getActivity());
@@ -298,20 +295,4 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		}
 
 	}
-
-	public class ImageResponseHandler extends BinaryHttpResponseHandler{  
-		private ImageView imageView;
-        public ImageResponseHandler(ImageView imageView){  
-           super();  
-           this.imageView = imageView;
-        }  
-        @Override  
-        public void onSuccess(byte[] data){  
-        		this.imageView.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
-        }  
-        @Override  
-        public void onFailure(Throwable e, String data){  
-            Log.i(TAG, "download failed");  
-        }  
-    }   
 }
