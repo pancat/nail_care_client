@@ -2,6 +2,7 @@ package com.pancat.fanrong.common;
 
 import android.content.Context;
 
+import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.http.AsyncHttpClient;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
@@ -28,9 +29,16 @@ public class RestClient {
 
 	private static AsyncHttpClient client = new AsyncHttpClient();
 
+	@Deprecated
 	public void get(Context context, String url, RequestParams params,
 			AsyncHttpResponseHandler responseHandler) {
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
+		client.get(getAbsoluteUrl(url), params, responseHandler);
+	}
+	
+	public void get(String url, RequestParams params,
+			AsyncHttpResponseHandler responseHandler) {
+		client.setUserAgent(PhoneUtils.getUserAgent(MainApplication.getAppContext()));
 		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
 
