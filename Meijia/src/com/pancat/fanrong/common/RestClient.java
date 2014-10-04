@@ -1,5 +1,15 @@
 package com.pancat.fanrong.common;
 
+import java.io.IOException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import android.content.Context;
 
 import com.pancat.fanrong.MainApplication;
@@ -59,5 +69,20 @@ public class RestClient {
 
 	public static interface CallBaskFromHttp {
 		void callback();
+	}
+	
+	/**
+	 *	从url获取json字符串 
+	 * @param url
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public String getStringFromUrl(String url) throws ClientProtocolException, IOException {
+		HttpGet get = new HttpGet(url);
+		HttpClient client = new DefaultHttpClient();
+		HttpResponse response = client.execute(get);
+		HttpEntity entity = response.getEntity();
+		return EntityUtils.toString(entity, "UTF-8");
 	}
 }
