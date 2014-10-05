@@ -127,7 +127,10 @@
 		<activity
 		    android:name=".activity.ProductDetailViewFragmentActivity">
 		</activity>
-		    
+        <activity
+            android:name=".activity.LogActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
         <!--个推SDK配置开始-->
          <receiver
             android:name="com.pancat.fanrong.receiver.PushMsgGeTuiReceiver"

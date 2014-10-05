@@ -1,124 +1,208 @@
 package com.pancat.fanrong.fragment;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.pancat.fanrong.R;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.pancat.fanrong.R;
-import com.pancat.fanrong.pulltorefresh.library.PullToRefreshBase;
-import com.pancat.fanrong.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.pancat.fanrong.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.pancat.fanrong.pulltorefresh.library.PullToRefreshListView;
+import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.util.PhoneUtils;
+import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
+import com.pancat.fanrong.waterfall.view.XListView;
+import com.pancat.fanrong.waterfall.view.XListView.IXListViewListener;
+import com.pancat.fanrong.waterfall.widget.ScaleImageView;
 
 
 @SuppressLint("NewApi")
-public class MomentFragment extends Fragment{
+public class MomentFragment extends Fragment implements IXListViewListener{
 
-	private PullToRefreshListView listView;
-	private List<String> stringList = new ArrayList<String>();
-	private MomentAdapter adapter;
+	private View contextView;
+	private ImageFetcher mImageFetcher;
+	private XListView mAdapterView = null;
+	private MyAdapter mAdapter = null;
+	private int currentPage = 0;
+	private ContentTask task = new ContentTask(getActivity(),2);
+	//屏幕宽度
+	private int mWidth;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.e("state","createview");
-		View view = inflater.inflate(R.layout.fragment_moment, container, false);
-		listView = (PullToRefreshListView)view.findViewById(R.id.moment_list);
-		listView.setMode(Mode.BOTH);
-		adapter = new MomentAdapter(getActivity());
-		listView.setAdapter(adapter);
-		listView.setMode(Mode.BOTH);
-		getData();
-		listView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
-
-			//下拉刷新
-			@Override
-			public void onPullDownToRefresh(
-					PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(
-						getActivity().getApplicationContext(), System.currentTimeMillis(),
-						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL);
-				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				handlerRefresh.sendEmptyMessage(0);
-			}
-
-			//上拉加载
-			@Override
-			public void onPullUpToRefresh(
-					PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(
-						getActivity().getApplicationContext(), System.currentTimeMillis(),
-						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL);
-				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				handlerRefresh.sendEmptyMessage(1);
-			} 
-
-			
-		});
-		return view;
+		
+		contextView = inflater.inflate(R.layout.act_pull_to_refresh_sample, container, false);
+		//获取屏幕宽度
+		WindowManager wm = (WindowManager)getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+		mWidth = wm.getDefaultDisplay().getWidth();
+				
+		mAdapterView = (XListView)contextView.findViewById(R.id.list);
+		mAdapterView.setPullLoadEnable(true);
+		mAdapterView.setXListViewListener(this);
+		mAdapter = new MyAdapter(getActivity(), mAdapterView);
+		
+		mImageFetcher = new ImageFetcher(getActivity(), 240);
+		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
+		return contextView;
+	}
+	
+	/**
+	 * 添加内容到列表中
+	 * @param pageIndex	页数索引
+	 * @param type 刷新类型
+	 */
+	private void addItemToContainer(int pageIndex,int type){
+		if(task.getStatus() != Status.RUNNING){
+			String url = "http://www.duitang.com/album/1733789/masn/p/"+pageIndex+"/10/";
+			Log.d("MainActivity", "current url:" + url);
+			ContentTask task = new ContentTask(getActivity(), type);
+			task.execute(url);
+		}
+	}
+	
+	@Override
+	public void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
+        mAdapterView.setAdapter(mAdapter);
+        addItemToContainer(currentPage, 2);
+        Log.e("currentPage",String.valueOf(currentPage));
+    }
+	
+	@Override
+	public void onRefresh() {
+		addItemToContainer(++currentPage, 1);
 	}
 
-	private Handler handlerRefresh = new Handler(){
+	@Override
+	public void onLoadMore() {
+		addItemToContainer(++currentPage, 2);
+	}
+	
+	public class ContentTask extends AsyncTask<String,Integer,List<DuitangInfo>>{
+		
+		private Context mContext;
+		//刷新类型：1为上拉刷新，2为下拉加载
+		private int mType = 1;
+		
+		/**
+		 * 构造函数，初始化变量
+		 * @param context
+		 * @param type
+		 */
+		public ContentTask(Context context,int type){
+			super();
+			mContext = context;
+			mType = type;
+		}
 
+		/**
+		 * 在后台执行费时的操作
+		 */
 		@Override
-		public void handleMessage(Message msg) {
-			switch(msg.what){
-			case 0:
-				stringList.clear();
-				getData();
-				listView.onRefreshComplete();
-				break;
-			case 1:
-				stringList.addAll(new ArrayList<String>(Arrays.asList("123","456","789")));
-				adapter.notifyDataSetChanged();
-				listView.onRefreshComplete();
-				break;
-			default:break;
+		protected List<DuitangInfo> doInBackground(String... params) {
+			
+			try {
+				return parseNewsJSON(params[0]);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		/**
+		 * 接受的参数为doInBackground返回的值
+		 * doInBackground执行完成后被UI线程调用
+		 */
+		@Override
+		protected void onPostExecute(List<DuitangInfo> result) {
+			if(mType == 1){
+				//执行上拉刷新时
+				mAdapter.addItemTop(result);
+				mAdapter.notifyDataSetChanged();
+				mAdapterView.stopRefresh();
+			}
+			else if(mType == 2){
+				//执行下拉加载时
+				mAdapterView.stopLoadMore();
+				mAdapter.addItemLast(result);
+				mAdapter.notifyDataSetChanged();
 			}
 		}
 		
-	};
-	
-	private void getData(){
-		Message msg = new Message();
-		msg.what = 1;
-		msg.obj = "";
-		handlerRefresh.sendMessage(msg);
-	}
-	
-	class MomentAdapter extends BaseAdapter{
-		
-		private LayoutInflater inflater;
-		
-		public MomentAdapter(Context context){
-			inflater = LayoutInflater.from(context);
+		public List<DuitangInfo> parseNewsJSON(String url) throws ClientProtocolException, IOException{
+			List<DuitangInfo> duitangs = new ArrayList<DuitangInfo>();
+			String json = "";
+			//判断是否连接网络
+			if(PhoneUtils.isNetworkConnected(mContext)){
+				//从url中获取json字符串
+				json = RestClient.getInstance().getStringFromUrl(url);
+			}
+			if(json != null){
+				try {
+					JSONObject newsObject = new JSONObject(json);
+					JSONObject jsonObject = newsObject.getJSONObject("data");
+					JSONArray blogsJson = jsonObject.getJSONArray("blogs");
+					for (int i = 0; i < blogsJson.length(); i++) {
+                        JSONObject newsInfoLeftObject = blogsJson.getJSONObject(i);
+                        DuitangInfo newsInfo1 = new DuitangInfo();
+                        newsInfo1.setAlbid(newsInfoLeftObject.isNull("albid") ? "" : newsInfoLeftObject.getString("albid"));
+                        newsInfo1.setIsrc(newsInfoLeftObject.isNull("isrc") ? "" : newsInfoLeftObject.getString("isrc"));
+                        newsInfo1.setMsg(newsInfoLeftObject.isNull("msg") ? "" : newsInfoLeftObject.getString("msg"));
+                        newsInfo1.setHeight(newsInfoLeftObject.getInt("iht"));
+                        duitangs.add(newsInfo1);
+                    }
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			return duitangs;
 		}
+	}  
+	
+	class MyAdapter extends BaseAdapter{
+
+		private Context mContext;
+		private LinkedList<DuitangInfo> mInfos;
+		private XListView mListView;
+		
+		public MyAdapter(Context context,XListView xListView){
+			mContext = context;
+			mInfos = new LinkedList<DuitangInfo>();
+			mListView = xListView;
+		}
+		
+		
 		@Override
 		public int getCount() {
-			return stringList.size();
+			return mInfos.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return mInfos.get(position);
 		}
 
 		@Override
@@ -128,12 +212,39 @@ public class MomentFragment extends Fragment{
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			String item = stringList.get(position);
-			convertView = inflater.inflate(R.layout.moment_item, null);
-			TextView tvMoment = (TextView)convertView.findViewById(R.id.tv_moment);
-			tvMoment.setText(item);
+			ViewHolder holder;
+			DuitangInfo duitangInfo = mInfos.get(position);
+			if(convertView == null){
+				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+				convertView = layoutInflater.inflate(R.layout.infos_list, null);
+				holder = new ViewHolder();
+				holder.imageView = (ScaleImageView)convertView.findViewById(R.id.news_pic);
+				holder.contentView = (TextView)convertView.findViewById(R.id.news_title);
+				convertView.setTag(holder);
+			}
+			holder = (ViewHolder)convertView.getTag();
+			holder.imageView.setImageWidth(mWidth);
+			holder.imageView.setImageHeight(duitangInfo.getHeight());
+			holder.contentView.setText(duitangInfo.getMsg());
+			mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
 			return convertView;
 		}
 		
+		class ViewHolder{
+			ScaleImageView imageView;
+			TextView contentView;
+			TextView timeView;
+		}
+		
+		public void addItemTop(List<DuitangInfo> data){
+			for(DuitangInfo info : data){
+				mInfos.addFirst(info);
+			}
+		}
+		
+		public void addItemLast(List<DuitangInfo> data){
+			mInfos.addAll(data);
+		}
 	}
+
 }
