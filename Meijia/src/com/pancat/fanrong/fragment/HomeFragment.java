@@ -10,7 +10,9 @@ import java.util.TimerTask;
 import com.j256.ormlite.dao.Dao;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.AdvertiseActivity;
+import com.pancat.fanrong.activity.ProductViewFragmentActivity;
 import com.pancat.fanrong.bean.AdBannerItem;
+import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.db.DatabaseOpenHelper;
@@ -32,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,7 +51,11 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 
 	private Timer adBannerPlayTimer = null;
 	private List<AdBannerItem> adBannerItemlist;
-
+    
+	//美甲作品及美妆作品按钮
+	private ImageButton meijia;
+	private ImageButton meizhuang;
+	
 	// 前一个被选中的点的索引位置默认设置为0
 	private int preEnablePosition = 0;
 
@@ -59,6 +66,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 				.inflate(R.layout.fragment_home, container, false);
 		
 		requestAdsFromServer();
+		initLeftButtonArr();
 		
 		return contextView;
 	}
@@ -272,7 +280,36 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			preEnablePosition = idx;
 		}
 	}
-
+    
+	//author Jogrunner
+	private void initLeftButtonArr()
+	{
+		meijia = (ImageButton)contextView.findViewById(R.id.btn_meijia_works);
+		meizhuang = (ImageButton)contextView.findViewById(R.id.btn_meizhuang_works);
+		meijia.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO 自动生成的方法存根
+				Intent intent = new Intent(getActivity(),ProductViewFragmentActivity.class);
+				intent.putExtra(Product.TYPE, Product.MEIJIA);
+				startActivity(intent);
+			}
+		});
+		
+		meizhuang.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO 自动生成的方法存根
+				Intent intent = new Intent(getActivity(),ProductViewFragmentActivity.class);
+				intent.putExtra(Product.TYPE, Product.MEIZHUANGE);
+				startActivity(intent);
+			}
+		});
+	}
+	
+	
 	public class AdBannerViewPagerAdapter extends PagerAdapter {
 		private List<ImageView> mListViews;
 
