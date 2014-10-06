@@ -52,7 +52,7 @@ public class XListView extends MultiColumnListView implements OnScrollListener {
 	// total list items, used to detect is at the bottom of listview.
 	private int mTotalItemCount;
 
-	// for mScroller, scroll back from header or footer.
+	//判断是从header还是footer中回滚
 	private int mScrollBack;
 	private final static int SCROLLBACK_HEADER = 0;
 	private final static int SCROLLBACK_FOOTER = 1;

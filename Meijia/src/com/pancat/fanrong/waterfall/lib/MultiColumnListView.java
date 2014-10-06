@@ -69,7 +69,8 @@ public class MultiColumnListView extends PLA_ListView {
         if (attrs == null) {
             mColumnNumber = (DEFAULT_COLUMN_NUMBER); // default column number is
                                                      // 2.
-        } else {
+        } 
+        else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PinterestLikeAdapterView);
 
             int landColNumber = a.getInteger(R.styleable.PinterestLikeAdapterView_plaLandscapeColumnNumber, 3);

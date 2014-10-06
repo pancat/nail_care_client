@@ -42,6 +42,7 @@ import com.pancat.fanrong.waterfall.widget.ScaleImageView;
 @SuppressLint("NewApi")
 public class MomentFragment extends Fragment implements IXListViewListener{
 
+	public final String TAG = "MomentFragment";
 	private View contextView;
 	private ImageFetcher mImageFetcher;
 	private XListView mAdapterView = null;
@@ -49,49 +50,29 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 	private int currentPage = 0;
 	private ContentTask task = new ContentTask(getActivity(),2);
 	private FragmentCallback fragmentCallback;
-	//屏幕宽度
-	private int mWidth;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+		Log.e(TAG, "createview");
 		contextView = inflater.inflate(R.layout.act_pull_to_refresh_sample, container, false);
-		//获取屏幕宽度
-		WindowManager wm = (WindowManager)getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-		mWidth = wm.getDefaultDisplay().getWidth();
 				
 		mAdapterView = (XListView)contextView.findViewById(R.id.list);
 		mAdapterView.setPullLoadEnable(true);
 		mAdapterView.setXListViewListener(this);
 		mAdapter = new MyAdapter(getActivity(), mAdapterView);
 		
-		mImageFetcher = new ImageFetcher(getActivity(), 720);
+		mImageFetcher = new ImageFetcher(getActivity(), 240);
 		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
+		getData();
 		return contextView;
 	}
 	
-	/**
-	 * 添加内容到列表中
-	 * @param pageIndex	页数索引
-	 * @param type 刷新类型
-	 */
-	private void addItemToContainer(int pageIndex,int type){
-		if(task.getStatus() != Status.RUNNING){
-			String url = "http://www.duitang.com/album/1733789/masn/p/"+pageIndex+"/10/";
-			Log.d("MainActivity", "current url:" + url);
-			ContentTask task = new ContentTask(getActivity(), type);
-			task.execute(url);
-		}
-	}
 	
 	@Override
 	public void onResume() {
+		Log.e(TAG, "resume");
         super.onResume();
-        mImageFetcher.setExitTasksEarly(false);
-        mAdapterView.setAdapter(mAdapter);
-        addItemToContainer(currentPage, 2);
-        Log.e("currentPage",String.valueOf(currentPage));
     }
 	
 	
@@ -110,6 +91,27 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 	@Override
 	public void onLoadMore() {
 		addItemToContainer(++currentPage, 2);
+	}
+	
+	private void getData(){
+		mImageFetcher.setExitTasksEarly(false);
+		mAdapterView.setAdapter(mAdapter);
+		//进入页面第一次加载数据
+		addItemToContainer(currentPage, 2);
+	}
+	
+	/**
+	 * 添加内容到列表中
+	 * @param pageIndex	页数索引
+	 * @param type 刷新类型
+	 */
+	private void addItemToContainer(int pageIndex,int type){
+		if(task.getStatus() != Status.RUNNING){
+			String url = "http://www.duitang.com/album/1733789/masn/p/"+pageIndex+"/10/";
+			Log.d("MainActivity", "current url:" + url);
+			ContentTask task = new ContentTask(getActivity(), type);
+			task.execute(url);
+		}
 	}
 	
 	public class ContentTask extends AsyncTask<String,Integer,List<DuitangInfo>>{
@@ -237,7 +239,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 				convertView.setTag(holder);
 			}
 			holder = (ViewHolder)convertView.getTag();
-			holder.imageView.setImageWidth(mWidth);
+			holder.imageView.setImageWidth(duitangInfo.getWidth());
 			holder.imageView.setImageHeight(duitangInfo.getHeight());
 			holder.contentView.setText(duitangInfo.getMsg());
 			mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
@@ -247,6 +249,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 				
 				@Override
 				public void onClick(View v) {
+					//回调MomentActivity的接口
 					fragmentCallback.callback(data);
 				}
 			});
