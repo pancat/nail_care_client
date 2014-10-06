@@ -6,6 +6,7 @@ import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.util.FileUtils;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 public class HandlerFactory {
@@ -16,7 +17,7 @@ public class HandlerFactory {
 		// 这里只可以做成异步的方式进行加载
 		if (FileUtils.isFileExist(filename)) {
 			ImageResponseHandler handler = new ImageResponseHandler(view);
-			try {
+			try {    
 				byte[] data = FileUtils.readDataFromFile(filename);
 				handler.onSuccess(data);
 				return true;

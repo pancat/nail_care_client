@@ -108,6 +108,26 @@
             android:theme="@style/AppTheme" >
         </activity>
         <activity
+            android:name=".activity.ProductViewFragmentActivity" 
+            android:theme="@style/Theme.AppCompat.Light">
+             <intent-filter >
+		        <action android:name="android.intent.action.SEARCH"/>
+		    </intent-filter>
+		    <meta-data android:name="android.app.searchable" 
+                   android:resource="@xml/searchable"/> 
+        </activity>
+        
+        <!-- 用于搜索对话框 -->
+		<activity
+		    android:name=".activity.ProductSearchActivity" 
+		    android:theme="@style/Theme.AppCompat.Light">
+		     <meta-data android:name="android.app.default_searchable" 
+                   android:value=".activity.ProductViewFragmentActivity"/>
+		</activity>
+		<activity
+		    android:name=".activity.ProductDetailViewFragmentActivity">
+		</activity>
+        <activity
             android:name=".activity.LogActivity"
             android:theme="@style/AppTheme" >
         </activity>
