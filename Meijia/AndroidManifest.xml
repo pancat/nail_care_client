@@ -111,6 +111,10 @@
             android:name=".activity.LogActivity"
             android:theme="@style/AppTheme" >
         </activity>
+        <activity
+            android:name=".activity.MomentItemActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
 		
         <!--个推SDK配置开始-->
          <receiver

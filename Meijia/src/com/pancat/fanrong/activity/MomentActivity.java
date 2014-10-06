@@ -1,16 +1,19 @@
 package com.pancat.fanrong.activity;
 
-import com.pancat.fanrong.R;
-import com.pancat.fanrong.fragment.MomentFragment;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.pancat.fanrong.R;
+import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.common.FragmentCallback;
+import com.pancat.fanrong.fragment.MomentFragment;
 
-public class MomentActivity extends Activity{
+
+public class MomentActivity extends Activity implements FragmentCallback{
 	
 	private MomentFragment momentFragment;
 	private FragmentManager fragmentManager;
@@ -37,4 +40,16 @@ public class MomentActivity extends Activity{
 		}
 		transaction.commit();
 	}
+
+	@Override
+	public void callback(Bundle arg) {
+		if(arg != null){
+			Intent intent = new Intent(MomentActivity.this,MomentItemActivity.class);
+			intent.putExtras(arg);
+			startActivity(intent);
+			
+		}
+	}
+	
+	
 }

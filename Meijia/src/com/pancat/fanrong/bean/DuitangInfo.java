@@ -1,7 +1,11 @@
 package com.pancat.fanrong.bean;
 
-public class DuitangInfo {
+import java.io.Serializable;
 
+@SuppressWarnings("serial")
+public class DuitangInfo implements Serializable{
+
+	private int width;
 	private int height;
 	private String albid = "";
 	private String msg = "";
@@ -39,4 +43,11 @@ public class DuitangInfo {
 		this.height = height;
 	}
 
+	public int getWidth(){
+		return width;
+	}
+	
+	public void setWidth(int width){
+		this.width = width;
+	}
 }

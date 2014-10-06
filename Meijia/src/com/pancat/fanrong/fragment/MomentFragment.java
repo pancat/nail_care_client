@@ -11,8 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.pancat.fanrong.R;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -21,12 +21,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.pancat.fanrong.R;
+import com.pancat.fanrong.activity.MomentActivity;
 import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.util.PhoneUtils;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
@@ -44,6 +48,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 	private MyAdapter mAdapter = null;
 	private int currentPage = 0;
 	private ContentTask task = new ContentTask(getActivity(),2);
+	private FragmentCallback fragmentCallback;
 	//屏幕宽度
 	private int mWidth;
 	
@@ -61,7 +66,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 		mAdapterView.setXListViewListener(this);
 		mAdapter = new MyAdapter(getActivity(), mAdapterView);
 		
-		mImageFetcher = new ImageFetcher(getActivity(), 240);
+		mImageFetcher = new ImageFetcher(getActivity(), 720);
 		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
 		return contextView;
 	}
@@ -89,6 +94,14 @@ public class MomentFragment extends Fragment implements IXListViewListener{
         Log.e("currentPage",String.valueOf(currentPage));
     }
 	
+	
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		fragmentCallback = (MomentActivity)activity;
+	}
+
 	@Override
 	public void onRefresh() {
 		addItemToContainer(++currentPage, 1);
@@ -172,6 +185,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
                         newsInfo1.setIsrc(newsInfoLeftObject.isNull("isrc") ? "" : newsInfoLeftObject.getString("isrc"));
                         newsInfo1.setMsg(newsInfoLeftObject.isNull("msg") ? "" : newsInfoLeftObject.getString("msg"));
                         newsInfo1.setHeight(newsInfoLeftObject.getInt("iht"));
+                        newsInfo1.setWidth(newsInfoLeftObject.getInt("iwd"));
                         duitangs.add(newsInfo1);
                     }
 				} catch (JSONException e) {
@@ -227,6 +241,15 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 			holder.imageView.setImageHeight(duitangInfo.getHeight());
 			holder.contentView.setText(duitangInfo.getMsg());
 			mImageFetcher.loadImage(duitangInfo.getIsrc(), holder.imageView);
+			final Bundle data = new Bundle();
+			data.putSerializable("duitangInfo", duitangInfo);
+			convertView.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					fragmentCallback.callback(data);
+				}
+			});
 			return convertView;
 		}
 		

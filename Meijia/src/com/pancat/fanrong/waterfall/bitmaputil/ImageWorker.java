@@ -61,7 +61,7 @@ public abstract class ImageWorker {
 	 * been set using {@link ImageWorker#setImageCache(ImageCache)}. If the
 	 * image is found in the memory cache, it is set immediately, otherwise an
 	 * {@link AsyncTask} will be created to asynchronously load the bitmap.
-	 * 
+	 * 通过url将image放到特定的imageview中
 	 * @param data
 	 *            The URL of the image to download.
 	 * @param imageView
@@ -69,15 +69,16 @@ public abstract class ImageWorker {
 	 */
 	public void loadImage(Object data, ImageView imageView) {
 		Bitmap bitmap = null;
-
+		//内存缓存中存在该bitmap对象，直接从缓存中取
 		if (mImageCache != null) {
 			bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data));
 		}
-
+		
 		if (bitmap != null) {
-			// Bitmap found in memory cache
+			//在内存缓存中找到了该bitmap对象
 			imageView.setImageBitmap(bitmap);
-		} else if (cancelPotentialWork(data, imageView)) {
+		}
+		else if (cancelPotentialWork(data, imageView)) {
 			final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
 			final AsyncDrawable asyncDrawable = new AsyncDrawable(mContext.getResources(), mLoadingBitmap, task);
 			imageView.setImageDrawable(asyncDrawable);
@@ -119,9 +120,7 @@ public abstract class ImageWorker {
 	}
 
 	/**
-	 * Set placeholder bitmap that shows when the the background thread is
-	 * running.
-	 * 
+	 *设置加载中的背景图片 
 	 * @param resId
 	 */
 	public void setLoadingImage(int resId) {
@@ -142,15 +141,17 @@ public abstract class ImageWorker {
 	}
 
 	/**
-	 * If set to true, the image will fade-in once it has been loaded by the
-	 * background thread.
-	 * 
+	 *设置图片显示效果是否淡入 
 	 * @param fadeIn
 	 */
 	public void setImageFadeIn(boolean fadeIn) {
 		mFadeInBitmap = fadeIn;
 	}
 
+	/**
+	 * 设置是否提早退出当前图片加载任务
+	 * @param exitTasksEarly
+	 */
 	public void setExitTasksEarly(boolean exitTasksEarly) {
 		mExitTasksEarly = exitTasksEarly;
 	}
@@ -180,13 +181,15 @@ public abstract class ImageWorker {
 	}
 
 	/**
+	 * 当前操作被取消或者这个image view中没有操作在执行则返回true
+	 * 如果正在执行的操作在处理同样的数据则返回false
 	 * Returns true if the current work has been canceled or if there was no
 	 * work in progress on this image view. Returns false if the work in
 	 * progress deals with the same data. The work is not stopped in that case.
 	 */
 	public static boolean cancelPotentialWork(Object data, ImageView imageView) {
 		final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
+		
 		if (bitmapWorkerTask != null) {
 			final Object bitmapData = bitmapWorkerTask.data;
 			if (bitmapData == null || !bitmapData.equals(data)) {
@@ -224,14 +227,16 @@ public abstract class ImageWorker {
 	 */
 	private class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
 		private Object data;
+		//简历ImageView的弱引用对象
 		private final WeakReference<ImageView> imageViewReference;
 
 		public BitmapWorkerTask(ImageView imageView) {
+			//初始化该弱引用对象
 			imageViewReference = new WeakReference<ImageView>(imageView);
 		}
 
 		/**
-		 * Background processing.
+		 * 后台操作
 		 */
 		@Override
 		protected Bitmap doInBackground(Object... params) {
@@ -247,6 +252,7 @@ public abstract class ImageWorker {
 			// fetch the bitmap from
 			// the cache
 			if (mImageCache != null && !isCancelled() && getAttachedImageView() != null && !mExitTasksEarly) {
+				//从磁盘缓存中获取bitmap对象
 				bitmap = mImageCache.getBitmapFromDiskCache(dataString);
 			}
 
@@ -363,7 +369,7 @@ public abstract class ImageWorker {
 	}
 
 	/**
-	 * Get the current adapter.
+	 * 获取当前适配器
 	 * 
 	 * @return
 	 */
@@ -371,7 +377,7 @@ public abstract class ImageWorker {
 		return mImageWorkerAdapter;
 	}
 
-	/**
+	/**ImageWorker类及其子类的简单的数据适配器
 	 * A very simple adapter for use with ImageWorker class and subclasses.
 	 */
 	public static abstract class ImageWorkerAdapter {
