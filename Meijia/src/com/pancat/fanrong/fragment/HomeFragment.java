@@ -292,7 +292,9 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			public void onClick(View arg0) {
 				// TODO 自动生成的方法存根
 				Intent intent = new Intent(getActivity(),ProductViewFragmentActivity.class);
-				intent.putExtra(Product.TYPE, Product.MEIJIA);
+				Bundle bundle = new Bundle();
+				bundle.putString(Product.TYPE, Product.MEIJIA);
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});
@@ -303,7 +305,9 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			public void onClick(View arg0) {
 				// TODO 自动生成的方法存根
 				Intent intent = new Intent(getActivity(),ProductViewFragmentActivity.class);
-				intent.putExtra(Product.TYPE, Product.MEIZHUANGE);
+				Bundle bundle = new Bundle();
+				bundle.putString(Product.TYPE, Product.MEIZHUANGE);
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});

@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.ProductDetailViewFragmentActivity;
+import com.pancat.fanrong.activity.ProductViewFragmentActivity;
 import com.pancat.fanrong.adapter.ProductInfoAdapter;
 import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.common.RestClient;
@@ -316,4 +317,40 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
     {
     	pageParam.put(key, value);
     }
+    
+    public static ProductViewFragment getHotInstance(Map<String,String>map)
+    {
+    	if(map == null)
+    	{
+    		map = new HashMap<String, String>();
+    		map.put(QUERY_PRODUCT_TYPE, ProductViewFragmentActivity.MEIJIA);
+    	}
+    	map.put(KEYWORD	, "hot");
+    	return newInstance(map);
+    }
+    
+    public static ProductViewFragment getNewInstance(Map<String,String>map)
+    {
+    	if(map == null)
+    	{
+    		map = new HashMap<String, String>();
+    		map.put(QUERY_PRODUCT_TYPE, ProductViewFragmentActivity.MEIJIA);
+    	}
+    	map.put(KEYWORD	, "new");
+    	return newInstance(map);
+    } 
+    
+    public static ProductViewFragment getFilterInstance(Map<String,String>map)
+    {
+    	if(map == null)
+    	{
+    		map = new HashMap<String, String>();
+    		map.put(QUERY_PRODUCT_TYPE, ProductViewFragmentActivity.MEIJIA);
+    	}
+    	map.put(QUERY_TYPE, "1");
+    	map.put(SELECT_LEFT, "0");
+    	map.put(SELECT_RIGHT, "200");
+    	
+    	return newInstance(map);
+    } 
 }

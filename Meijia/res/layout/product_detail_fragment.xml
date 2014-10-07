@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/product_detail_fragment_style" >
+    
+    <ImageView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/product_detail_fragment_img"/>
+    <TextView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/product_detail_fragment_description"/>
+    
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_detail_fragment_price_label"
+                android:text="优惠价:"/>
+            
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_detail_fragment_price"
+                />
+            
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_detail_fragment_order"
+                android:text="马上预约" />
+                        
+    </LinearLayout>
+    <View  android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/green"/>
+</LinearLayout>

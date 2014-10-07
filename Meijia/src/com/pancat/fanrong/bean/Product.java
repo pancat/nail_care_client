@@ -1,6 +1,7 @@
 package com.pancat.fanrong.bean;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.pancat.fanrong.util.StringUtils;
@@ -12,9 +13,9 @@ public class Product{
 	public static final String KEY = "product";
 	
 	//��Ʒ���ͳ���
-	public static final int MEIJIA = 0;
-	public static final int MEIFA = 1;
-	public static final int MEIZHUANGE = 2;
+	public static final String MEIJIA = "0";
+	public static final String MEIFA = "1";
+	public static final String MEIZHUANGE = "2";
 	
 	//��Ʒͼ��߶���������
 	public static final int TINY = 0;
@@ -43,7 +44,7 @@ public class Product{
 	public static final String URL = "url";
 	
 	//��Ʒ����
-	private int productType = MEIJIA;
+	private String productType = MEIJIA;
 	private String productUrl = "";
 	private int productWidth = -1; //default;
 	private int productHeight = NORMAL;
@@ -173,7 +174,7 @@ public class Product{
     	if(prices != null) price = Double.parseDouble(prices);
     	productPrice = price > 0 ? price:0.0;
     }
-	public int getProductType()
+	public String getProductType()
 	{
 		return  productType;
 	}
@@ -227,17 +228,35 @@ public class Product{
 	public String toString() {
 		// TODO 自动生成的方法存根
 		String res = "";
-		res = ID+":"+productId+","+
-				TYPE+":"+productType+","+
-				URL+":"+productUrl+","+
-				TITLE+":"+productTitle+","+
-				PRICE+":"+productPrice+","+
-				AUTHOR+":"+productAuthor+","+
-				AUTHORIMG+":"+productAuthorImg+","+
-				HOT+":"+productHot+","+
-				DESCRIPTION+":"+productDescription+","+
-				DATE+":"+productDate+",";
+		res = ID+"*:"+productId+"#,"+
+				TYPE+"*:"+productType+"#,"+
+				URL+"*:"+productUrl+"#,"+
+				TITLE+"*:"+productTitle+"#,"+
+				PRICE+"*:"+productPrice+"#,"+
+				AUTHOR+"*:"+productAuthor+"#,"+
+				AUTHORIMG+"*:"+productAuthorImg+"#,"+
+				HOT+"*:"+productHot+"#,"+
+				DESCRIPTION+"*:"+productDescription+"#,"+
+				DATE+"*:"+productDate;
 		return res;
+	}
+	public static Product ParseFromString(String content)
+	{
+		String[] arr = content.split("#,");
+		Map<String,String>param = new HashMap<String, String>();
+		for(int i=0; i< arr.length; i++)
+		{  
+			String temp = arr[i];
+			String[] key_value = temp.split("[*]:");
+			if(key_value.length != 0)
+			{   
+				if(key_value.length == 1)
+					param.put(key_value[0], "");
+				else
+					param.put(key_value[0],key_value[1]);
+			}
+		}
+		return new Product(param);
 	}
     
 }

@@ -108,34 +108,30 @@
             android:theme="@style/AppTheme" >
         </activity>
         <activity
-            android:name=".activity.ProductViewFragmentActivity" 
-            android:theme="@style/Theme.AppCompat.Light">
-             <intent-filter >
-		        <action android:name="android.intent.action.SEARCH"/>
-		    </intent-filter>
-		    <meta-data android:name="android.app.searchable" 
-                   android:resource="@xml/searchable"/> 
+            android:name=".activity.ProductViewFragmentActivity"
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
-        
-        <!-- 用于搜索对话框 -->
 		<activity
 		    android:name=".activity.ProductSearchActivity" 
-		    android:theme="@style/Theme.AppCompat.Light">
-		     <meta-data android:name="android.app.default_searchable" 
-                   android:value=".activity.ProductViewFragmentActivity"/>
+		     android:theme="@style/Theme.AppCompat.Light" >
 		</activity>
 		<activity
-		    android:name=".activity.ProductDetailViewFragmentActivity">
+		    android:name=".activity.ProductDetailViewFragmentActivity"
+		     android:theme="@style/Theme.AppCompat.Light" >
 		</activity>
         <activity
             android:name=".activity.LogActivity"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
+            android:name=".activity.SearchProductShowFragmentActivity"
+             android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
+        <activity
             android:name=".activity.MomentItemActivity"
             android:theme="@style/AppTheme" >
         </activity>
-		
+	 
         <!--个推SDK配置开始-->
          <receiver
             android:name="com.pancat.fanrong.receiver.PushMsgGeTuiReceiver"
