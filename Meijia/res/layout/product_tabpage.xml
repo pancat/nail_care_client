@@ -31,11 +31,14 @@
 	    <Spinner
 	        android:id="@+id/product_filter_tab"
 	        android:layout_width="100dp"
+	        android:gravity="center"
+	        android:layout_weight="1"
 	        android:layout_height="wrap_content" 
 	        />
     
     </LinearLayout>
     <View android:layout_height="2dp"
-        android:layout_width="80dp"
-        android:background="@color/blue"/>
+        android:layout_width="wrap_content"
+        android:background="@color/blue"
+        android:id="@+id/bottom_line"/>
 </LinearLayout>
