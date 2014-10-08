@@ -58,7 +58,7 @@ public class RestClient {
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
 
-	private String getAbsoluteUrl(String relativeUrl) {
+	public static String getAbsoluteUrl(String relativeUrl) {
 		if (relativeUrl.toLowerCase().startsWith("http://")
 				|| relativeUrl.toLowerCase().startsWith("https://")) {
 			return relativeUrl;

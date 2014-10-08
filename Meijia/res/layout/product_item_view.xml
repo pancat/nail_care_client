@@ -5,13 +5,21 @@
     android:id="@+id/panel_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/news_item_bg">
 
-    <com.pancat.fanrong.gridview.util.DynamicHeightImageView
+  <!--   <com.pancat.fanrong.gridview.util.DynamicHeightImageView
+        android:id="@+id/product_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"/> -->
+        
+       <com.pancat.fanrong.waterfall.widget.ScaleImageView
         android:id="@+id/product_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"/>
+        
     
     <LinearLayout android:orientation="horizontal"
         android:layout_width="match_parent"

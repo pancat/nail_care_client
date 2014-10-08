@@ -11,6 +11,7 @@ import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.fragment.ProductTabFragment;
 import com.pancat.fanrong.fragment.ProductTabFragment.OnProductTabClickListenser;
 import com.pancat.fanrong.fragment.ProductViewFragment;
+import com.pancat.fanrong.fragment.ProductViewFragment.OnClickListItem;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -33,7 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class ProductViewFragmentActivity extends ActionBarActivity implements OnProductTabClickListenser {
+public class ProductViewFragmentActivity extends ActionBarActivity implements OnProductTabClickListenser ,OnClickListItem{
 	private static final String TAG = "ProductViewFragment";
 
 	//static title
@@ -200,6 +201,17 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 			}
 		});
       
+	}
+
+	@Override
+	public void setOnClickListItem(Product product) {
+		// TODO 自动生成的方法存根
+		Intent intent = new Intent(this,ProductDetailViewFragmentActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putString(Product.KEY, product.toString());
+		intent.putExtras(bundle);
+
+		startActivity(intent);
 	}
 }
 

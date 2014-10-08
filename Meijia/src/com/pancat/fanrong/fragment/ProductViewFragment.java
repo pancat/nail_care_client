@@ -1,17 +1,25 @@
 package com.pancat.fanrong.fragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.AsyncTask.Status;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -25,15 +33,22 @@ import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.ProductDetailViewFragmentActivity;
 import com.pancat.fanrong.activity.ProductViewFragmentActivity;
 import com.pancat.fanrong.adapter.ProductInfoAdapter;
+import com.pancat.fanrong.bean.DuitangInfo;
 import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.fragment.MomentFragment.ContentTask;
+import com.pancat.fanrong.fragment.MomentFragment.MyAdapter;
 import com.pancat.fanrong.gridview.StaggeredGridView;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.temp.SampleData;
+import com.pancat.fanrong.util.PhoneUtils;
+import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
+import com.pancat.fanrong.waterfall.view.XListView;
+import com.pancat.fanrong.waterfall.view.XListView.IXListViewListener;
 
 public class ProductViewFragment extends Fragment implements
-AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
+IXListViewListener{
 	private static final String TAG = "ProductViewFragment";
 	
 	/*public static final String QUERY_TYPE = "querytype";
@@ -87,12 +102,16 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 	
 	private static final String url = "product/get_product_list";
 	
-	private StaggeredGridView mGridView; //主布局View
+	private View contextView;
+	private ImageFetcher mImageFetcher;
+	private XListView mAdapterView = null;
+	
 	private int mHasRequestedMore = DATA_WAIT;//是否加载更多
 	private ProductInfoAdapter mAdapter;
     private Map<String,String> pageParam;//主导布局的参数
     
 	private ArrayList<Product> mData; //数据
+    private OnClickListItem onClickListItem;
     
 	//新建一个实例
 	public static ProductViewFragment newInstance(Map<String,String> pageParams)
@@ -133,75 +152,46 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.activity_product_view, container, false);
+		contextView = inflater.inflate(R.layout.act_pull_to_refresh_sample, container, false);
+		mAdapterView = (XListView)contextView.findViewById(R.id.list);
+		mAdapterView.setPullLoadEnable(true);
+		mAdapterView.setXListViewListener(this);
+		
+		mImageFetcher = new ImageFetcher(getActivity(), 240);
+		mImageFetcher.setLoadingImage(R.drawable.defaultproduct);
+		
+		return contextView;
 	}
 
 	@Override
 	public void onActivityCreated(final Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mGridView = (StaggeredGridView) getView().findViewById(R.id.grid_view);
-
 		if (savedInstanceState == null) {
 			final LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 
-			/* View header = layoutInflater.inflate(R.layout.list_item_header_footer, null);
-                View footer = layoutInflater.inflate(R.layout.list_item_header_footer, null);
-                TextView txtHeaderTitle = (TextView) header.findViewById(R.id.txt_title);
-                TextView txtFooterTitle = (TextView) footer.findViewById(R.id.txt_title);
-                txtHeaderTitle.setText("THE HEADER!");
-                txtFooterTitle.setText("THE FOOTER!");
-
-                mGridView.addHeaderView(header);
-                mGridView.addFooterView(footer);*/
 		}
 
 		if (mAdapter == null) {
-			mAdapter = new ProductInfoAdapter(getActivity(), R.id.product_img);
+			mAdapter = new ProductInfoAdapter(getActivity(), R.id.product_img,mImageFetcher,onClickListItem);
 		}
 
 		if (mData == null) {
 			QueryProductDataFromServer();
 		}
-
-		//TODO 出错时
-		mGridView.setAdapterSDK9(mAdapter);
-		mGridView.setOnScrollListener(this);
-		mGridView.setOnItemClickListener(this);
+		
+		mAdapterView.setAdapter(mAdapter);
 	}
 
+    
 	@Override
-	public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+	public void onAttach(Activity activity) {
+		// TODO 自动生成的方法存根
+		super.onAttach(activity);
+		onClickListItem = (OnClickListItem)activity;
 	}
 
-	@Override
-	public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
-		if (mHasRequestedMore == DATA_WAIT) {
-			int lastInScreen = firstVisibleItem + visibleItemCount;
-			if (lastInScreen >= totalItemCount) {
-				//   Log.d(TAG, "onScroll lastInScreen - so load more");
-				mHasRequestedMore = DATA_MORE;
-				onLoadMoreItems();
-			}
-		}
-	}
 
-	private void onLoadMoreItems() {
-        
-		QueryProductDataFromServer();
-		mAdapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-		Intent intent = new Intent(getActivity(),ProductDetailViewFragmentActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putString(Product.KEY, ((Product)adapterView.getItemAtPosition(position)).toString());
-		intent.putExtras(bundle);
-
-		startActivity(intent);
-	}
-	
 	private AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler(){
 
 		@Override
@@ -227,7 +217,7 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 		}
 		
 	};
-	private void notifyChangeParam(ArrayList<Product> product)
+	private void notifyChangeParam(List<Product> product)
 	{
 		if(product != null)
 		{
@@ -252,7 +242,6 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 				e.printStackTrace();
 			}
 				
-			
 		}
 		else
 		{
@@ -287,13 +276,15 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 	
 	private void QueryProductDataFromServer()
 	{
+		if(mImageFetcher != null)
+			mImageFetcher.setExitTasksEarly(false);
 		RequestParams requestParams = new RequestParams(pageParam);
 		RestClient.getInstance().get(url, requestParams, responseHandler);	
 	}
 	//如果参数不存在，设置为默认值
 	private void setDefaultQueyParam(String key,String defaultValue)
 	{
-		if(!pageParam.containsKey(key) || ( pageParam.get(key) == null ))
+		if(!pageParam.containsKey(key) || ( pageParam.get(key) == "" ))
 			 pageParam.put(key, defaultValue);
 			
 	}
@@ -352,5 +343,23 @@ AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
     	map.put(SELECT_RIGHT, "200");
     	
     	return newInstance(map);
-    } 
+    }
+
+	@Override
+	public void onRefresh() {
+		// TODO 自动生成的方法存根
+		mAdapter.clear();
+        QueryProductDataFromServer();
+	}
+
+	@Override
+	public void onLoadMore() {
+		// TODO 自动生成的方法存根
+		QueryProductDataFromServer();
+	}
+	
+	public interface OnClickListItem
+	{
+		public void setOnClickListItem(Product product);
+	}
 }
