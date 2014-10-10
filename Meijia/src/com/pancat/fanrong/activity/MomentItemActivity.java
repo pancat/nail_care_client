@@ -49,32 +49,14 @@ public class MomentItemActivity extends Activity{
 			@Override
 			public void onGlobalLayout() {
 				mImgParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				int  parentWidth = mImgParent.getWidth();
 				mImgPath.setText(info.getIsrc());
-				if(originalWidth > parentWidth){
-					//当原图宽度大于最大显示宽度时，按比例缩放图片显示
-					int iWidth = parentWidth;
-					int iHeight = iWidth*originalHeight/originalWidth;
-					mImgParent.addView(addImageView(iWidth, iHeight,info.getIsrc()));
-//					mImageView.setScaleType(ScaleType.CENTER_INSIDE);
-//					mImageFetcher.loadImage(info.getIsrc(), mImageView);
-					
-				}
-				else{
-					//原图宽度小于最大显示宽度则按原来大小显示
-					int iWidth = info.getWidth();
-					int iHeight = info.getHeight();
-					mImgParent.addView(addImageView(iWidth, iHeight,info.getIsrc()));
-				}
+				int  parentWidth = mImgParent.getWidth();
+				//按比例缩放图片
+				int iWidth = parentWidth;
+				int iHeight = iWidth*originalHeight/originalWidth;
+				mImgParent.addView(addImageView(iWidth, iHeight,info.getIsrc()));
 			}
 		});
-		
-//		mImageView.setImageWidth(720);
-//		mImageView.setImageHeight(info.getHeight());
-//		mImageFetcher = new ImageFetcher(this,720);
-//		mImageFetcher.loadImage(info.getIsrc(), mImageView);
-//		mImgPath.setText(info.getIsrc());
-		Log.i("duitang", String.valueOf(info));
 	}
 
 	private final View addImageView(int width,int height,String src){
@@ -91,11 +73,7 @@ public class MomentItemActivity extends Activity{
 		imageView.setScaleType(ScaleType.CENTER_CROP);
 		ImageFetcher fetcher = new ImageFetcher(this, 720);
 		fetcher.loadImage(src, imageView);
-//		TextView path = new TextView(this);
-//		path.setText(src);
-//		path.setTextColor(Color.GRAY);
 		view.addView(imageView);
-//		view.addView(path);
 		return view;
 	}
 }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="55dp"
     android:layout_alignParentBottom="true"
-    android:background="@drawable/bottom_bar"
+    android:background="@color/pink"
     >
     <LinearLayout 
         android:layout_width="fill_parent"
@@ -24,12 +24,12 @@
                 android:layout_height="wrap_content"
                 android:background="#0000"
                 android:clickable="false"
-                android:src="@drawable/tab_weixin_pressed"
+                android:src="@drawable/icon_tab_home_unfold"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:text="首页"
                 />
         </LinearLayout>
@@ -48,12 +48,12 @@
                 android:layout_width="wrap_content"
                 android:background="#0000"
                 android:clickable="false"
-                android:src="@drawable/tab_find_frd_normal"
+                android:src="@drawable/icon_tab_product_fold"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:text="订单"
                 />
         </LinearLayout>
@@ -73,12 +73,12 @@
                 android:layout_width="wrap_content"
                 android:background="#0000"
                 android:clickable="false"
-                android:src="@drawable/tab_address_normal"
+                android:src="@drawable/icon_tab_me_fold"
                 />
             <TextView 
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:text="个人"
                 />
             
@@ -99,12 +99,12 @@
                 android:layout_width="wrap_content"
                 android:background="#0000"
                 android:clickable="false"
-                android:src="@drawable/tab_settings_normal"
+                android:src="@drawable/icon_tab_mass_fold"
                 />
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:text="圈子"
                 />
         </LinearLayout>
