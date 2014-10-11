@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,7 +93,9 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 	{  
 		actionBar =  getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		
 	}
 	
 	@Override
@@ -122,12 +125,15 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 	@Override
 	public void setOnProductTabClickListenser(int tab,Map<String,String>map) {
 		// TODO 自动生成的方法存根
-       if(tab < 2 && tab >= 0)
+       if(tab < 2 && tab >= 0){
     	   viewpage.setCurrentItem(tab);
+       	   productTabFragment.changeBottomLine(tab);
+       }
        else
        {
     	   lf.set(tab, ProductViewFragment.newInstance(map));
     	   viewpage.setCurrentItem(tab);
+    	   productTabFragment.changeBottomLine(tab);
        }
 	}
 	
