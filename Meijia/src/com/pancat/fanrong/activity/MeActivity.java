@@ -67,51 +67,25 @@ public class MeActivity extends Activity {
 		// TODO Auto-generated method stub
 
 		super.onStart();
-
-		/**
-		 * 对自己进行定位
-		 */
-		mLocationClient = new LocationClient(getApplicationContext());
-		mLocationClient.registerLocationListener(myListener);
-		LocationClientOption option = new LocationClientOption();
-		option.setLocationMode(LocationMode.Hight_Accuracy);
-		option.setCoorType("bd09ll");
-		option.setScanSpan(1000);
-		option.setIsNeedAddress(true);
-		option.setNeedDeviceDirect(true);
-		option.getAddrType();
-		mLocationClient.setLocOption(option);
-		mLocationClient.start();
-		// 发起定位请求
-		if (mLocationClient != null && mLocationClient.isStarted())
-			mLocationClient.requestLocation();
-		else
-			Log.d("Locsdk4", "locclient is null or not start");
-
-		
-		
 		MainApplication app = (MainApplication) getApplicationContext();
-		// 通过网络请求获取用户信息
-		app.getUserDateFromServer();
+		app.setUserDate();
+		
 		// 获取用户的id和token
 		id = app.getId();
 		token = app.getToken();
-
+	
 		if (id == -1) {
 			// 未登录
-			btn3.setText("登录");
-
-			username_wig.setText("username:");
-			nick_name_wig.setText("nick_name");
-			age_wig.setText("age:");
-			email_wig.setText("email:");
-			avatar_uri_wig.setText("头像地址：");
-			btn3.setOnClickListener(gotologin);
+			Intent intent = new Intent(MeActivity.this, LogActivity.class);
+			startActivity(intent);
+			//btn3.setText("登录");
+			
 		} else {
-			// 已登录，显示登录信息
+			// 已登录，显示登录信息	
 			btn3.setText("注销");
 			btn3.setOnClickListener(logout);
-
+			// 通过网络请求获取用户信息
+			app.getUserDateFromServer();
 			// 读取sharedperference,然后显示
 			SharedPreferences userInfo = getSharedPreferences("userinfo",
 					Activity.MODE_PRIVATE);
@@ -126,8 +100,33 @@ public class MeActivity extends Activity {
 			age_wig.setText("age:" + Integer.toString(age));
 			email_wig.setText("email:" + email);
 			avatar_uri_wig.setText("头像地址：" + avatar_uri);
+		
 
 		}
+		/**
+		 * 对自己进行定位
+		 */
+		
+		mLocationClient = new LocationClient(getApplicationContext());
+		mLocationClient.registerLocationListener(myListener);
+		LocationClientOption option = new LocationClientOption();
+		option.setLocationMode(LocationMode.Hight_Accuracy);
+		option.setCoorType("bd09ll");
+		option.setScanSpan(1000);
+		option.setIsNeedAddress(true);
+		option.setNeedDeviceDirect(true);
+		option.getAddrType();
+		mLocationClient.setLocOption(option);
+		mLocationClient.start();
+		
+		if (mLocationClient != null && mLocationClient.isStarted())
+			mLocationClient.requestLocation();
+		else
+			Log.d("Locsdk4", "locclient is null or not start");
+        
+		
+		
+		
 
 	}
 
@@ -182,17 +181,7 @@ public class MyLocationListener implements BDLocationListener {
     			return;
     		
     		
-    		   //在地图上显示
-    		/*
-            mBaiduMap.setMyLocationData(locData);
-         
-            if (isFirstLoc) {
-				isFirstLoc = false;
-				LatLng ll = new LatLng(location.getLatitude(),location.getLongitude());
-				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-				mBaiduMap.animateMapStatus(u);
-			}
-			*/
+			
     	}
 
     }
@@ -204,18 +193,15 @@ public class MyLocationListener implements BDLocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_me);
-
-		btn3 = (Button) findViewById(R.id.btn3);
-
 		username_wig = (TextView) findViewById(R.id.username);
 		nick_name_wig = (TextView) findViewById(R.id.nick_name);
 		age_wig = (TextView) findViewById(R.id.age);
 		email_wig = (TextView) findViewById(R.id.email);
 		avatar_uri_wig = (TextView) findViewById(R.id.avatar_uri);
 		listview = (ListView) findViewById(R.id.listview);
-		// ArrayAdapter<String> aadata= new
-		// ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data);
-
+		btn3 = (Button) findViewById(R.id.btn3);
+		
+		
 		SimpleAdapter adapter = new SimpleAdapter(this, getData(),
 				R.layout.singlelist, new String[] { "title", "info" },
 				new int[] { R.id.title, R.id.info });
