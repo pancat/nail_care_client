@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/green" >
+    android:orientation="vertical">
     
         <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
-	        android:background="@color/red"
+	        android:background="@color/pink"
 	        android:orientation="horizontal"
 	        android:padding="5dp">
 	        >
@@ -21,7 +20,7 @@
 	            android:layout_height="wrap_content"
 	            android:paddingLeft="10dp"
 	            android:layout_marginLeft="15dp"
-	            android:layout_weight="1"
+	            android:layout_weight="2"
 	            android:text="@string/search_hint"
 	            android:textColor="@color/grey"
 	            android:textSize="18dp"
@@ -30,13 +29,16 @@
 	        <Button
 	            android:id="@+id/product_search_button"
 	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
+	            android:layout_height="38dp"
 	            android:layout_marginLeft="5dp"
 	            android:layout_marginRight="15dp"
+	            android:background="@drawable/search_button"
 	            android:text="搜索"
-	            android:layout_weight="2"
-	            android:textColor="@color/green"
+	            android:layout_weight="1"
+	            android:textColor="@color/red"
 	            android:textSize="18dp" />
+	        
 
     </LinearLayout>
+
 </LinearLayout>

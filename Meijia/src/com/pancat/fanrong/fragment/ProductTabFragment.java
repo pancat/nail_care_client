@@ -69,7 +69,6 @@ public class ProductTabFragment extends Fragment
 			hotTab = (TextView)currentView.findViewById(R.id.product_hot_tab);
 			newTab = (TextView)currentView.findViewById(R.id.product_new_tab);
 			
-			changeBottomLine(0);
 			InitTabEvent();
 			
 		    List<String> temp = new ArrayList<String>();
@@ -98,9 +97,8 @@ public class ProductTabFragment extends Fragment
 					else{
 						map.put(ProductViewFragment.SELECT_LEFT, "600");
 					}
-					changeBottomLine(2);
 					onProductTabClickListenter.setOnProductTabClickListenser(2, map);
-					
+					Log.d(TAG, "cao ni ma");
 				}
 
 				@Override
@@ -110,6 +108,7 @@ public class ProductTabFragment extends Fragment
 				}
 			});
 			
+			onProductTabClickListenter.setOnProductTabClickListenser(0, null);
 			//
 		    //Log.d(TAG,"yes set");
 		}

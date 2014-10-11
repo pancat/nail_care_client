@@ -121,6 +121,7 @@
 		</activity>
 		<activity
 		    android:name=".activity.ProductDetailViewFragmentActivity"
+		    android:configChanges="orientation|keyboardHidden"
 		     android:theme="@style/Theme.AppCompat.Light" >
 		</activity>
         <activity
