@@ -69,6 +69,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/loginlinear"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/log"
@@ -82,5 +83,14 @@
             android:background="@color/pink"
             android:text="登录" />
     </LinearLayout>
+    
+    <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="80dp"
+                android:layout_below="@id/loginlinear"
+                android:text="未使用md5，可用用户名123密码123登录" />
 
 </RelativeLayout>

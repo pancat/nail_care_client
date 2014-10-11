@@ -89,7 +89,7 @@ IXListViewListener{
 	
 	public static final String SP_ID = "p_id";
 	public static final String SP_name = "name";
-	public static final String SP_describe = "discribe";
+	public static final String SP_describe = "p_describe";
 	public static final String SP_credate = "cre_date";
 	public static final String SP_hit = "hit";
 	public static final String SP_image_uri = "image_uri";

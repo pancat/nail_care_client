@@ -16,24 +16,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头像："
+            android:id="@+id/avatar_uri"
             ></TextView>
         <TextView
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="昵称："
             ></TextView>
           <TextView
+            android:id="@+id/nick_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="年龄："
             ></TextView>
             <TextView
+            android:id="@+id/age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="地址："
             ></TextView>
-       
-        
+            <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地址："
+            ></TextView>
+        	   <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地址："
+            ></TextView>
     </LinearLayout>
     
     <ListView 

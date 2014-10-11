@@ -54,6 +54,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="getui.permission.GetuiService"/>
+     
+    
     
         <!-- 百度云推送 额外需要 的权限 -->  
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -75,6 +77,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" 
         android:persistent="true"><!-- 消息推持久连接 -->
+        
+       
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" ><!-- 个推运行模式singleTop 不改应该没影响，百度云是singleTask-->
@@ -261,6 +265,9 @@
         </service>
         
         <meta-data android:name="api_key" android:value="9Ay3feL878KZY88PLChUlEOk" />
+         <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="jZ1AWfj73X3edTRtlmMREp3X" />
         <!-- 百度云推送配置结束 -->
         
     </application>

@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 					try {
 						int productID = itemObj.getInt("p_id");
 						String imgUrl = itemObj.getString("image_uri");
-						String desc = itemObj.getString("discribe");
+						String desc = itemObj.getString("p_describe");
 						Log.d("item ", productID + " " + imgUrl + " " + desc );
 						if (imgUrl != "null")
 						{
