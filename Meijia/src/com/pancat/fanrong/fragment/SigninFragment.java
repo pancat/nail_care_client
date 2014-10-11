@@ -18,11 +18,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,17 +39,15 @@ import com.pancat.fanrong.R;
 import com.pancat.fanrong.common.ChangeMd5;
 import com.pancat.fanrong.common.Constants;
 import com.pancat.fanrong.common.RestClient;
-import com.pancat.fanrong.common.UserInter;
+
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
 
 @SuppressLint("NewApi")
-public class MeRegFragment extends Fragment {
+public class SigninFragment extends Fragment {
 	private View contextView;
 	private EditText username, passwd, repasswd, testnum;
 	private Button regbtn;
-	private MeFragment meFragment;
-	private FragmentManager fragmentManager;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -91,11 +92,42 @@ public class MeRegFragment extends Fragment {
 					@Override
 					public void onSuccess(String content) {
 
-						Toast.makeText(getActivity(), "数据提交成功",
-								Toast.LENGTH_LONG).show();
+					//	Toast.makeText(getActivity(), "数据提交成功",
+					//			Toast.LENGTH_LONG).show();
 						// 跳转到个人界面并显示出个人信息
+						// 跳转到个人界面并显示出个人信息
+						Message msg = new Message();
+						msg.obj = content;
+						msg.what = 0;
+						try {
+							
+							JSONObject jsonObject = new JSONObject(content.toString());
+							System.out.println(content.toString());
+							
+							int id;
+							int error_code;
+							
+							  id = jsonObject.getInt("res_state");  
+                              error_code = jsonObject.getInt("error_code");  
+                              System.out.println("id="+id+"errorcode="+error_code);
+                              if(id==1)
+                              {
+                            	  Toast.makeText(getActivity(), "注册成功",Toast.LENGTH_LONG).show();
+                              }else{
+                            	  Toast.makeText(getActivity(), "注册失败",Toast.LENGTH_LONG).show();
+                              }
+                            String tomes="res_code="+id+" errpr_code="+error_code;
+                              Toast.makeText(getActivity(), tomes,Toast.LENGTH_LONG).show();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						//注册成功后自动登录
 
 					}
+
+					
 
 				});
 
@@ -173,9 +205,9 @@ public class MeRegFragment extends Fragment {
 						.show();
 			} else {
 				// 进行注册
-				UserInter usernew=new UserInter(getActivity(),name,pass1,testn);
+				//UserInter usernew=new UserInter(getActivity(),name,pass1,testn);
 				try {
-					usernew.regmethod();
+					regmethod(name,pass1,testn);
 				} catch (NoSuchAlgorithmException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

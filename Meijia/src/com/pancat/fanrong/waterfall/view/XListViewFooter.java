@@ -6,14 +6,15 @@
  */
 package com.pancat.fanrong.waterfall.view;
 
-import com.pancat.fanrong.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.pancat.fanrong.R;
 
 public class XListViewFooter extends LinearLayout {
 	public final static int STATE_NORMAL = 0;
@@ -59,8 +60,13 @@ public class XListViewFooter extends LinearLayout {
 		mContentView.setLayoutParams(lp);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getBottomMargin() {
 		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mContentView.getLayoutParams();
+		Log.i("bottom margin", String.valueOf(lp.bottomMargin));
 		return lp.bottomMargin;
 	}
 

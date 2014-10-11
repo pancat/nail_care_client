@@ -13,12 +13,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.fragment.MeFragment;
-import com.pancat.fanrong.fragment.MeRegFragment;
+import com.pancat.fanrong.fragment.LoginFragment;
+import com.pancat.fanrong.fragment.SigninFragment;
 
 public class LogActivity extends Activity {
-	private MeFragment meFragment;
-	private MeRegFragment meRegFragment;
+	private LoginFragment loginFragment;
+	private SigninFragment signinFragment;
 	private FragmentManager fragmentManager;
 	private Button logbtn2, regbtn2;
 	int colorpink = Color.parseColor("#FA8072");
@@ -73,12 +73,12 @@ public class LogActivity extends Activity {
 		fragmentManager = getFragmentManager();
 		// 开启一个Fragment事务
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		if (meFragment == null) {
+		if (loginFragment == null) {
 			// 如果MessageFragment为空，则创建一个并添加到界面上
-			meFragment = new MeFragment();
-			transaction.add(R.id.content, meFragment);
+			loginFragment = new LoginFragment();
+			transaction.add(R.id.content, loginFragment);
 		} else {
-			transaction.show(meFragment);
+			transaction.show(loginFragment);
 		}
 		transaction.commit();
 	}
@@ -89,9 +89,9 @@ public class LogActivity extends Activity {
 		// 开启一个Fragment事务
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-		meFragment = new MeFragment();
+		loginFragment = new LoginFragment();
 
-		transaction.replace(R.id.content, meFragment);
+		transaction.replace(R.id.content, loginFragment);
 
 		transaction.commit();
 	}
@@ -102,9 +102,9 @@ public class LogActivity extends Activity {
 		// 开启一个Fragment事务
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-		meRegFragment = new MeRegFragment();
+		signinFragment = new SigninFragment();
 
-		transaction.replace(R.id.content, meRegFragment);
+		transaction.replace(R.id.content, signinFragment);
 
 		transaction.commit();
 	}

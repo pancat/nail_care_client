@@ -114,19 +114,22 @@ public class ImageFetcher extends ImageResizer {
     }
 
     /**
+     * 通过url下载bitmap，把它写入本地缓存并且返回该文件指针
      * Download a bitmap from a URL, write it to a disk and return the File pointer. This
      * implementation uses a simple disk cache.
      *
-     * @param context The context to use
-     * @param urlString The URL to fetch
+     * @param context 上下文环境
+     * @param urlString 图片url
      * @return A File pointing to the fetched bitmap
      */
     public static File downloadBitmap(Context context, String urlString) {
         final File cacheDir = DiskLruCache.getDiskCacheDir(context, HTTP_CACHE_DIR);
 
+        //通过上下文环境，缓存目录和缓存大小构造本地缓存对象
         final DiskLruCache cache =
                 DiskLruCache.openCache(context, cacheDir, HTTP_CACHE_SIZE);
 
+        //通过图片url地址构造该图片缓存文件
         final File cacheFile = new File(cache.createFilePath(urlString));
 
         if (cache.containsKey(urlString)) {

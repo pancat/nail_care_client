@@ -11,10 +11,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.http.AsyncHttpClient;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
+import com.pancat.fanrong.http.PersistentCookieStore;
 import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.util.PhoneUtils;
 
@@ -46,6 +48,12 @@ public class RestClient {
 		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
 	
+	public void setCookieStore(){
+		PersistentCookieStore cookieStore = new PersistentCookieStore(MainApplication.getAppContext()); 
+		client.setCookieStore(cookieStore);
+		Log.i("setcookie", "setcookies");
+	}
+	
 	public void get(String url, RequestParams params,
 			AsyncHttpResponseHandler responseHandler) {
 		client.setUserAgent(PhoneUtils.getUserAgent(MainApplication.getAppContext()));
@@ -58,7 +66,7 @@ public class RestClient {
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
 
-	public static String getAbsoluteUrl(String relativeUrl) {
+	private String getAbsoluteUrl(String relativeUrl) {
 		if (relativeUrl.toLowerCase().startsWith("http://")
 				|| relativeUrl.toLowerCase().startsWith("https://")) {
 			return relativeUrl;

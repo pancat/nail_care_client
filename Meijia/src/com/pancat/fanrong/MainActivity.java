@@ -115,7 +115,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		switch(v.getId()){
 		case R.id.tab_home:
 			ImageButton btnTabHome = (ImageButton)tabHome.findViewById(R.id.btn_tab_home);
-			btnTabHome.setImageResource(R.drawable.tab_weixin_pressed);
+			btnTabHome.setImageResource(R.drawable.icon_tab_home_unfold);
 			tabHome.setClickable(false);
 			intent.setClass(MainActivity.this, HomeActivity.class);
 			subActivity = getLocalActivityManager().startActivity(
@@ -125,7 +125,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			break;
 		case R.id.tab_order:
 			ImageButton btnTabOrder = (ImageButton)tabOrder.findViewById(R.id.btn_tab_order);
-			btnTabOrder.setImageResource(R.drawable.tab_find_frd_pressed);
+			btnTabOrder.setImageResource(R.drawable.icon_tab_product_unfold);
 			tabOrder.setClickable(false);
 			intent.setClass(MainActivity.this, OrderActivity.class);
 			subActivity = getLocalActivityManager().startActivity(
@@ -135,7 +135,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			break;
 		case R.id.tab_me:
 			ImageButton btnTabMe = (ImageButton)tabMe.findViewById(R.id.btn_tab_me);
-			btnTabMe.setImageResource(R.drawable.tab_address_pressed);
+			btnTabMe.setImageResource(R.drawable.icon_tab_me_unfold);
 			tabMe.setClickable(false);
 			
 			intent.setClass(MainActivity.this,MeActivity.class);
@@ -146,7 +146,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			break;
 		case R.id.tab_moment:
 			ImageButton btnTabMoment = (ImageButton)tabMoment.findViewById(R.id.btn_tab_moment);
-			btnTabMoment.setImageResource(R.drawable.tab_settings_pressed);
+			btnTabMoment.setImageResource(R.drawable.icon_tab_mass_unfold);
 			
 			intent.setClass(MainActivity.this, MomentActivity.class);
 			subActivity = getLocalActivityManager().startActivity(
@@ -163,13 +163,13 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	 */
 	private void resetBtn() {
 		((ImageButton)tabHome.findViewById(R.id.btn_tab_home))
-			.setImageResource(R.drawable.tab_weixin_normal);
+			.setImageResource(R.drawable.icon_tab_home_fold);
 		((ImageButton)tabOrder.findViewById(R.id.btn_tab_order))
-			.setImageResource(R.drawable.tab_find_frd_normal);
+			.setImageResource(R.drawable.icon_tab_product_fold);
 		((ImageButton)tabMe.findViewById(R.id.btn_tab_me))
-			.setImageResource(R.drawable.tab_address_normal);
+			.setImageResource(R.drawable.icon_tab_me_fold);
 		((ImageButton)tabMoment.findViewById(R.id.btn_tab_moment))
-			.setImageResource(R.drawable.tab_settings_normal);
+			.setImageResource(R.drawable.icon_tab_mass_fold);
 		tabHome.setClickable(true);
 		tabOrder.setClickable(true);
 		tabMe.setClickable(true);

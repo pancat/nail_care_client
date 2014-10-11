@@ -34,10 +34,10 @@ import com.pancat.fanrong.BuildConfig;
 public class ImageCache {
     private static final String TAG = "ImageCache";
 
-    // Default memory cache size
+    // Default memory cache size默认内存缓存大小
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 5; // 5MB
 
-    // Default disk cache size
+    // Default disk cache size默认本地缓存大小
     private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
 
     // Compression settings when writing images to disk cache
@@ -162,6 +162,7 @@ public class ImageCache {
     }
 
     /**
+     * 从内存缓存中得到bitmap
      * Get from memory cache.
      *
      * @param data Unique identifier for which item to get
@@ -181,6 +182,7 @@ public class ImageCache {
     }
 
     /**
+     * 从本地缓存中得到bitmap
      * Get from disk cache.
      *
      * @param data Unique identifier for which item to get

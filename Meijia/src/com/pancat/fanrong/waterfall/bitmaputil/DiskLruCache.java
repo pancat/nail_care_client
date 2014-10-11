@@ -109,6 +109,7 @@ public class DiskLruCache {
 	}
 
 	/**
+	 * 添加bitmap到本地缓存
 	 * Add a bitmap to the disk cache.
 	 * 
 	 * @param key
@@ -141,6 +142,7 @@ public class DiskLruCache {
 	}
 
 	/**
+	 * 清除缓存
 	 * Flush the cache, removing oldest entries if the total size is over the
 	 * specified cache size. Note that this isn't keeping track of stale files
 	 * in the cache directory that aren't in the HashMap. If the images and keys
@@ -168,6 +170,7 @@ public class DiskLruCache {
 	}
 
 	/**
+	 * 从本地缓存中得到一张图片
 	 * Get an image from the disk cache.
 	 * 
 	 * @param key
@@ -197,10 +200,10 @@ public class DiskLruCache {
 	}
 
 	/**
+	 * 检查一个特定的key是否在cache中存在
 	 * Checks if a specific key exist in the cache.
 	 * 
-	 * @param key
-	 *            The unique identifier for the bitmap
+	 * @param key bitmap的唯一标识，这里是图片url
 	 * @return true if found, false otherwise
 	 */
 	public boolean containsKey(String key) {
@@ -257,12 +260,11 @@ public class DiskLruCache {
 	}
 
 	/**
+	 * 获取一个可用的磁盘目录
 	 * Get a usable cache directory (external if available, internal otherwise).
 	 * 
-	 * @param context
-	 *            The context to use
-	 * @param uniqueName
-	 *            A unique directory name to append to the cache dir
+	 * @param context 上下文背景
+	 * @param uniqueName cache目录中的一个特定的缓存目录，这里是http
 	 * @return The cache dir
 	 */
 	public static File getDiskCacheDir(Context context, String uniqueName) {
@@ -270,6 +272,7 @@ public class DiskLruCache {
 		// Check if media is mounted or storage is built-in, if so, try and use
 		// external cache dir
 		// otherwise use internal cache dir
+		//here is cachePath = "/storage/emulated/0/Android/data/com.pancat.fanrong/cache"
 		final String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Utils.isExternalStorageRemovable() ? Utils
 				.getExternalCacheDir(context).getPath() : context.getCacheDir().getPath();
 
@@ -289,7 +292,8 @@ public class DiskLruCache {
 			// Use URLEncoder to ensure we have a valid filename, a tad hacky
 			// but it will do for
 			// this example
-			return cacheDir.getAbsolutePath() + File.separator + CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
+			String path = cacheDir.getAbsolutePath() + File.separator + CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
+			return path;
 		} catch (final UnsupportedEncodingException e) {
 			Log.e(TAG, "createFilePath - " + e);
 		}
@@ -321,6 +325,7 @@ public class DiskLruCache {
 	}
 
 	/**
+	 * 将一个biemap对象写入一个文件
 	 * Writes a bitmap to a file. Call
 	 * {@link DiskLruCache#setCompressParams(CompressFormat, int)} first to set
 	 * the target bitmap compression and format.

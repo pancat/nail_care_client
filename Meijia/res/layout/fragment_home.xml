@@ -54,8 +54,8 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:descendantFocusability="beforeDescendants"
                 android:gravity="center"
+                android:descendantFocusability="beforeDescendants"
                 android:orientation="vertical" >
 
                 <ImageButton
@@ -63,15 +63,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
-                    android:src="@drawable/f001" />
+                    android:src="@drawable/nail_a" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="美甲作品" />
+                    android:text="美甲作品"
+                    android:textColor="#F64D8E" />
             </LinearLayout>
-
+            <ImageView 
+                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:src="@drawable/cutline_2px_upright"
+                />
             <LinearLayout
                 android:id="@+id/ll_2"
                 android:layout_width="0dp"
@@ -86,21 +91,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
-                    android:src="@drawable/f002" />
+                    android:src="@drawable/icon_appraise" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="美甲师" />
+                    android:text="美甲师"
+                    android:textColor="#fec94c" />
             </LinearLayout>
         </LinearLayout>
-
+		<LinearLayout
+            android:id="@+id/cut1ine_1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/option_1ine_1"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp" >
+		    <ImageView 
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:src="@drawable/cutline_2px"
+		        android:layout_marginRight="2dp"
+		        />
+		    <ImageView 
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:src="@drawable/cutline_2px"
+		        android:layout_marginLeft="2dp"
+		        />
+		</LinearLayout>
         <LinearLayout
             android:id="@+id/option_1ine_2"
             android:layout_width="fill_parent"
             android:layout_height="120dp"
-            android:layout_below="@+id/option_1ine_1"
+            android:layout_below="@+id/cut1ine_1"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp" >
 
@@ -118,15 +147,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
-                    android:src="@drawable/f003" />
+                    android:src="@drawable/hair_a" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="美妆作品" />
+                    android:text="美妆作品"
+                    android:textColor="#cc8614" />
             </LinearLayout>
-
+			<ImageView 
+                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:src="@drawable/cutline_2px_upright"
+                />
             <LinearLayout
                 android:id="@+id/ll_4"
                 android:layout_width="0dp"
@@ -141,13 +175,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
-                    android:src="@drawable/f004" />
+                    android:src="@drawable/icon_trial" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="美妆师" />
+                    android:text="美妆师"
+                    android:textColor="#a7dc44"/>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
