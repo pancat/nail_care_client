@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" 
+	    android:paddingBottom="20dp"
+	    >
+	    
+	    <LinearLayout android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal">
+	        
+	        <View android:layout_width="10dp"
+	            android:layout_height="match_parent"
+	            android:background="@color/blue"
+	            />
+	        <TextView android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="left"
+	            android:background="@color/grey"
+	            android:id="@+id/tab_search_component_fragment_label"
+	            android:padding="8dp"
+	            android:textSize="18dp"
+	            android:text="样式"/>
+	    </LinearLayout>
+	    <TableLayout android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/tab_search_component_fragment_tabtable">
+	        
+	    </TableLayout>
+	</LinearLayout>
