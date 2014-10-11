@@ -89,7 +89,7 @@ IXListViewListener{
 	
 	public static final String SP_ID = "p_id";
 	public static final String SP_name = "name";
-	public static final String SP_describe = "discribe";
+	public static final String SP_describe = "p_describe";
 	public static final String SP_credate = "cre_date";
 	public static final String SP_hit = "hit";
 	public static final String SP_image_uri = "image_uri";
@@ -99,6 +99,8 @@ IXListViewListener{
 	public static final int DATA_WAIT = 0;
 	public static final int DATA_END = 1;
 	public static final int DATA_MORE = 2;
+	
+	public static enum STATE{REFRESH,LOAD,IDLE};
 	
 	private static final String url = "product/get_product_list";
 	
@@ -113,6 +115,7 @@ IXListViewListener{
 	private ArrayList<Product> mData; //数据
     private OnClickListItem onClickListItem;
     
+    private STATE state = STATE.IDLE;
 	//新建一个实例
 	public static ProductViewFragment newInstance(Map<String,String> pageParams)
 	{
@@ -223,7 +226,10 @@ IXListViewListener{
 		{
 			for(Product p:product)
 			{
-				mAdapter.add(p);
+				if(state == STATE.REFRESH)
+					mAdapter.addProductToHead(p);
+				else
+					mAdapter.addProductToTail(p);
 			}
 			
 			int num = product.size();
@@ -239,6 +245,7 @@ IXListViewListener{
 				else mHasRequestedMore = DATA_WAIT;
 				
 			}catch(Exception e){
+				state = STATE.IDLE;
 				e.printStackTrace();
 			}
 				
@@ -247,6 +254,7 @@ IXListViewListener{
 		{
 			
 		}
+		state = STATE.IDLE;
 	}
 	private ArrayList<Product> ParseToProductArr(String content) throws Exception
 	{
@@ -276,8 +284,6 @@ IXListViewListener{
 	
 	private void QueryProductDataFromServer()
 	{
-		if(mImageFetcher != null)
-			mImageFetcher.setExitTasksEarly(false);
 		RequestParams requestParams = new RequestParams(pageParam);
 		RestClient.getInstance().get(url, requestParams, responseHandler);	
 	}
@@ -348,13 +354,14 @@ IXListViewListener{
 	@Override
 	public void onRefresh() {
 		// TODO 自动生成的方法存根
-		mAdapter.clear();
+		state = STATE.REFRESH;
         QueryProductDataFromServer();
 	}
 
 	@Override
 	public void onLoadMore() {
 		// TODO 自动生成的方法存根
+		state = STATE.LOAD;
 		QueryProductDataFromServer();
 	}
 	

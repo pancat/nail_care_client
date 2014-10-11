@@ -12,7 +12,7 @@
     	
 		<TextView
 		    android:id="@+id/product_hot_tab"
-		    android:layout_width="wrap_content"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"
 		    android:gravity="center"
@@ -21,7 +21,7 @@
 		
 	    <TextView
 	        android:id="@+id/product_new_tab"
-	        android:layout_width="wrap_content"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
 	        android:gravity="center"
@@ -30,9 +30,9 @@
 	
 	    <Spinner
 	        android:id="@+id/product_filter_tab"
-	        android:layout_width="100dp"
 	        android:gravity="center"
 	        android:layout_weight="1"
+	        android:layout_width="0dp"
 	        android:layout_height="wrap_content" 
 	        />
     

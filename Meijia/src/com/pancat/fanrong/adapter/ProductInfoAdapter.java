@@ -1,5 +1,8 @@
 package com.pancat.fanrong.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.ProductDetailViewFragmentActivity;
 import com.pancat.fanrong.bean.Product;
@@ -20,12 +23,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ProductInfoAdapter extends ArrayAdapter<Product> {
+public class ProductInfoAdapter extends BaseAdapter{
 
 	private static final String TAG = "ProductInfoAdapter";
 	
@@ -42,15 +46,17 @@ public class ProductInfoAdapter extends ArrayAdapter<Product> {
 	private ImageFetcher imageFetcher;
 	private Context context;
 	private OnClickListItem onClickListItem;
+	private LinkedList<Product> productList;
 	
 	public ProductInfoAdapter(Context context, int resource,ImageFetcher imageFetcher,OnClickListItem onClickListItem) {
-		super(context, resource);
+		super();
 		// TODO �Զ����ɵĹ��캯�����
 		layoutInflater = LayoutInflater.from(context);
 		this.context = context;
 		
 		this.imageFetcher = imageFetcher;
 		this.onClickListItem = onClickListItem;
+		productList = new LinkedList<Product>();
 	}
 
 	@Override
@@ -78,12 +84,13 @@ public class ProductInfoAdapter extends ArrayAdapter<Product> {
 		
 		Product product = getItem(position);
 		
-		Bitmap bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.defaultproduct);
+		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.defaultproduct);
 		vh.productImg.setImageWidth(bmp.getWidth());
 		vh.productImg.setImageHeight(bmp.getHeight());
 		try
 		{
-			imageFetcher.loadImage(product.getProductURL(), vh.productImg);
+			if(product.getProductURL() != "" )
+				imageFetcher.loadImage(product.getProductURL(), vh.productImg);
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -110,5 +117,30 @@ public class ProductInfoAdapter extends ArrayAdapter<Product> {
 		return productItemView;
 	}
     
-	
+	public void addProductToHead(Product product)
+	{
+		productList.addFirst(product);
+	}
+	public void addProductToTail(Product product)
+	{
+		productList.add(product);
+	}
+
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return productList.size();
+	}
+
+	@Override
+	public Product getItem(int arg0) {
+		// TODO Auto-generated method stub
+		return productList.get(arg0);
+	}
+
+	@Override
+	public long getItemId(int arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
