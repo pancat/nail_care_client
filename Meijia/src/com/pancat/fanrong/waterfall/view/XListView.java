@@ -230,24 +230,29 @@ public class XListView extends MultiColumnListView implements OnScrollListener {
 	 * @param delta
 	 */
 	private void updateFooterHeight(float delta) {
-		int height = mFooterView.getBottomMargin() + (int) delta;
+		int bottomMargin = mFooterView.getBottomMargin();
+		int height = bottomMargin + (int) delta;     
 		if (mEnablePullLoad && !mPullLoading) {
-			if (height > PULL_LOAD_MORE_DELTA) { // height enough to invoke load
-													// more.
+			if (height > PULL_LOAD_MORE_DELTA) { // height enough to invoke load more
+				//根据状态显示文字，ready则显示松开加载更多
 				mFooterView.setState(XListViewFooter.STATE_READY);
 			} else {
+				//normal则显示显示更多
 				mFooterView.setState(XListViewFooter.STATE_NORMAL);
 			}
 		}
 		mFooterView.setBottomMargin(height);
-
 		// setSelection(mTotalItemCount - 1); // scroll to bottom
 	}
 
+	/**
+	 * 回滚footer
+	 */
 	private void resetFooterHeight() {
 		int bottomMargin = mFooterView.getBottomMargin();
 		if (bottomMargin > 0) {
 			mScrollBack = SCROLLBACK_FOOTER;
+			//开始回滚
 			mScroller.startScroll(0, bottomMargin, 0, -bottomMargin, SCROLL_DURATION);
 			invalidate();
 		}
@@ -296,8 +301,9 @@ public class XListView extends MultiColumnListView implements OnScrollListener {
 					}
 				}
 				resetHeaderHeight();
-			} else if (getLastVisiblePosition() == mTotalItemCount - 1) {
-				// invoke load more.
+			}
+			if (getLastVisiblePosition() == mTotalItemCount - 1) {
+				//触发加载更多
 				if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
 					startLoadMore();
 				}
@@ -308,9 +314,12 @@ public class XListView extends MultiColumnListView implements OnScrollListener {
 		return super.onTouchEvent(ev);
 	}
 
+	//在draw过程中调用
 	@Override
 	public void computeScroll() {
-		if (mScroller.computeScrollOffset()) {
+		//判断滚动是否结束，true表示滚动未完成，false表示滚动完成
+		boolean isScrollFinish = mScroller.computeScrollOffset();
+		if (isScrollFinish) {
 			if (mScrollBack == SCROLLBACK_HEADER) {
 				mHeaderView.setVisiableHeight(mScroller.getCurrY());
 			} else {
@@ -320,7 +329,7 @@ public class XListView extends MultiColumnListView implements OnScrollListener {
 			invokeOnScrolling();
 		}
 		super.computeScroll();
-	}
+   	}
 
 //	@Override
 //	public void setOnScrollListener(OnScrollListener l) {
