@@ -4,6 +4,8 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    
+  
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="14" />
@@ -126,7 +128,7 @@
 		</activity>
         <activity
             android:name=".activity.LogActivity"
-            android:theme="@style/AppTheme" >
+             android:theme="@style/Transparent"  >
         </activity>
         <activity
             android:name=".activity.SearchProductShowFragmentActivity"
@@ -135,6 +137,14 @@
         <activity
             android:name=".activity.MomentItemActivity"
             android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activity.EditUserInfomation"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activity.TestLocation"
+            android:theme="@style/AppTheme"  >
         </activity>
 	 
         <!--个推SDK配置开始-->
@@ -266,11 +276,18 @@
         </service>
         
         <meta-data android:name="api_key" android:value="9Ay3feL878KZY88PLChUlEOk" />
-         <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="jZ1AWfj73X3edTRtlmMREp3X" />
+        
         <!-- 百度云推送配置结束 -->
         
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="UzrqQal1M0FcjLnFmqa28XNS" />
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
     </application>
 
 </manifest>

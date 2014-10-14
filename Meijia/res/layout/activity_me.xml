@@ -1,72 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/lin"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-       
-        android:orientation="vertical" >
+        android:layout_height="fill_parent"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none" 
+        android:id="@+id/scrollview"
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="头像："
-            android:id="@+id/avatar_uri"
-            ></TextView>
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="昵称："
-            ></TextView>
-          <TextView
-            android:id="@+id/nick_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="年龄："
-            ></TextView>
-            <TextView
-            android:id="@+id/age"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="地址："
-            ></TextView>
-            <TextView
-            android:id="@+id/email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="地址："
-            ></TextView>
-        	   <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="地址："
-            ></TextView>
-    </LinearLayout>
-    
-    <ListView 
-        android:layout_below="@id/lin"
-        android:id="@+id/listview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        ></ListView>
-    
-	
- 	<Button
-	     
-            android:id="@+id/btn3"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:background="@color/pink"
+        <LinearLayout
+            android:id="@+id/lin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="登录/注销" 
-            
-            />
+            android:layout_marginTop="20dp"
+            android:gravity="left"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:orientation="vertical" >
+
+               <com.pancat.fanrong.common.CircleImageView
+                    android:id="@+id/usercircleimage"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="center"
+                   
+                    android:src="@drawable/player"
+                    app:border_color="#FF000000"
+                    app:border_width="2dp" 
+                    android:onClick="onClick"
+                    />
+               
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/nick_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="欢迎你，游客"
+                    android:textSize="20sp" >
+                </TextView>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/redpacket"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selectmeitem"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/redpackettext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="58dp"
+                    android:paddingTop="8dp"
+                    android:text="红包兑换"
+                    android:textColor="#000"
+                    android:textSize="17sp" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:scaleType="matrix"
+                    android:src="@drawable/mm_submenu_normal" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/commonaddress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selectmeitem"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/commonaddresstext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="58dp"
+                    android:paddingTop="8dp"
+                    android:text="常用地址"
+                    android:textColor="#000"
+                    android:textSize="17sp" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:scaleType="matrix"
+                    android:src="@drawable/mm_submenu_normal" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/discount"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selectmeitem"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/discounttext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="58dp"
+                    android:paddingTop="8dp"
+                    android:text="优惠券"
+                    android:textColor="#000"
+                    android:textSize="17sp" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:scaleType="matrix"
+                    android:src="@drawable/mm_submenu_normal" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/collection"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selectmeitem"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/collectiontext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="58dp"
+                    android:paddingTop="8dp"
+                    android:text="我的收藏"
+                    android:textColor="#000"
+                    android:textSize="17sp" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:scaleType="matrix"
+                    android:src="@drawable/mm_submenu_normal" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/messagecenter"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selectmeitem"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/messagecentertext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="58dp"
+                    android:paddingTop="8dp"
+                    android:text="消息中心"
+                    android:textColor="#000"
+                    android:textSize="17sp" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:scaleType="matrix"
+                    android:src="@drawable/mm_submenu_normal" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/servicephone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/selectmeitem"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/servicephonetext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="58dp"
+                    android:paddingTop="8dp"
+                    android:text="客服电话"
+                    android:textColor="#000"
+                    android:textSize="17sp" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:scaleType="matrix"
+                    android:src="@drawable/mm_submenu_normal" />
+            </RelativeLayout>
+
+            <Button
+                android:layout_marginTop="40dp"
+                android:id="@+id/loginOrout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/selectmeitem"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="注销" />
+        </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>

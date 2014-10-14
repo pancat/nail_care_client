@@ -9,4 +9,6 @@ import android.os.Bundle;
  */
 public interface FragmentCallback {
 	public void callback(Bundle arg);
+	
+	public void finishActivity();
 }

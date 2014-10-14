@@ -4,19 +4,24 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 
+import com.pancat.fanrong.MainActivity;
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.fragment.LoginFragment;
 import com.pancat.fanrong.fragment.SigninFragment;
 
-public class LogActivity extends Activity {
+public class LogActivity extends Activity implements FragmentCallback {
 	private LoginFragment loginFragment;
 	private SigninFragment signinFragment;
 	private FragmentManager fragmentManager;
@@ -27,6 +32,7 @@ public class LogActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.activity_log);
 		setFragment();
 		regbtn2 = (Button) findViewById(R.id.regbtn2);
@@ -128,4 +134,31 @@ public class LogActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+	public void callback(Bundle arg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finishActivity() {
+		// TODO Auto-generated method stub
+		finish();
+	}
+	
+	/*
+	@Override  
+	public boolean onKeyDown(int keyCode, KeyEvent event) {  
+	// TODO Auto-generated method stub  
+	if(keyCode==KeyEvent.KEYCODE_BACK&&event.getRepeatCount()==0){  
+	    //需要处理  
+		Intent it=new Intent(this,MainActivity.class);
+		startActivity(it);
+		
+		
+	}  
+	    return false;  
+	}  
+    */	
 }

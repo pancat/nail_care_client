@@ -41,9 +41,12 @@ import android.widget.Toast;
 import com.pancat.fanrong.MainActivity;
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.activity.LogActivity;
 import com.pancat.fanrong.common.ChangeMd5;
 import com.pancat.fanrong.common.Constants;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.common.User;
 
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
@@ -54,6 +57,8 @@ public class SigninFragment extends Fragment {
 	private EditText username, passwd, repasswd, testnum;
 	private Button regbtn;
 
+	private FragmentCallback fragmentCallback;
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		contextView = inflater.inflate(R.layout.fragment_mereg, container,
@@ -118,7 +123,7 @@ public class SigninFragment extends Fragment {
 
 							int id,res_state;
 							int error_code;
-							
+						
 
 							//id = jsonObject.getInt("res_state");
 						//	error_code = jsonObject.getInt("error_code");
@@ -156,16 +161,17 @@ public class SigninFragment extends Fragment {
 								
 								editor.commit();
 								
-								MainApplication app=(MainApplication)getActivity().getApplicationContext();
-								app.setUserDate();
+								User user=User.getInstance();
+								user.setUserDate();
 								
 								RestClient.getInstance().setCookieStore();
 								Log.i("setcookie", "setcookiestore111");
 								
-								//跳转到另一个activity
+								fragmentCallback.finishActivity(); 
+								/*
 								Intent it=new Intent(getActivity(),MainActivity.class);
-								//Intent intent=new Intent(MeActivity.this,LogActivity.class);
 								startActivity(it);
+								*/
 							 }
 							 else{
 								// Toast.makeText(getActivity(), "注册失败",Toast.LENGTH_LONG).show();
@@ -227,4 +233,10 @@ public class SigninFragment extends Fragment {
 		}
 
 	};
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		fragmentCallback = (LogActivity) activity;
+	}
 }
