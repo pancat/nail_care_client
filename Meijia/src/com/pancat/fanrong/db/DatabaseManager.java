@@ -1,18 +1,16 @@
 package com.pancat.fanrong.db;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.User;
 
-/**
- * 
- * @author trhuo
- *
- */
 public class DatabaseManager {
 	
 	private static  DatabaseManager instance;
@@ -56,5 +54,30 @@ public class DatabaseManager {
 					e.printStackTrace();
 				}
 		}
+	}
+	
+	public void addCircle(Circle circle){
+		Dao<Circle,Integer> dao = getHelper().getCircleDao();
+		if(circle != null){
+			try {
+				dao.create(circle);
+				System.out.println("0000");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public List<Circle> getCircles(){
+		Dao<Circle,Integer> dao = getHelper().getCircleDao();
+		List<Circle> circleList = new ArrayList<Circle>();
+		QueryBuilder<Circle, Integer> query = dao.queryBuilder();
+		try {
+			circleList = query.query();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return circleList;
 	}
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public class Infos {
 	private String	newsLast = "0";
 	private int	type = 0;
-	private List<DuitangInfo>	newsInfos;
+	private List<Circle>	newsInfos;
 
 	public String getNewsLast() {
 		return newsLast;
@@ -23,11 +23,11 @@ public class Infos {
 		this.type = type;
 	}
 
-	public List<DuitangInfo> getNewsInfos() {
+	public List<Circle> getNewsInfos() {
 		return newsInfos;
 	}
 
-	public void setNewsInfos(List<DuitangInfo> newsInfos) {
+	public void setNewsInfos(List<Circle> newsInfos) {
 		this.newsInfos = newsInfos;
 	}
 

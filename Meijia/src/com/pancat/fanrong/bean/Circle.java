@@ -2,23 +2,35 @@ package com.pancat.fanrong.bean;
 
 import java.io.Serializable;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+/**
+ * 圈子bean
+ * @author trh
+ *
+ */
 @SuppressWarnings("serial")
-public class DuitangInfo implements Serializable{
-
+@DatabaseTable(tableName="circle")
+public class Circle implements Serializable{
+	@DatabaseField(generatedId=true)
+	private int id;	
+	@DatabaseField
 	private int width;
+	@DatabaseField
 	private int height;
-	private String albid = "";
-	private String msg = "";
-	private String isrc = "";
+	@DatabaseField
+	private String msg;
+	@DatabaseField
+	private String isrc;
 
-	public String getAlbid() {
-		return albid;
+	public int getId() {
+		return id;
 	}
 
-	public void setAlbid(String albid) {
-		this.albid = albid;
+	public void setId(int id) {
+		this.id = id;
 	}
-
 	public String getMsg() {
 		return msg;
 	}
@@ -50,4 +62,5 @@ public class DuitangInfo implements Serializable{
 	public void setWidth(int width){
 		this.width = width;
 	}
+	
 }

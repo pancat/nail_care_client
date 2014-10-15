@@ -1,29 +1,59 @@
 package com.pancat.fanrong;
 
-import com.pancat.fanrong.R;
+
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import android.app.Activity;
 import android.app.ActivityGroup;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
-import android.util.Log;
 import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.MeActivity;
 import com.pancat.fanrong.activity.MomentActivity;
 import com.pancat.fanrong.activity.OrderActivity;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
+import com.pancat.fanrong.util.PhoneUtils;
+import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
+import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
 
 @SuppressWarnings("deprecation")
@@ -38,6 +68,22 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private int segment = 1;
 	
 	private Resources resource;
+	
+	//发送圈子按钮
+	private Button btnSendMoment;
+	
+	private final int FROM_CAMERA = 1;
+	private final int FROM_LOCAL_FILE = 2;
+	
+	private AlertDialog addPicDialog;
+	
+	//手机屏幕的宽度，用来设置dialog的大小
+	private int screenWidth;
+	
+	//图片存储路径
+	private final String BASE_FILE_PATH = Environment.getExternalStorageDirectory() + "/rongmeme/";
+	//拍照上传照片临时存放文件
+	private final String TEMP_PHOTO_PATH = BASE_FILE_PATH + "temp.jpg";
 	
 	//消息推送的配置选项
 	private int msgPushType = ConfigHelperUtils.BAIDUMSGPUSH;
@@ -58,8 +104,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		WindowManager wm = this.getWindowManager();
+		screenWidth = wm.getDefaultDisplay().getWidth();
 		container = (LinearLayout)findViewById(R.id.container);
-		initBottomBar();
+		init();
 		segment = getIntent().getIntExtra("segment", 1);
 		tabHome.setClickable(false);
 		initMsgPush();//消息推送初始化
@@ -96,7 +144,8 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		addView();
 	}
 
-	private void initBottomBar(){
+	private void init(){
+		btnSendMoment = (Button)findViewById(R.id.add_to_moment);
 		tabHome = (LinearLayout)findViewById(R.id.tab_home);
 		tabOrder = (LinearLayout)findViewById(R.id.tab_order);
 		tabMe = (LinearLayout)findViewById(R.id.tab_me);
@@ -105,15 +154,152 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		tabOrder.setOnClickListener(this);
 		tabMe.setOnClickListener(this);
 		tabMoment.setOnClickListener(this);
+		btnSendMoment.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				openAddDialog();
+			}
+		});
 	}
 	
+	/**
+	 * 弹出添加圈子图片对话框
+	 */
+	private void openAddDialog(){
+		
+		// 创建AlertDialog
+		addPicDialog = new AlertDialog.Builder(this).create();
+		
+		addPicDialog.show();
+		Window addPicWindow = addPicDialog.getWindow();
+		addPicWindow.setContentView(R.layout.add_photo);
+		RelativeLayout uploadCamera = (RelativeLayout)addPicWindow.findViewById(R.id.upload_camera);
+		RelativeLayout uploadFile = (RelativeLayout)addPicWindow.findViewById(R.id.upload_file);
+		//照相上传图片点击事件
+		uploadCamera.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(TEMP_PHOTO_PATH)));
+				startActivityForResult(intent, FROM_CAMERA);
+			}
+		});
+		
+		//本地图片上传点击事件
+		uploadFile.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//到系统相册选择图片
+				Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				
+				startActivityForResult(intent, FROM_LOCAL_FILE);
+			}
+		});
+	}
+	
+	/**
+	 * 弹出发送圈子内容对话框
+	 * @param path 图片存储路径
+	 */
+	private void openSendDialog(String path){
+		AlertDialog sendDialog = new AlertDialog.Builder(this).create();
+		//解决唤不出键盘问题
+		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_moment, null));
+		sendDialog.show();
+		Window sendWindow = sendDialog.getWindow();
+		sendWindow.setContentView(R.layout.edit_moment);
+		EditText description = (EditText)sendWindow.findViewById(R.id.moment_des);			//对话框中的描述控件
+		ImageView selectedImg = (ImageView)sendWindow.findViewById(R.id.selected_image);	//对话框中的图片控件
+		Button btnSendMoment = (Button)sendWindow.findViewById(R.id.btn_send_moment);
+		//设置图片控件参数
+		android.view.ViewGroup.LayoutParams params = selectedImg.getLayoutParams();
+		
+		selectedImg.setScaleType(ScaleType.CENTER_CROP);
+		
+		//获取图片的原始宽和高
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+		int originalHeight = options.outHeight;
+		int originalWidth = options.outWidth;
+		//按比例缩放图片
+		int iWidth = (int) (screenWidth*0.9);
+		int iHeight = iWidth*originalHeight/originalWidth;
+		params.height = iHeight;
+		params.width = iWidth;
+		selectedImg.setLayoutParams(params);
+		//得到缩略图
+		Bitmap bitmap = ImageResizer.decodeSampledBitmapFromFile(path, iWidth, iHeight);
+		selectedImg.setImageBitmap(bitmap);
+		btnSendMoment.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//这里实现点击发送圈子按钮操作(上传图文到服务器)
+				Toast.makeText(MainActivity.this, "点击发送按钮", Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(resultCode == Activity.RESULT_OK){
+			if(addPicDialog.isShowing()){
+				addPicDialog.dismiss();
+			}
+			if(requestCode == FROM_CAMERA){
+				//图片从相机获取
+				File file = new File(BASE_FILE_PATH);
+				if(!file.exists()){
+					file.mkdirs();
+				}
+				//打开发送对话框
+				openSendDialog(TEMP_PHOTO_PATH);
+			}
+			else if(requestCode == FROM_LOCAL_FILE){
+				//图片是从本地文件获取
+				
+				final Uri uri = data.getData();
+				//以下操作获取本地图片存储路径
+				String[] proj = {MediaStore.Images.Media.DATA};
+				Cursor cursor = managedQuery(uri, proj, null, null, null);
+				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				cursor.moveToFirst();
+				final String path = cursor.getString(columnIndex);//本地图片存储路径
+				//打开发送对话框
+				openSendDialog(path);
+			}
+		}
+	}
+
+	/**
+	 * 根据路径获取本地本地图片bitmap对象
+	 * @param url 本地图片路径
+	 * @return
+	 */
+	private Bitmap getLocalBitmap(String url){
+		 try {
+	          FileInputStream fis = new FileInputStream(url);
+	          return BitmapFactory.decodeStream(fis);
+	     } catch (FileNotFoundException e) {
+	          e.printStackTrace();
+	          return null;
+	     }
+	}
+	
+	
 	public void onClick(View v){
-		container.removeAllViews();
-		resetBtn();
+		
 		Intent intent = new Intent();
 		//改变点击的tab的图片和文字颜色并设置点击的tab为不可点击状态
 		switch(v.getId()){
 		case R.id.tab_home:
+			resetBtn();
 			ImageButton btnTabHome = (ImageButton)tabHome.findViewById(R.id.btn_tab_home);
 			btnTabHome.setImageResource(R.drawable.icon_tab_home_unfold);
 			tabHome.setClickable(false);
@@ -124,6 +310,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			segment = 1;
 			break;
 		case R.id.tab_order:
+			resetBtn();
 			ImageButton btnTabOrder = (ImageButton)tabOrder.findViewById(R.id.btn_tab_order);
 			btnTabOrder.setImageResource(R.drawable.icon_tab_product_unfold);
 			tabOrder.setClickable(false);
@@ -134,6 +321,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			segment = 2;
 			break;
 		case R.id.tab_me:
+			resetBtn();
 			ImageButton btnTabMe = (ImageButton)tabMe.findViewById(R.id.btn_tab_me);
 			btnTabMe.setImageResource(R.drawable.icon_tab_me_unfold);
 			tabMe.setClickable(false);
@@ -145,6 +333,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			segment = 3;
 			break;
 		case R.id.tab_moment:
+			resetBtn();
 			ImageButton btnTabMoment = (ImageButton)tabMoment.findViewById(R.id.btn_tab_moment);
 			btnTabMoment.setImageResource(R.drawable.icon_tab_mass_unfold);
 			
@@ -162,6 +351,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	 * 清除按钮选中状态并设置所有按钮为可点击
 	 */
 	private void resetBtn() {
+		container.removeAllViews();
 		((ImageButton)tabHome.findViewById(R.id.btn_tab_home))
 			.setImageResource(R.drawable.icon_tab_home_fold);
 		((ImageButton)tabOrder.findViewById(R.id.btn_tab_order))
