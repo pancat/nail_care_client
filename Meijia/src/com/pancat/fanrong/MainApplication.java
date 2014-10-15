@@ -1,6 +1,8 @@
 package com.pancat.fanrong;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.TextView;
 
 import com.baidu.frontia.FrontiaApplication;
 
@@ -8,10 +10,10 @@ import com.baidu.frontia.FrontiaApplication;
 public class MainApplication extends FrontiaApplication {
 	
 	private static Context appContext;
+
 	@Override
     public void onCreate() {
         super.onCreate();
-        
         appContext = getApplicationContext();
     }
 	
