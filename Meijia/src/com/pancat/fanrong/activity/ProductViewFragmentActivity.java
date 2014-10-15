@@ -157,6 +157,7 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 		}
 		return map;
 	}
+	
 	private void setFragmentAdapterAndViewPage(Map<String,String> map)
 	{
 		Fragment a = ProductViewFragment.getHotInstance(map);

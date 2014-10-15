@@ -53,6 +53,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="getui.permission.GetuiService"/>
     
         <!-- 百度云推送 额外需要 的权限 -->  
@@ -132,7 +133,12 @@
             android:name=".activity.MomentItemActivity"
             android:theme="@style/AppTheme" >
         </activity>
-	 
+        
+        <activity android:name=".activity.OrderAuthorActivity"
+                  android:theme="@style/Theme.AppCompat.Light"
+                  android:windowSoftInputMode="stateHidden" >
+        </activity>
+       
         <!--个推SDK配置开始-->
          <receiver
             android:name="com.pancat.fanrong.receiver.PushMsgGeTuiReceiver"
@@ -264,6 +270,18 @@
         <meta-data android:name="api_key" android:value="9Ay3feL878KZY88PLChUlEOk" />
         <!-- 百度云推送配置结束 -->
         
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="B9e857aecb7e4e427f90e3939ebdfac2" />
+        <service 
+            android:name="com.baidu.location.f" 
+            android:enabled="true" 
+            android:process=":remote">
+               <intent-filter>
+                    <action android:name="com.baidu.location.service_v2.2" >
+                </action>
+            </intent-filter>
+	    </service>
     </application>
 
 </manifest>

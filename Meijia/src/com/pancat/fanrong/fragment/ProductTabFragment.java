@@ -9,7 +9,9 @@ import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Product;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,13 +19,17 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -36,12 +42,14 @@ public class ProductTabFragment extends Fragment
 	
 	private OnProductTabClickListenser onProductTabClickListenter = null;
 	private List<String> tab = null;
-	private Spinner spinner = null;
+	private TextView filter = null;
 	private View currentView = null;
 	private View bottomLine = null;
 	private TextView hotTab = null;
 	private TextView newTab = null;
 	private String productType = Product.MEIJIA;
+	private PopupWindow popWindow = null;
+	private ArrayAdapter<String> filteradapter = null;
 	
 	public interface OnProductTabClickListenser
 	{
@@ -64,23 +72,16 @@ public class ProductTabFragment extends Fragment
 		//Log.d(TAG, "yes enter");
 		if(currentView != null)
 		{
-			spinner = (Spinner)currentView.findViewById(R.id.product_filter_tab);
+			filter = (TextView)currentView.findViewById(R.id.product_filter_tab);
 			bottomLine = (View)currentView.findViewById(R.id.bottom_line);
 			hotTab = (TextView)currentView.findViewById(R.id.product_hot_tab);
 			newTab = (TextView)currentView.findViewById(R.id.product_new_tab);
 			
 			InitTabEvent();
 			
-		    List<String> temp = new ArrayList<String>();
-		    temp.add("0-200");
-		    temp.add("200-299");
-		    temp.add("300-399");
-		    temp.add("400-499");
-		    temp.add("500-599");
-		    temp.add("高于600");
 		    
 		    //TODO 这里之后再改
-			spinner.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, temp));
+			/*spinner.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, temp));
 			spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 				@Override
 				public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id)
@@ -106,7 +107,7 @@ public class ProductTabFragment extends Fragment
 					// TODO 自动生成的方法存根
 					
 				}
-			});
+			});*/
 			
 			onProductTabClickListenter.setOnProductTabClickListenser(0, null);
 			//
@@ -147,7 +148,91 @@ public class ProductTabFragment extends Fragment
 		param.put(ProductViewFragment.KEYWORD, "new");
 		//param.put(ProductViewFragment.QUERY_TYPE, "0");
 		newTab.setOnClickListener(new TabOnClickEvent(param,1));
+		
+		InitFilterEvent();
 	}
+	
+	private void InitFilterEvent()
+	{
+		filter.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub	
+				changePopWindowState();
+			}
+		});
+	}
+	
+	//依靠状态来打开或者关闭弹出窗口
+	private void changePopWindowState()
+	{
+		if(popWindow == null){
+			popW();
+			return ;
+		}
+		if(!popWindow.isShowing()){
+			popW();
+		}else{
+			popWindow.dismiss();
+		}
+	}
+	
+	//弹出窗口的显示创建
+	private void popW()
+	{
+		if(popWindow == null){
+			View v = LayoutInflater.from(getActivity()).inflate(R.layout.tab_filter_list, null);
+			ListView list = (ListView)v.findViewById(R.id.tab_filter_list_listview);
+			list.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> adapter, View lv,
+						int pos, long arg3) {
+					// TODO Auto-generated method stub
+					String text = adapter.getItemAtPosition(pos).toString();
+					Map<String,String>map = new HashMap<String, String>();
+					if(text.contains("-"))
+					{
+						String[] ar = text.split("-");
+						map.put(ProductViewFragment.SELECT_LEFT, ar[0]);
+						map.put(ProductViewFragment.SELECT_RIGHT, ar[1]);
+					}
+					else{
+						map.put(ProductViewFragment.SELECT_LEFT, "600");
+					}
+					//map.put("text", text);
+					filter.setText(text);
+					onProductTabClickListenter.setOnProductTabClickListenser(2, map);
+					Log.d(TAG, "cao ni ma");
+					
+					if(popWindow!=null) changePopWindowState();
+				}
+			});
+			
+		    List<String> temp = new ArrayList<String>();
+		    temp.add("0-200");
+		    temp.add("200-299");
+		    temp.add("300-399");
+		    temp.add("400-499");
+		    temp.add("500-599");
+		    temp.add("高于600");
+		    
+		    filteradapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,temp);
+		    list.setAdapter(filteradapter);
+		    list.setDivider(null);
+		    
+		    popWindow = new PopupWindow(v,filter.getWidth(),400);
+		    popWindow.setFocusable(true);  
+		    popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.orange));
+		    //popWindow.setBackgroundDrawable(new BitmapDrawable());  
+		    popWindow.setOutsideTouchable(true); 
+		    popWindow.update();  
+		}
+		popWindow.showAsDropDown(filter);
+	}
+	
+	
 	//改变下划线位置
 	public void changeBottomLine(int which)
 	{
@@ -165,6 +250,12 @@ public class ProductTabFragment extends Fragment
 		lp.setMargins(startWidth, lp.topMargin, ScreenWidth - endWidth, lp.bottomMargin);
 		bottomLine.setLayoutParams(lp);
         bottomLine.setPadding(0, 0, 0, 0);
+        
+        //set FilterText;
+        if(which == 2){
+        	if(filter.getText() == getResources().getText(R.string.filter))
+        		filter.setText("0-200");
+        }
 	}
 	
 	//按钮监听
@@ -187,6 +278,27 @@ public class ProductTabFragment extends Fragment
 			{
 				onProductTabClickListenter.setOnProductTabClickListenser(curIndex,params);
 			}
+		}
+		
+	}
+	
+	private class TempAdapter extends ArrayAdapter<String>{
+		private Context context;
+		
+		public TempAdapter(Context context, int resource) {
+			super(context, resource);
+			this.context = context;
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			if(convertView == null){
+				convertView = LayoutInflater.from(context).inflate(R.layout.tab_filter_list_item, parent);
+			}
+			((TextView)convertView.findViewById(R.id.tab_filter_list_item)).setText(getItem(position));
+			return convertView;
 		}
 		
 	}

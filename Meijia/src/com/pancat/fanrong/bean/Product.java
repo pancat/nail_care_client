@@ -1,5 +1,6 @@
 package com.pancat.fanrong.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import com.pancat.fanrong.util.StringUtils;
 
 import android.util.Log;
 
-public class Product{
+public class Product implements Serializable{
 	private static final String TAG = "Product";
 	public static final String KEY = "product";
 	

@@ -1,15 +1,18 @@
 package com.pancat.fanrong.fragment;
 
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.activity.OrderAuthorActivity;
 import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.handler.HandlerFactory;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -66,8 +69,28 @@ public class ProductDetailFragment extends Fragment {
 		{
 			productDFDescription.setText(product.getProductDescription());
 			productDFPrice.setText(product.getProductPrice());
+			
+			//TODO 需要进一步更改
 			HandlerFactory.setLoadImageHandler(product.getProductURL(), true, productDFImg);
 			Log.d(TAG, product.getProductURL());
 		}
+		
+		//预约按钮监听事件
+		productDFOrder.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				//TODO 这里需要判断是否登录 @empark
+				// Class.getInstance().isLogin()
+				// do something and if not login ,return ;
+				
+				Intent intent = new Intent(getActivity(),OrderAuthorActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(Product.KEY, product);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				
+			}
+		});
 	}
 }

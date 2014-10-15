@@ -48,14 +48,6 @@ public class ProductSearchFragment extends Fragment {
 		searchButton = (Button)view.findViewById(R.id.product_search_button);
 		editText = (EditText)view.findViewById(R.id.search_btn_tv);
 		
-		editText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
-				// TODO 自动生成的方法存根
-				editText.setText("");
-			}
-		});
 		searchButton.setOnClickListener(new OnClickListener() {
 			
 			@Override

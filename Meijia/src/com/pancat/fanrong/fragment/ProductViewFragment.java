@@ -147,6 +147,7 @@ IXListViewListener{
 			{
 				String key = iter.next();
 				pageParam.put(key, bundle.getString(key));
+				Log.d(TAG,key+":----");
 			}
 		}
 		InitAllParams();
@@ -163,6 +164,16 @@ IXListViewListener{
 		mImageFetcher = new ImageFetcher(getActivity(), 240);
 		mImageFetcher.setLoadingImage(R.drawable.defaultproduct);
 		
+		if (mAdapter == null) {
+			mAdapter = new ProductInfoAdapter(getActivity(), R.id.product_img,mImageFetcher,onClickListItem);
+		}
+
+		if (mData == null) {
+			QueryProductDataFromServer();
+		}
+		
+		mAdapterView.setAdapter(mAdapter);
+		
 		return contextView;
 	}
 
@@ -175,15 +186,6 @@ IXListViewListener{
 
 		}
 
-		if (mAdapter == null) {
-			mAdapter = new ProductInfoAdapter(getActivity(), R.id.product_img,mImageFetcher,onClickListItem);
-		}
-
-		if (mData == null) {
-			QueryProductDataFromServer();
-		}
-		
-		mAdapterView.setAdapter(mAdapter);
 	}
 
     
