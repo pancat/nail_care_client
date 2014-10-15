@@ -2,40 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ffffff"
-    android:orientation="vertical" >
+    android:gravity="center_horizontal"
+   >
 
     <LinearLayout
-        android:id="@+id/lin"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="#fff"
+        android:layout_gravity="center"
         android:gravity="center"
-         
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/logbtn2"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/lin"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="登录" >
-        </Button>
+            android:gravity="center"
+           
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/regbtn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注册" />
-        
-        
-        
+            <Button
+                android:id="@+id/logbtn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登录" >
+            </Button>
+
+            <Button
+                android:id="@+id/regbtn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注册" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" >
+        </FrameLayout>
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_below="@id/lin"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-     >
-    </FrameLayout>
 
 </RelativeLayout>

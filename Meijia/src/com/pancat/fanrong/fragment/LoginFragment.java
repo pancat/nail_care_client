@@ -24,11 +24,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.pancat.fanrong.MainActivity;
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.activity.LogActivity;
+import com.pancat.fanrong.activity.MeActivity;
 import com.pancat.fanrong.common.ChangeMd5;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.common.User;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
 
@@ -39,7 +42,10 @@ public class LoginFragment extends Fragment {
 	private EditText username, password;
 	int colorpink = Color.parseColor("#FA8072");
 	int colordefault = android.graphics.Color.WHITE;
-
+	private FragmentCallback fragmentCallback;
+	
+	String hellome;
+	
 	// static String contentinfo;
 
 	@Override
@@ -49,12 +55,12 @@ public class LoginFragment extends Fragment {
 		loginbtn = (Button) contextView.findViewById(R.id.loginbtn);
 		username = (EditText) contextView.findViewById(R.id.username);
 		password = (EditText) contextView.findViewById(R.id.password);
-		loginbtn.setOnClickListener(logIn);
+		loginbtn.setOnClickListener(login);
 		//Toast.makeText(getActivity(), "暂时未使用md5，请输入用户名123密码123", Toast.LENGTH_SHORT).show();
 		return contextView;
 	}
 
-	private OnClickListener logIn = new OnClickListener() {
+	private OnClickListener login = new OnClickListener() {
 		private String name;
 		private String passwd;
 
@@ -69,7 +75,7 @@ public class LoginFragment extends Fragment {
 			} else {
 				// UserInter loguser=new UserInter(getActivity(),name,passwd);
 				try {
-					logmethod(name, passwd);
+					loginmethod(name, passwd);
 
 				} catch (NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
@@ -82,7 +88,8 @@ public class LoginFragment extends Fragment {
 	};
 
 	// 用户登录方法
-	@SuppressLint("NewApi") private void logmethod(String name, String password)
+	    @SuppressLint("NewApi") 
+	    private void loginmethod(String name, String password)
 			throws NoSuchAlgorithmException {
 		String uame;
 		String passwd;
@@ -125,13 +132,13 @@ public class LoginFragment extends Fragment {
 						try {
 							JSONObject jsonObject;
 							jsonObject = new JSONObject(content.toString());
-
+							
 							System.out.println("loginis:" + content.toString());
 
 							int res_state, id;
 							int error_code;
 							String token, username1, nick_name, email, avatar_uri;
-
+							
 							res_state = jsonObject.getInt("res_state");
 							error_code = jsonObject.getInt("error_code");
 							id = jsonObject.getInt("id");
@@ -150,6 +157,7 @@ public class LoginFragment extends Fragment {
 							if (res_state == 1) {
 								// Toast.makeText(getActivity(),
 								// "登录成功",Toast.LENGTH_LONG).show();
+								
 								Log.i("登录状态", "登陆成功");
 
 								SharedPreferences userInfo = getActivity()
@@ -166,19 +174,19 @@ public class LoginFragment extends Fragment {
 								editor.putString("avatar_uri", avatar_uri);
 								editor.commit();
 
-								MainApplication app = (MainApplication) getActivity()
-										.getApplicationContext();
-								app.setUserDate();
+								
+								
+								User user=User.getInstance();
+								user.setUserDate();
+								
 
 								RestClient.getInstance().setCookieStore();
 								Log.i("setcookie", "setcookiestore111");
-
+								fragmentCallback.finishActivity();
 								// 跳转到另一个activity
-								Intent it = new Intent(getActivity(),
-										MainActivity.class);
-								// Intent intent=new
-								// Intent(MeActivity.this,LogActivity.class);
-								startActivity(it);
+							    // Intent it = new Intent(getActivity(),MeActivity.class);
+								
+								//startActivity(it);
 
 							} else {
 								// Toast.makeText(getActivity(),
@@ -202,12 +210,6 @@ public class LoginFragment extends Fragment {
 						 */
 						// 写入sharePreherences
 
-						// AsyncHttpClient myClient = new AsyncHttpClient();
-						// PersistentCookieStore myCookieStore = new
-						// PersistentCookieStore(getActivity());
-
-						// 跳转到另一个activity
-
 					}
 
 				});
@@ -221,17 +223,27 @@ public class LoginFragment extends Fragment {
 
 			switch (msg.what) {
 			case 0:
-
+				
 				SharedPreferences userInfo = getActivity()
 						.getSharedPreferences("userinfo", Activity.MODE_PRIVATE);
 				SharedPreferences.Editor editor = userInfo.edit();
 				String use = username.getText().toString();
 				editor.putString("username", use);
+				
+				fragmentCallback.finishActivity();
 			default:
 				break;
 			}
 		}
 
 	};
+
+	
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		fragmentCallback = (LogActivity) activity;
+	}
 
 }

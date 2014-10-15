@@ -50,6 +50,12 @@ public class MomentActivity extends Activity implements FragmentCallback{
 			
 		}
 	}
+
+	@Override
+	public void finishActivity() {
+		// TODO Auto-generated method stub
+	
+	}
 	
 	
 }
