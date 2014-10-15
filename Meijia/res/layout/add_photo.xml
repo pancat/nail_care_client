@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    >
+    <LinearLayout
+        android:id="@+id/add_photo_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_snsbg_new"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dip"
+            android:layout_marginTop="10dip"
+            android:text="发送圈子"
+            android:textColor="#0087cb"
+            android:textSize="20dip" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cutline_2px" />
+
+        <RelativeLayout
+            android:id="@+id/upload_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/add_photo_selector"
+            android:onClick="onClick"
+            android:paddingLeft="25dip" >
+
+            <ImageView
+                android:id="@+id/icon_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/camera" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/icon_camera"
+                android:text="拍照上传"
+                android:textColor="#2e2e2e"
+                android:textSize="18dip" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/cutline_1px" />
+
+        <RelativeLayout
+            android:id="@+id/upload_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/add_photo_selector"
+            android:onClick="onClick"
+            android:paddingLeft="25dip" >
+
+            <ImageView
+                android:id="@+id/icon_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/file" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/icon_file"
+                android:text="本地上传"
+                android:textColor="#2e2e2e"
+                android:textSize="18dip" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/cutline_1px" />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="80dp"
+		    android:gravity="center"
+		    android:layout_gravity="center"
+		    android:text="请选择图片上传方式"
+		    android:textSize="20sp"
+		    android:textColor="#0087cb"
+		    />
+    </LinearLayout>
+
+</ScrollView>

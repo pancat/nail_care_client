@@ -14,7 +14,7 @@
 
         <TableRow>
 
-            <TextView android:layout_width="55dp" />
+           
 
             <EditText
                 android:layout_span="2"
@@ -26,7 +26,7 @@
 
         <TableRow>
 
-            <TextView android:layout_width="5dp" />
+           
 
             <EditText
                 android:id="@+id/testnum"
@@ -43,7 +43,7 @@
 
         <TableRow>
 
-            <TextView android:layout_width="5dp" />
+           
 
             <EditText
                 android:layout_span="2"
@@ -56,7 +56,7 @@
 
         <TableRow>
 
-            <TextView android:layout_width="5dp" />
+   
 
             <EditText
                 android:layout_span="2"

@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.fragment.MomentFragment;
 
@@ -49,6 +49,12 @@ public class MomentActivity extends Activity implements FragmentCallback{
 			startActivity(intent);
 			
 		}
+	}
+
+	@Override
+	public void finishActivity() {
+		// TODO Auto-generated method stub
+	
 	}
 	
 	

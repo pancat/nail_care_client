@@ -25,13 +25,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.MomentActivity;
-import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.bean.Circle;
+import com.pancat.fanrong.bean.Infos;
 import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.util.PhoneUtils;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
 import com.pancat.fanrong.waterfall.view.XListView;
@@ -50,6 +53,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 	private int currentPage = 0;
 	private ContentTask task = new ContentTask(getActivity(),2);
 	private FragmentCallback fragmentCallback;
+	private List<Circle> mInfos = new ArrayList<Circle>();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,13 +68,16 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 		
 		mImageFetcher = new ImageFetcher(getActivity(), 240);
 		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
-		getData();
+		mImageFetcher.setExitTasksEarly(false);
+		mAdapterView.setAdapter(mAdapter);
+		
 		return contextView;
 	}
 	
 	
 	@Override
 	public void onResume() {
+		getData();
 		Log.e(TAG, "resume");
         super.onResume();
     }
@@ -94,10 +101,9 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 	}
 	
 	private void getData(){
-		mImageFetcher.setExitTasksEarly(false);
-		mAdapterView.setAdapter(mAdapter);
 		//进入页面第一次加载数据
-		addItemToContainer(currentPage, 2);
+		mInfos = DatabaseManager.getInstance(getActivity()).getCircles();
+		mAdapter.notifyDataSetChanged();
 	}
 	
 	/**
@@ -114,7 +120,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 		}
 	}
 	
-	public class ContentTask extends AsyncTask<String,Integer,List<DuitangInfo>>{
+	public class ContentTask extends AsyncTask<String,Integer,List<Circle>>{
 		
 		private Context mContext;
 		//刷新类型：1为上拉刷新，2为下拉加载
@@ -135,7 +141,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 		 * 在后台执行费时的操作
 		 */
 		@Override
-		protected List<DuitangInfo> doInBackground(String... params) {
+		protected List<Circle> doInBackground(String... params) {
 			
 			try {
 				return parseNewsJSON(params[0]);
@@ -152,7 +158,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 		 * doInBackground执行完成后被UI线程调用
 		 */
 		@Override
-		protected void onPostExecute(List<DuitangInfo> result) {
+		protected void onPostExecute(List<Circle> result) {
 			if(mType == 1){
 				//执行上拉刷新时
 				mAdapter.addItemTop(result);
@@ -167,8 +173,8 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 			}
 		}
 		
-		public List<DuitangInfo> parseNewsJSON(String url) throws ClientProtocolException, IOException{
-			List<DuitangInfo> duitangs = new ArrayList<DuitangInfo>();
+		public List<Circle> parseNewsJSON(String url) throws ClientProtocolException, IOException{
+			List<Circle> duitangs = new ArrayList<Circle>();
 			String json = "";
 			//判断是否连接网络
 			if(PhoneUtils.isNetworkConnected(mContext)){
@@ -182,13 +188,13 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 					JSONArray blogsJson = jsonObject.getJSONArray("blogs");
 					for (int i = 0; i < blogsJson.length(); i++) {
                         JSONObject newsInfoLeftObject = blogsJson.getJSONObject(i);
-                        DuitangInfo newsInfo1 = new DuitangInfo();
-                        newsInfo1.setAlbid(newsInfoLeftObject.isNull("albid") ? "" : newsInfoLeftObject.getString("albid"));
-                        newsInfo1.setIsrc(newsInfoLeftObject.isNull("isrc") ? "" : newsInfoLeftObject.getString("isrc"));
-                        newsInfo1.setMsg(newsInfoLeftObject.isNull("msg") ? "" : newsInfoLeftObject.getString("msg"));
-                        newsInfo1.setHeight(newsInfoLeftObject.getInt("iht"));
-                        newsInfo1.setWidth(newsInfoLeftObject.getInt("iwd"));
-                        duitangs.add(newsInfo1);
+                        Circle circle = new Circle();
+                        circle.setIsrc(newsInfoLeftObject.isNull("isrc") ? "" : newsInfoLeftObject.getString("isrc"));
+                        circle.setMsg(newsInfoLeftObject.isNull("msg") ? "" : newsInfoLeftObject.getString("msg"));
+                        circle.setHeight(newsInfoLeftObject.getInt("iht"));
+                        circle.setWidth(newsInfoLeftObject.getInt("iwd"));
+                        duitangs.add(circle);
+                        DatabaseManager.getInstance(getActivity()).addCircle(circle);
                     }
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -201,12 +207,10 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 	class MyAdapter extends BaseAdapter{
 
 		private Context mContext;
-		private LinkedList<DuitangInfo> mInfos;
 		private XListView mListView;
 		
 		public MyAdapter(Context context,XListView xListView){
 			mContext = context;
-			mInfos = new LinkedList<DuitangInfo>();
 			mListView = xListView;
 		}
 		
@@ -229,7 +233,7 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
-			DuitangInfo duitangInfo = mInfos.get(position);
+			Circle duitangInfo = mInfos.get(position);
 			if(convertView == null){
 				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 				convertView = layoutInflater.inflate(R.layout.infos_list, null);
@@ -262,13 +266,13 @@ public class MomentFragment extends Fragment implements IXListViewListener{
 			TextView timeView;
 		}
 		
-		public void addItemTop(List<DuitangInfo> data){
-			for(DuitangInfo info : data){
-				mInfos.addFirst(info);
+		public void addItemTop(List<Circle> data){
+			for(Circle info : data){
+				mInfos.add(0, info);
 			}
 		}
 		
-		public void addItemLast(List<DuitangInfo> data){
+		public void addItemLast(List<Circle> data){
 			mInfos.addAll(data);
 		}
 	}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_snsbg_new"
+        android:orientation="vertical"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:gravity="center_horizontal" >
+       <ImageView 
+           android:layout_height="wrap_content"
+           android:layout_width="fill_parent"
+           android:id="@+id/selected_image"
+           />
+       <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/cutline_1px" />
+       <EditText
+            android:id="@+id/moment_des"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+            android:background="@drawable/input_comment_bg_selector"
+            android:gravity="center_vertical"
+            android:hint="Edit description"
+            >
+       </EditText>
+       <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/cutline_1px" />
+       <Button
+           android:layout_height="wrap_content"
+           android:layout_width="wrap_content"
+           android:background="@drawable/btn_pin_selector"
+           android:text="send"
+           android:textColor="@android:color/white"
+           android:layout_marginBottom="18dp"
+           android:id="@+id/btn_send_moment"
+           android:gravity="center"
+           />
+    </LinearLayout>
+</ScrollView>

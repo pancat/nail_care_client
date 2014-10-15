@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
 
 /**
@@ -37,7 +37,7 @@ public class MomentItemActivity extends Activity{
 		
 		Intent intent = getIntent();
 		Bundle data = intent.getExtras();
-		final DuitangInfo info = (DuitangInfo)data.getSerializable("duitangInfo");
+		final Circle info = (Circle)data.getSerializable("duitangInfo");
 		final int originalWidth = info.getWidth();
 		final int originalHeight = info.getHeight();
 		mImgParent = (LinearLayout)findViewById(R.id.img_parent_ll);

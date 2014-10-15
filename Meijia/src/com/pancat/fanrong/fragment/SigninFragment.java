@@ -22,8 +22,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -35,10 +38,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.pancat.fanrong.MainActivity;
+import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.common.ChangeMd5;
 import com.pancat.fanrong.common.Constants;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.common.User;
 
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
@@ -49,6 +57,8 @@ public class SigninFragment extends Fragment {
 	private EditText username, passwd, repasswd, testnum;
 	private Button regbtn;
 
+	private FragmentCallback fragmentCallback;
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		contextView = inflater.inflate(R.layout.fragment_mereg, container,
@@ -67,19 +77,27 @@ public class SigninFragment extends Fragment {
 
 	// 用户注册方法
 	private void regmethod(String name, String password, String testnum)
-			throws NoSuchAlgorithmException {
+			{
 		String url = "user/register";
 		// String url= "user/login";
 		RequestParams params = new RequestParams();
 		params.put("username", name);
 		// 将password转换为MD5
-		MessageDigest md = MessageDigest.getInstance("MD5");
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			String md5password = ChangeMd5.MD5(password, md);
 
-		String md5password = ChangeMd5.MD5(password, md);
-		Log.i("pasword md5:", md5password);
+			Log.i("pasword md5:", md5password);
 
-		params.put("password", md5password);
+			params.put("password", md5password);
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
+		
+		
 		params.put("validation", testnum);
 		RestClient.getInstance().post(getActivity(), url, params,
 				new AsyncHttpResponseHandler() {
@@ -92,97 +110,90 @@ public class SigninFragment extends Fragment {
 					@Override
 					public void onSuccess(String content) {
 
-					//	Toast.makeText(getActivity(), "数据提交成功",
-					//			Toast.LENGTH_LONG).show();
+						 Toast.makeText(getActivity(), "数据提交成功",
+						 Toast.LENGTH_LONG).show();
 						// 跳转到个人界面并显示出个人信息
 						// 跳转到个人界面并显示出个人信息
-						Message msg = new Message();
-						msg.obj = content;
-						msg.what = 0;
+						
 						try {
-							
-							JSONObject jsonObject = new JSONObject(content.toString());
+
+							JSONObject jsonObject = new JSONObject(content
+									.toString());
 							System.out.println(content.toString());
-							
-							int id;
+
+							int id,res_state;
 							int error_code;
+						
+
+							//id = jsonObject.getInt("res_state");
+						//	error_code = jsonObject.getInt("error_code");
+						//	System.out.println("id=" + id + "errorcode="
+						//			+ error_code);
+
+							String token, username1, nick_name, email, avatar_uri;
+
+							res_state = jsonObject.getInt("res_state");
+							error_code = jsonObject.getInt("error_code");
+							id = jsonObject.getInt("id");
+						//	token = jsonObject.getString("token");
+							username1 = jsonObject.getString("username");
+							nick_name = jsonObject.getString("nick_name");
+							email = jsonObject.getString("email");
+							avatar_uri = jsonObject.getString("avatar_uri");
+							String tomes = "res_code=" + res_state + " errpr_code="+ error_code;
+						//	Toast.makeText(getActivity(), tomes,Toast.LENGTH_LONG).show();
+							Log.i("res & error_code", tomes);
 							
-							  id = jsonObject.getInt("res_state");  
-                              error_code = jsonObject.getInt("error_code");  
-                              System.out.println("id="+id+"errorcode="+error_code);
-                              if(id==1)
-                              {
-                            	  Toast.makeText(getActivity(), "注册成功",Toast.LENGTH_LONG).show();
-                              }else{
-                            	  Toast.makeText(getActivity(), "注册失败",Toast.LENGTH_LONG).show();
-                              }
-                            String tomes="res_code="+id+" errpr_code="+error_code;
-                              Toast.makeText(getActivity(), tomes,Toast.LENGTH_LONG).show();
+							 if(res_state==1)
+							 {
+								//Toast.makeText(getActivity(), "注册成功",Toast.LENGTH_LONG).show();
+								Log.i("注册状态", "注册成功");
+								SharedPreferences userInfo=getActivity().getSharedPreferences("userinfo",Activity.MODE_PRIVATE);
+								SharedPreferences.Editor editor=userInfo.edit();
+											
+								editor.putString("username",username1);
+										editor.putInt("id", id);
+								//editor.putString("token", token);
+								editor.putString("nick_name", nick_name);
+								editor.putString("email", email);
+								editor.putString("avatar_uri", avatar_uri);
+								
+								
+								editor.commit();
+								
+								User user=User.getInstance();
+								user.setUserDate();
+								
+								RestClient.getInstance().setCookieStore();
+								Log.i("setcookie", "setcookiestore111");
+								
+								fragmentCallback.finishActivity(); 
+								/*
+								Intent it=new Intent(getActivity(),MainActivity.class);
+								startActivity(it);
+								*/
+							 }
+							 else{
+								// Toast.makeText(getActivity(), "注册失败",Toast.LENGTH_LONG).show();
+								 Log.i("注册状态", "注册失败");
+							 }
+								
+							
+							
+							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
-						//注册成功后自动登录
+
+						// 注册成功后自动登录
 
 					}
-
-					
 
 				});
 
 	}
-	//不使用第三方库的http连接方法
-	private void regmethodtwo(String name, String password, String testnum) {
-		HttpClient httpClient = new DefaultHttpClient();
-		String validateUrl = Constants.BASE_URL + "user/register";
-		System.out.println(validateUrl);
-		Log.i("url=",validateUrl);
-		// 设置链接超时
-		httpClient.getParams().setParameter(
-				CoreConnectionPNames.CONNECTION_TIMEOUT, 5000);
 
-		// 设置读取超时
-		httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-				5000);
-		HttpPost httpRequst = new HttpPost(validateUrl);
-		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-
-		params.add(new BasicNameValuePair("username", name));
-		params.add(new BasicNameValuePair("password", password));
-
-		try {
-			httpRequst.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			HttpResponse response = httpClient.execute(httpRequst);
-
-			if (response.getStatusLine().getStatusCode() == 200) {
-				
-				Toast.makeText(getActivity(), "chenggong", Toast.LENGTH_LONG).show();
-				StringBuilder builder = new StringBuilder();
-				BufferedReader buffer = new BufferedReader(
-						new InputStreamReader(response.getEntity().getContent()));
-
-				for (String s = buffer.readLine(); s != null; s = buffer
-						.readLine()) {
-					builder.append(s);
-
-				}
-
-				System.out.println(builder.toString());
-			}
-
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 
 	private OnClickListener regnewuser = new OnClickListener() {
 
@@ -200,30 +211,32 @@ public class SigninFragment extends Fragment {
 				Toast.makeText(getActivity(), "不是5位效验码", Toast.LENGTH_LONG)
 						.show();
 			}
-			if (!pass1.equals(pass2)) {
+			else if (!pass1.equals(pass2)) {
 				Toast.makeText(getActivity(), "两次密码不一致", Toast.LENGTH_LONG)
 						.show();
 			} else {
 				// 进行注册
-				//UserInter usernew=new UserInter(getActivity(),name,pass1,testn);
-				try {
-					regmethod(name,pass1,testn);
-				} catch (NoSuchAlgorithmException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				/*
-				try {
-					//regmethodtwo(name, pass1, testn);
+				// UserInter usernew=new
+				// UserInter(getActivity(),name,pass1,testn);
+			
 					regmethod(name, pass1, testn);
-				} catch (NoSuchAlgorithmException e) {
+				
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				*/
+			
+				/*
+				 * try { //regmethodtwo(name, pass1, testn); regmethod(name,
+				 * pass1, testn); } catch (NoSuchAlgorithmException e) { // TODO
+				 * Auto-generated catch block e.printStackTrace(); }
+				 */
 
 			}
 		}
 
 	};
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		fragmentCallback = (LoginActivity) activity;
+	}
 }

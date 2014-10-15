@@ -37,6 +37,10 @@ public class XListViewFooter extends LinearLayout {
 		initView(context);
 	}
 
+	/**
+	 * 根据状态设置显示相应文字或者progressbar
+	 * @param state
+	 */
 	public void setState(int state) {
 		mHintView.setVisibility(View.INVISIBLE);
 		mProgressBar.setVisibility(View.INVISIBLE);
@@ -47,6 +51,7 @@ public class XListViewFooter extends LinearLayout {
 		} else if (state == STATE_LOADING) {
 			mProgressBar.setVisibility(View.VISIBLE);
 		} else {
+			//状态为normal显示查看更多
 			mHintView.setVisibility(View.VISIBLE);
 			mHintView.setText(R.string.xlistview_footer_hint_normal);
 		}
@@ -66,7 +71,7 @@ public class XListViewFooter extends LinearLayout {
 	 */
 	public int getBottomMargin() {
 		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mContentView.getLayoutParams();
-		Log.i("bottom margin", String.valueOf(lp.bottomMargin));
+//		Log.i("bottom margin", String.valueOf(lp.bottomMargin));
 		return lp.bottomMargin;
 	}
 
