@@ -5,8 +5,6 @@ package com.pancat.fanrong;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -23,14 +21,10 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -39,20 +33,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
 import com.pancat.fanrong.activity.HomeActivity;
+import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.activity.MeActivity;
 import com.pancat.fanrong.activity.MomentActivity;
 import com.pancat.fanrong.activity.OrderActivity;
+import com.pancat.fanrong.common.User;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
-import com.pancat.fanrong.util.PhoneUtils;
-import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
 
@@ -158,7 +151,15 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
+				
+				if(!User.getInstance().isUserLogined())
+				{
+					Intent it=new Intent(MainActivity.this,LoginActivity.class);
+					startActivity(it);
+				}
+				else{
 				openAddDialog();
+				}
 			}
 		});
 	}
@@ -327,8 +328,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			tabMe.setClickable(false);
 			
 			intent.setClass(MainActivity.this,MeActivity.class);
-			subActivity = getLocalActivityManager().startActivity(
-					"subActivity3", intent);
+			subActivity = getLocalActivityManager().startActivity("subActivity3", intent);
 			container.addView(subActivity.getDecorView());
 			segment = 3;
 			break;

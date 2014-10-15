@@ -183,15 +183,22 @@ public class User {
 		id = -1;
 		token = null;
 		// 读取sharedperference
-		File f1 = new File(
-				"/data/data/com.pancat.fanrong/shared_prefs/userinfo.xml");
-		File f2 = new File(
-				"/data/data/com.pancat.fanrong/shared_prefs/userinfo.xml");
+		
+		// 读取sharedperference
+	//	File f1 = new File(Environment.getDataDirectory(), address);
+		Log.i("context",context+"");
+	//	SharedPreferences userInfo=context.getSharedPreferences("userinfo", Activity.MODE_PRIVATE);
+		File f1 = new File("/data/data/com.pancat.fanrong/shared_prefs/userinfo.xml");
+		File f2 = new File("/data/data/com.pancat.fanrong/shared_prefs/commonaddress.xml");
+	//	File f2 = new File(context.getFilesDir().getPath());
+		//File f2=context.getFilesDir().getPath("/data/data/com.pancat.fanrong/shared_prefs/userinfo.xml");
+		
 		if (!f1.exists()) {
 			Log.i("file exist", "not exist");
 		} else {
-			SharedPreferences userInfo = context.getSharedPreferences(
-					"userinfo", Activity.MODE_PRIVATE);
+		
+		
+		SharedPreferences userInfo = MainApplication.getAppContext().getSharedPreferences("userinfo", Activity.MODE_PRIVATE);
 
 			id = userInfo.getInt("id", -1);
 			token = userInfo.getString("token", "null");
@@ -204,15 +211,13 @@ public class User {
 			if (!f2.exists()) {
 				Log.i("file exist", "not exist");
 			} else {
-				SharedPreferences commonaddress = context.getSharedPreferences(
-						"commonaddress", Activity.MODE_PRIVATE);
-				Latitude = Double.valueOf(commonaddress.getString("Latitude",
-						"null"));
-				Longitude = Double.valueOf(commonaddress.getString("Longitude",
-						"null"));
+				SharedPreferences commonaddress = MainApplication.getAppContext().getSharedPreferences("commonaddress", Activity.MODE_PRIVATE);
+				Latitude = Double.valueOf(commonaddress.getString("Latitude","null"));
+				Longitude = Double.valueOf(commonaddress.getString("Longitude","null"));
 				address = commonaddress.getString("address", "null");
 			}
 		}
+		
 
 	}
 
