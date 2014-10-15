@@ -10,6 +10,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.pancat.fanrong.bean.AdBannerItem;
+import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.User;
 
 /**
@@ -24,6 +25,7 @@ public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper{
 	
 	private Dao<User,Integer> userDao;
 	private Dao<AdBannerItem, Integer> adBannerItemDao;
+	private Dao<Circle,Integer> circleDao;
 	
 	public DatabaseOpenHelper(Context ctx){
 		super(ctx,DATABASE_NAME,null,DATABASE_VERSION);
@@ -34,6 +36,7 @@ public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper{
 		try {
 			TableUtils.createTable(arg1, User.class);
 			TableUtils.createTable(arg1, AdBannerItem.class);
+			TableUtils.createTable(arg1, Circle.class);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -73,5 +76,16 @@ public class DatabaseOpenHelper extends OrmLiteSqliteOpenHelper{
 			}
 		}
 		return adBannerItemDao;
+	}
+	
+	public Dao<Circle,Integer> getCircleDao(){
+		if(circleDao == null){
+			try {
+				circleDao = getDao(Circle.class);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return circleDao;
 	}
 }

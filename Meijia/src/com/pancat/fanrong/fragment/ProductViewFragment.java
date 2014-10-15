@@ -33,7 +33,7 @@ import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.ProductDetailViewFragmentActivity;
 import com.pancat.fanrong.activity.ProductViewFragmentActivity;
 import com.pancat.fanrong.adapter.ProductInfoAdapter;
-import com.pancat.fanrong.bean.DuitangInfo;
+import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.fragment.MomentFragment.ContentTask;
