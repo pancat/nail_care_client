@@ -10,8 +10,7 @@ import android.os.Bundle;
 public interface FragmentCallback {
 	public void callback(Bundle arg);
 	
-<<<<<<< HEAD
+
 	public void finishActivity();
-=======
->>>>>>> f0e5a18b3cde8a3da93f797c68551274d0aad816
+
 }
