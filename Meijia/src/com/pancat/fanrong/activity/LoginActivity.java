@@ -21,7 +21,7 @@ import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.fragment.LoginFragment;
 import com.pancat.fanrong.fragment.SigninFragment;
 
-public class LogActivity extends Activity implements FragmentCallback {
+public class LoginActivity extends Activity implements FragmentCallback {
 	private LoginFragment loginFragment;
 	private SigninFragment signinFragment;
 	private FragmentManager fragmentManager;
@@ -33,7 +33,7 @@ public class LogActivity extends Activity implements FragmentCallback {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE); 
-		setContentView(R.layout.activity_log);
+		setContentView(R.layout.activity_login);
 		setFragment();
 		regbtn2 = (Button) findViewById(R.id.regbtn2);
 		logbtn2 = (Button) findViewById(R.id.logbtn2);

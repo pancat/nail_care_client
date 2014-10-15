@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.activity.LogActivity;
+import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.activity.MeActivity;
 import com.pancat.fanrong.common.ChangeMd5;
 import com.pancat.fanrong.common.FragmentCallback;
@@ -243,7 +243,7 @@ public class LoginFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		fragmentCallback = (LogActivity) activity;
+		fragmentCallback = (LoginActivity) activity;
 	}
 
 }

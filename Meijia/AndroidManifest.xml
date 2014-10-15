@@ -3,13 +3,12 @@
     package="com.pancat.fanrong"
     android:versionCode="1"
     android:versionName="1.0" >
-
     
-  
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="14" />
 
+   
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -22,6 +21,7 @@
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
 
+    
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
@@ -127,7 +127,7 @@
 		     android:theme="@style/Theme.AppCompat.Light" >
 		</activity>
         <activity
-            android:name=".activity.LogActivity"
+            android:name=".activity.LoginActivity"
              android:theme="@style/Transparent"  >
         </activity>
         <activity
