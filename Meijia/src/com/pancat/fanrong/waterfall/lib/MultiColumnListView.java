@@ -38,7 +38,7 @@ public class MultiColumnListView extends PLA_ListView {
 
     private static final int DEFAULT_COLUMN_NUMBER = 2;
 
-    private int mColumnNumber = 2;
+    private int mColumnNumber;
     private Column[] mColumns = null;
     private Column mFixedColumn = null; // column for footers & headers.
     private SparseIntArray mItems = new SparseIntArray();
@@ -65,10 +65,8 @@ public class MultiColumnListView extends PLA_ListView {
 
     private void init(AttributeSet attrs) {
         getWindowVisibleDisplayFrame(mFrameRect);
-
         if (attrs == null) {
-            mColumnNumber = (DEFAULT_COLUMN_NUMBER); // default column number is
-                                                     // 2.
+            mColumnNumber = (DEFAULT_COLUMN_NUMBER); // default column number is 2
         } 
         else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PinterestLikeAdapterView);
@@ -96,6 +94,11 @@ public class MultiColumnListView extends PLA_ListView {
         mFixedColumn = new FixedColumn();
     }
 
+    
+    public void setColumnNum(int num){
+    	mColumnNumber = num;
+    }
+    
     // /////////////////////////////////////////////////////////////////////
     // Override Methods...
     // /////////////////////////////////////////////////////////////////////

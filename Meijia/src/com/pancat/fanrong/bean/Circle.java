@@ -20,9 +20,13 @@ public class Circle implements Serializable{
 	@DatabaseField
 	private int height;
 	@DatabaseField
-	private String msg;
+	private String description;
 	@DatabaseField
-	private String isrc;
+	private String path;
+	@DatabaseField
+	private int uid;
+	@DatabaseField
+	private String creTime;
 
 	public int getId() {
 		return id;
@@ -31,20 +35,20 @@ public class Circle implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getMsg() {
-		return msg;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getIsrc() {
-		return isrc;
+	public String getPath() {
+		return path;
 	}
 
-	public void setIsrc(String isrc) {
-		this.isrc = isrc;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public int getHeight() {
@@ -63,4 +67,20 @@ public class Circle implements Serializable{
 		this.width = width;
 	}
 	
+	public int getUid(){
+		return uid;
+	}
+	
+	public void setUid(int uid){
+		this.uid = uid;
+	}
+	
+	
+	public String getCreTime(){
+		return creTime;
+	}
+	
+	public void setCreTime(String creTime){
+		this.creTime = creTime;
+	}
 }

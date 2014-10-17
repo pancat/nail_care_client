@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -43,9 +44,13 @@ import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.activity.MeActivity;
 import com.pancat.fanrong.activity.MomentActivity;
 import com.pancat.fanrong.activity.OrderActivity;
+import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.common.User;
+import com.pancat.fanrong.http.AsyncHttpResponseHandler;
+import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
+import com.pancat.fanrong.util.FileUtils;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
 
@@ -69,6 +74,8 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private final int FROM_LOCAL_FILE = 2;
 	
 	private AlertDialog addPicDialog;
+	private AlertDialog sendDialog;
+	private ProgressDialog progressDialog;
 	
 	//手机屏幕的宽度，用来设置dialog的大小
 	private int screenWidth;
@@ -158,7 +165,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 					startActivity(it);
 				}
 				else{
-				openAddDialog();
+					openAddDialog();
 				}
 			}
 		});
@@ -205,14 +212,14 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	 * 弹出发送圈子内容对话框
 	 * @param path 图片存储路径
 	 */
-	private void openSendDialog(String path){
-		AlertDialog sendDialog = new AlertDialog.Builder(this).create();
+	private void openSendDialog(final String path){
+		sendDialog = new AlertDialog.Builder(this).create();
 		//解决唤不出键盘问题
 		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_moment, null));
 		sendDialog.show();
 		Window sendWindow = sendDialog.getWindow();
 		sendWindow.setContentView(R.layout.edit_moment);
-		EditText description = (EditText)sendWindow.findViewById(R.id.moment_des);			//对话框中的描述控件
+		final EditText etDescription = (EditText)sendWindow.findViewById(R.id.moment_des);			//对话框中的描述控件
 		ImageView selectedImg = (ImageView)sendWindow.findViewById(R.id.selected_image);	//对话框中的图片控件
 		Button btnSendMoment = (Button)sendWindow.findViewById(R.id.btn_send_moment);
 		//设置图片控件参数
@@ -224,8 +231,8 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(path, options);
-		int originalHeight = options.outHeight;
-		int originalWidth = options.outWidth;
+		final int originalHeight = options.outHeight;
+		final int originalWidth = options.outWidth;
 		//按比例缩放图片
 		int iWidth = (int) (screenWidth*0.9);
 		int iHeight = iWidth*originalHeight/originalWidth;
@@ -240,7 +247,46 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				//这里实现点击发送圈子按钮操作(上传图文到服务器)
-				Toast.makeText(MainActivity.this, "点击发送按钮", Toast.LENGTH_LONG).show();
+				String description = etDescription.getText().toString();
+				File file = new File(path);
+				//设置请求url
+				String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/save_circle";
+				RequestParams params = new RequestParams();
+				try {
+					//设置post参数
+					params.put("uid", String.valueOf(1));
+					params.put("height", String.valueOf(originalHeight));
+					params.put("width", String.valueOf(originalWidth));
+					params.put("description", description);
+					params.put("cre_time",String.valueOf(System.currentTimeMillis()));
+					params.put("img", file);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				//显示正在上传对话框
+				progressDialog = ProgressDialog.show(MainActivity.this, "uploading", "Please wait...");
+				RestClient.getInstance().postFromAbsoluteUrl(MainActivity.this, requestUrl, params,
+						new AsyncHttpResponseHandler(){
+							
+							@Override
+							public void onSuccess(String content) {
+								super.onSuccess(content);
+								progressDialog.dismiss();
+								
+								sendDialog.dismiss();
+								Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
+							}
+
+							@Override
+							public void onFailure(Throwable error,
+									String content) {
+								// TODO Auto-generated method stub
+								super.onFailure(error, content);
+								progressDialog.dismiss();
+								Toast.makeText(MainActivity.this, "上传失败", Toast.LENGTH_LONG).show();
+							}
+
+				});
 			}
 		});
 	}

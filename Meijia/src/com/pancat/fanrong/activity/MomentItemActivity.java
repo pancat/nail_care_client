@@ -49,12 +49,12 @@ public class MomentItemActivity extends Activity{
 			@Override
 			public void onGlobalLayout() {
 				mImgParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				mImgPath.setText(info.getIsrc());
+				mImgPath.setText(info.getPath());
 				int  parentWidth = mImgParent.getWidth();
 				//按比例缩放图片
 				int iWidth = parentWidth;
 				int iHeight = iWidth*originalHeight/originalWidth;
-				mImgParent.addView(addImageView(iWidth, iHeight,info.getIsrc()));
+				mImgParent.addView(addImageView(iWidth, iHeight,info.getPath()));
 			}
 		});
 	}

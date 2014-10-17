@@ -65,7 +65,21 @@ public class RestClient {
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
+	
+	/**
+	 * 测试使用，url地址未拼接BASE_URL
+	 * @param context
+	 * @param absoluteUrl
+	 * @param params
+	 * @param responseHandler
+	 */
+	public void postFromAbsoluteUrl(Context context , String absoluteUrl ,RequestParams params,
+			AsyncHttpResponseHandler responseHandler){
+		client.setUserAgent(PhoneUtils.getUserAgent(context));
+		client.post(absoluteUrl, params, responseHandler);
+	}
 
+	
 	private String getAbsoluteUrl(String relativeUrl) {
 		if (relativeUrl.toLowerCase().startsWith("http://")
 				|| relativeUrl.toLowerCase().startsWith("https://")) {
@@ -86,7 +100,7 @@ public class RestClient {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public String getStringFromUrl(String url) throws ClientProtocolException, IOException {
+	public static String getStringFromUrl(String url) throws ClientProtocolException, IOException {
 		HttpGet get = new HttpGet(url);
 		HttpClient client = new DefaultHttpClient();
 		HttpResponse response = client.execute(get);
