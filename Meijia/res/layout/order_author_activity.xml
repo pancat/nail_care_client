@@ -2,88 +2,118 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     >
     
-	<LinearLayout 
-	     android:layout_width="match_parent"
+	<LinearLayout
+	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical" >
-	    
-		<LinearLayout android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal"
-		    android:background="@drawable/input_field" 
-		    android:layout_margin="10dp"
-		    >
-		    
-		    <ImageView android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:src="@drawable/user"
-		        android:layout_gravity="center"
-		        android:padding="5dp"
-		        android:background="@color/blue"/>
-		    
-		    <EditText android:id="@+id/order_author_activity_time"
-		        android:layout_width="0dp"
-		        android:layout_height="match_parent"
-		        android:layout_weight="1"
-		        android:hint="预约时间"
-		        android:padding="5dp"
-		        android:gravity="center_vertical"
-		        />
-		</LinearLayout>
-		
-		<LinearLayout android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal"
-		    android:background="@drawable/input_field" 
-		    android:layout_margin="10dp"
-		    >
-		    
-		    <ImageView android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:src="@drawable/user"
-		        android:layout_gravity="center"
-		        android:padding="5dp"
-		        android:background="@color/blue"/>
-		    
-		    <EditText android:id="@+id/order_author_activity_position"
-		        android:layout_width="0dp"
-		        android:layout_height="match_parent"
-		        android:layout_weight="1"
-		        android:hint="地理位置"
-		        android:padding="5dp"
-		        android:gravity="center_vertical"/>
-		</LinearLayout>
-		
-		<LinearLayout android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal"
-		    android:background="@drawable/input_field" 
-		    android:layout_margin="10dp"
-		    >
-		    
-		    <ImageView android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:src="@drawable/user"
-		        android:layout_gravity="center"
-		        android:padding="5dp"
-		        android:background="@color/blue"/>
-		    
-		    <EditText android:id="@+id/order_author_activity_detail"
-		        android:layout_width="0dp"
-		        android:layout_height="match_parent"
-		        android:layout_weight="1"
-		        android:hint="详细位置"
-		        android:padding="5dp"
-		        android:gravity="center_vertical"/>
-		</LinearLayout>
-		
-		<!-- 在这里输入百度地图视图相关总局代码，id=order_author_activity_map -->
-		<!-- @empark -->
-       <TextView android:layout_width="match_parent"
-           android:layout_height="400dp"
-           android:background="#ff0000"
-           android:text="123"/>
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:background="@drawable/input_field"
+	        android:orientation="horizontal" >
+
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:background="@color/blue"
+	            android:src="@drawable/user" />
+
+	        <EditText
+	            android:id="@+id/order_author_activity_time"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center_vertical"
+	            android:hint="预约时间" />
+	    </LinearLayout>
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:background="@drawable/input_field"
+	        android:orientation="horizontal" >
+
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:background="@color/blue"
+	            android:src="@drawable/user" />
+
+	        <EditText
+	            android:id="@+id/order_author_activity_position"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center_vertical"
+	            android:hint="地理位置"
+	            android:padding="5dp" />
+	    </LinearLayout>
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:background="@drawable/input_field"
+	        android:orientation="horizontal" >
+
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:background="@color/blue"
+	            android:src="@drawable/user" />
+
+	        <EditText
+	            android:id="@+id/order_author_activity_detail"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center_vertical"
+	            android:hint="详细位置"
+	            android:padding="5dp" />
+	    </LinearLayout>
+
+	    <LinearLayout
+	        android:id="@+id/order_author_activity_morelabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:background="#69ff00"
+	        android:orientation="horizontal" >
+
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/btn_add_s" />
+
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:gravity="center_vertical"
+	            android:padding="8dp"
+	            android:text="点击添加附加信息" />
+	    </LinearLayout>
+
+	    <EditText android:id="@+id/order_author_activity_moremsg"
+	        android:layout_width="match_parent"
+	        android:layout_height="80dp"
+	        android:layout_margin="2dp"
+	        android:maxLines="6"
+	        android:minLines="3"
+	        android:background="@drawable/input_field"
+	         />
+
+	    <!-- 在这里输入百度地图视图相关总局代码，id=order_author_activity_map -->
+	    <!-- @empark -->
 	</LinearLayout>
+
 </ScrollView>

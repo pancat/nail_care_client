@@ -49,7 +49,9 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 	private EditText mTime;
 	private EditText mPosition;
 	private EditText mDetail;
-
+    private View mMoreLabel;
+    private EditText mMore;
+    
 	FreeTimeTableView timeView = null;
 	
 	@Override
@@ -66,6 +68,10 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		mTime = (EditText)findViewById(R.id.order_author_activity_time);
 		mPosition = (EditText)findViewById(R.id.order_author_activity_position);
 		mDetail = (EditText)findViewById(R.id.order_author_activity_detail);
+		mMoreLabel = findViewById(R.id.order_author_activity_morelabel);
+		mMore = (EditText)findViewById(R.id.order_author_activity_moremsg);
+		mMore.setVisibility(View.GONE);
+		
 		hideSoftKeyBoard(mTime);
 		
 		(LayoutInflater.from(this).inflate(R.layout.order_author_activity, null)).setOnClickListener(new OnClickListener() {
@@ -109,6 +115,17 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				
+			}
+		});
+		
+		mMoreLabel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if(mMore.getVisibility() == View.VISIBLE)
+					mMore.setVisibility(View.GONE);
+				else mMore.setVisibility(View.VISIBLE);
 			}
 		});
 	}
