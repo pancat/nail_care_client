@@ -6,22 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.pancat.fanrong.viewpagerindicator.TitlePageIndicator
-        android:id="@+id/indicator"
-        android:padding="10dip"
+    <com.pancat.fanrong.viewpagerindicator.TabPageIndicator
+        android:id="@+id/tab_freetime_table_indicator"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:background="#18FF0000"
-        android:textColor="#AA000000"
-        app:footerColor="#FFAA2222"
-        app:footerLineHeight="1dp"
-        app:footerIndicatorHeight="3dp"
-        app:footerIndicatorStyle="underline"
-        app:selectedColor="#FF000000"
-        app:selectedBold="true" />
-    
-    <android.support.v4.view.ViewPager
-        android:id="@+id/gong"
+        />
+    <com.pancat.fanrong.common.ViewPagerFixWrapContent
+        android:id="@+id/tab_freetime_table_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

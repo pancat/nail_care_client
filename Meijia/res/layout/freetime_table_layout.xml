@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
-    android:background="#ffffff">
+    android:background="#ffff00">
     
     <GridView android:id="@+id/freetime_table"
         android:layout_width="match_parent"

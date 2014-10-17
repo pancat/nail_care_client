@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,15 @@ public class ProductDetailFragment extends Fragment {
    private static final String TAG = "ProductDetailFragment";
 	
    private Product product;
-   private ImageView productDFImg;
+ //  private ImageView productDFImg;
+   private ViewPager productDFImgListViewpager;
+   private ImageView leftArrow = null;
+   private ImageView rightArrow = null;
+   
    private TextView productDFDescription;
    private TextView productDFPrice;
    private Button productDFOrder;
+   
    
    public static ProductDetailFragment newInstance(String product)
    {
@@ -45,7 +51,7 @@ public class ProductDetailFragment extends Fragment {
 	   product = Product.ParseFromString(args.getString(Product.KEY));
    }
 
-
+   
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,25 +59,21 @@ public class ProductDetailFragment extends Fragment {
 		return inflater.inflate(R.layout.product_detail_fragment, container, false);
 	}
 
-
+   
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		super.onActivityCreated(savedInstanceState);
 		
-		View view = getView();
-		productDFDescription = (TextView)view.findViewById(R.id.product_detail_fragment_description);
-		productDFImg = (ImageView)view.findViewById(R.id.product_detail_fragment_img);
-		productDFOrder = (Button)view.findViewById(R.id.product_detail_fragment_order);
-		productDFPrice = (TextView)view.findViewById(R.id.product_detail_fragment_price);
-		productDFImg.setImageResource(R.drawable.defaultproduct);
+		//获取视图中组件
+
+		//productDFImg.setImageResource(R.drawable.defaultproduct);
 		if(product != null)
 		{
 			productDFDescription.setText(product.getProductDescription());
 			productDFPrice.setText(product.getProductPrice());
 			
 			//TODO 需要进一步更改
-			HandlerFactory.setLoadImageHandler(product.getProductURL(), true, productDFImg);
+			//HandlerFactory.setLoadImageHandler(product.getProductURL(), true, productDFImg);
 			Log.d(TAG, product.getProductURL());
 		}
 		
@@ -92,5 +94,17 @@ public class ProductDetailFragment extends Fragment {
 				
 			}
 		});
+	}
+	
+	//初始化视图
+	private void initView(){
+		
+		View view = getView();
+		productDFDescription = (TextView)view.findViewById(R.id.product_detail_fragment_description);
+		//productDFImg = (ImageView)view.findViewById(R.id.product_detail_fragment_img);
+        productDFImgListViewpager = (ViewPager)view.findViewById(R.id.product_detail_fragment_viewpage);
+		
+        productDFOrder = (Button)view.findViewById(R.id.product_detail_fragment_order);
+		productDFPrice = (TextView)view.findViewById(R.id.product_detail_fragment_price);
 	}
 }

@@ -5,9 +5,42 @@
     android:orientation="vertical"
     android:background="@drawable/product_detail_fragment_style" >
     
-    <ImageView android:layout_width="match_parent"
+    <!--<ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scaleType="center"
         android:id="@+id/product_detail_fragment_img"/>
+        -->
+      
+      <!-- 作者的系列图片显示  具备左箭头右箭头-->
+      <RelativeLayout android:id="@+id/product_detail_fragment_img"
+          android:layout_width="wrap_content"
+          android:layout_height="150dp"
+          android:background="#ff0000" >
+         
+	     <android.support.v4.view.ViewPager
+	        android:id="@+id/product_detail_fragment_viewpage"
+	        android:layout_width="match_parent"
+	        android:layout_height="150dp"
+	        android:layout_weight="1"
+	        android:background="#00ff00"
+	        />
+	     
+	    <ImageView android:id="@+id/product_detail_fragment_left"
+              android:layout_height="150dp"
+              android:layout_width="50dp"
+              android:gravity="center"
+              android:src="@drawable/left"
+              android:layout_alignLeft="@id/product_detail_fragment_viewpage" />
+	    
+	    <ImageView android:id="@+id/product_detail_fragment_right"
+              android:layout_height="150dp"
+              android:layout_width="50dp"
+              android:gravity="center"
+              android:layout_alignRight="@id/product_detail_fragment_viewpage"
+              android:src="@drawable/right"/>
+	</RelativeLayout>
+	
+      
     <TextView android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/product_detail_fragment_description"/>

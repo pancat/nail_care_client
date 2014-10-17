@@ -81,6 +81,9 @@
 		
 		<!-- 在这里输入百度地图视图相关总局代码，id=order_author_activity_map -->
 		<!-- @empark -->
-		
+       <TextView android:layout_width="match_parent"
+           android:layout_height="400dp"
+           android:background="#ff0000"
+           android:text="123"/>
 	</LinearLayout>
 </ScrollView>

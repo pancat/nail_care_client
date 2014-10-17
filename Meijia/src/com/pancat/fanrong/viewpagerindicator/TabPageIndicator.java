@@ -16,13 +16,16 @@
  */
 package com.pancat.fanrong.viewpagerindicator;
 
+
 import com.pancat.fanrong.R;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -78,12 +81,12 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
     public TabPageIndicator(Context context) {
         this(context, null);
     }
-
-    public TabPageIndicator(Context context, AttributeSet attrs) {
+    
+	public TabPageIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
         setHorizontalScrollBarEnabled(false);
 
-        mTabLayout = new IcsLinearLayout(context, R.attr.vpiTabPageIndicatorStyle);
+        mTabLayout = new IcsLinearLayout(context,R.attr.vpiTabPageIndicatorStyle);
         addView(mTabLayout, new ViewGroup.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
     }
 
@@ -107,7 +110,7 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
         } else {
             mMaxTabWidth = -1;
         }
-
+        
         final int oldWidth = getMeasuredWidth();
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         final int newWidth = getMeasuredWidth();
@@ -281,4 +284,9 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
             return mIndex;
         }
     }
+    
+    public int getCurrentPage() {
+    	return mSelectedTabIndex;
+    }
+    
 }
