@@ -87,7 +87,9 @@ public class FreeTimeTableFragment extends Fragment {
 				// TODO Auto-generated method stub
 				Map<String,Object> map = datas.get(pos);
 				if((Integer) map.get(MoreTypeViewForGVAdapter.TYPE) == MoreTypeViewForGVAdapter.BUSY ){
-					Toast.makeText(getActivity(), "你不能重复别人的预约", Toast.LENGTH_LONG);
+					if(listener != null){
+						listener.setonItemClickToActivity(-1);
+					}
 				}else{
 					if(listener != null){
 						listener.setonItemClickToActivity(pos+START_TIME);
@@ -103,7 +105,11 @@ public class FreeTimeTableFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-		listener = (onItemClickToActivity)activity;
+		try{
+			listener = (onItemClickToActivity)activity;
+		}catch(Exception e){
+			listener = null;
+		}
 	}
 	@Override
     public void onSaveInstanceState(Bundle outState) {
