@@ -197,7 +197,7 @@ public class MeActivity extends Activity implements FragmentCallback {
 
 		@Override
 		public void onClick(View v) {
-			Intent intent = new Intent(MeActivity.this, LoginActivity.class);
+			Intent intent = new Intent(MeActivity.this, SignInActivity.class);
 
 			startActivity(intent);
 			MeActivity.this.getParent().overridePendingTransition(

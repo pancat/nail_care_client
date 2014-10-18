@@ -16,12 +16,12 @@ import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
 
 public class User {
-	private User() {
+	public User() {
 	}
 
 	int id = -1;
 	String token;
-	String username, nick_name, email, avatar_uri;
+	String username, nickname, email, avatarUri;
 	int age;
 
 	String address;
@@ -37,12 +37,12 @@ public class User {
 		this.username = username;
 	}
 
-	public String getNick_name() {
-		return nick_name;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setNick_name(String nick_name) {
-		this.nick_name = nick_name;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getEmail() {
@@ -53,12 +53,12 @@ public class User {
 		this.email = email;
 	}
 
-	public String getAvatar_uri() {
-		return avatar_uri;
+	public String getAvatarUri() {
+		return avatarUri;
 	}
 
-	public void setAvatar_uri(String avatar_uri) {
-		this.avatar_uri = avatar_uri;
+	public void setAvatarUri(String avatarUri) {
+		this.avatarUri = avatarUri;
 	}
 
 	public int getAge() {
@@ -203,10 +203,10 @@ public class User {
 			id = userInfo.getInt("id", -1);
 			token = userInfo.getString("token", "null");
 			username = userInfo.getString("username", "null");
-			nick_name = userInfo.getString("nick_name", "null");
+			nickname = userInfo.getString("nick_name", "null");
 			age = userInfo.getInt("age", 0);
 			email = userInfo.getString("email", "null");
-			avatar_uri = userInfo.getString("avatar_uri", "null");
+			avatarUri = userInfo.getString("avatar_uri", "null");
 
 			if (!f2.exists()) {
 				Log.i("file exist", "not exist");

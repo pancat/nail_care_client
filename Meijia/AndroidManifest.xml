@@ -3,12 +3,11 @@
     package="com.pancat.fanrong"
     android:versionCode="1"
     android:versionName="1.0" >
-    
+
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="14" />
 
-   
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -21,7 +20,6 @@
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
 
-    
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
@@ -53,49 +51,48 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="getui.permission.GetuiService"/>
-     
-    
-    
-        <!-- 百度云推送 额外需要 的权限 -->  
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="getui.permission.GetuiService" />
+
+    <!-- 百度云推送 额外需要 的权限 -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    
+
     <!-- 自定义个推权限 -->
     <permission
         android:name="getui.permission.GetuiService"
         android:protectionLevel="normal" >
     </permission>
-    
-    <!-- 百度云所要求 android:name-->
+
+    <!-- 百度云所要求 android:name -->
     <application
-        android:name="com.pancat.fanrong.MainApplication"  
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" 
-        android:persistent="true"><!-- 消息推持久连接 -->
-        
-       
+        android:persistent="true"
+        android:theme="@style/AppTheme" >
+ <!-- 消息推持久连接 -->
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateHidden" ><!-- 个推运行模式singleTop 不改应该没影响，百度云是singleTask-->
+            android:windowSoftInputMode="adjustPan|stateHidden" >
+ <!-- 个推运行模式singleTop 不改应该没影响，百度云是singleTask -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.HomeActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
-		>
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
             android:name=".activity.OrderActivity"
@@ -125,58 +122,58 @@
             android:name=".activity.ProductViewFragmentActivity"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
-		<activity
-		    android:name=".activity.ProductSearchActivity" 
-		     android:theme="@style/Theme.AppCompat.Light" >
-		</activity>
-		<activity
-		    android:name=".activity.ProductDetailViewFragmentActivity"
-		    android:configChanges="orientation|keyboardHidden"
-		      android:theme="@style/StyledIndicators" >
-		</activity>
+        <activity
+            android:name=".activity.ProductSearchActivity"
+            android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
+        <activity
+            android:name=".activity.ProductDetailViewFragmentActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/StyledIndicators" >
+        </activity>
         <activity
             android:name=".activity.LoginActivity"
-             android:theme="@style/Transparent"  >
+            android:theme="@style/Transparent" >
         </activity>
         <activity
             android:name=".activity.SearchProductShowFragmentActivity"
-             android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
             android:name=".activity.MomentItemActivity"
             android:theme="@style/AppTheme" >
         </activity>
-        
-        <activity android:name=".activity.OrderAuthorActivity"
-                  android:theme="@style/StyledIndicators"
-                  android:windowSoftInputMode="stateHidden" >
+        <activity
+            android:name=".activity.OrderAuthorActivity"
+            android:theme="@style/StyledIndicators"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
-       
         <activity
             android:name=".activity.EditUserInfomation"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name=".activity.TestLocation"
-            android:theme="@style/AppTheme"  >
+            android:theme="@style/AppTheme" >
         </activity>
-	 
-        <!--个推SDK配置开始-->
-         <receiver
-            android:name="com.pancat.fanrong.receiver.PushMsgGeTuiReceiver"
+
+        <!-- 个推SDK配置开始 -->
+        <receiver
+            android:name=".receiver.PushMsgGeTuiReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.igexin.sdk.action.QMwFHj377d7Nm76Lti0ZU7" />
             </intent-filter>
         </receiver>
-        
+
         <!-- 配置SDK核心服务 -->
-         <service
+        <service
             android:name="com.igexin.sdk.PushService"
-            android:process=":pushservice"
             android:exported="true"
-            android:label="NotificationCenter" >
+            android:label="NotificationCenter"
+            android:process=":pushservice" >
         </service>
+
         <receiver android:name="com.igexin.sdk.PushReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -192,65 +189,81 @@
                 <action android:name="com.igexin.sdk.action.pushmanager" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name="com.igexin.sdk.PushActivity"
-            android:process=":pushservice"
             android:excludeFromRecents="true"
             android:exported="false"
+            android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-         
-        <service android:name="com.igexin.download.DownloadService" android:process=":pushservice" />
-        <receiver android:name="com.igexin.download.DownloadReceiver"> 
+
+        <service
+            android:name="com.igexin.download.DownloadService"
+            android:process=":pushservice" />
+
+        <receiver android:name="com.igexin.download.DownloadReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
         <provider
-            android:process=":pushservice"
             android:name="com.igexin.download.DownloadProvider"
-            android:authorities="downloads.com.pancat.fanrong"    />
-            <!-- android:authorities="downloads.第三方包名" -->
-         
-        <activity android:name="com.igexin.getuiext.activity.GetuiExtActivity" 
+            android:authorities="downloads.com.pancat.fanrong"
+            android:process=":pushservice" />
+        <!-- android:authorities="downloads.第三方包名" -->
+
+        <activity
+            android:name="com.igexin.getuiext.activity.GetuiExtActivity"
             android:configChanges="orientation|keyboard|keyboardHidden"
             android:excludeFromRecents="true"
+            android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="android.task.myServicetask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:exported="false" />
-         
-        <receiver android:name="com.igexin.getuiext.service.PayloadReceiver" android:exported="false" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver
+            android:name="com.igexin.getuiext.service.PayloadReceiver"
+            android:exported="false" >
             <intent-filter>
+
                 <!-- 这个com.igexin.sdk.action.7fjUl2Z3LH6xYy7NQK4ni4固定，不能修改 -->
                 <action android:name="com.igexin.sdk.action.7fjUl2Z3LH6xYy7NQK4ni4" />
-                <!-- android:name="com.igexin.sdk.action.第三方的appId" -->            
+                <!-- android:name="com.igexin.sdk.action.第三方的appId" -->
                 <action android:name="com.igexin.sdk.action.Y99EnrVe6o6kOoYsymqEK7" />
             </intent-filter>
         </receiver>
-         
-        <service android:name="com.igexin.getuiext.service.GetuiExtService" android:process=":pushservice" />
-         <!-- 个推SDK配置结束 -->
-         
-         	<!--配置第三方应用参数属性-->
-		<meta-data
-		    android:name="PUSH_APPID"
-		    android:value="Y99EnrVe6o6kOoYsymqEK7"/><!--替换为第三方应用的APPID-->
-		<meta-data
-		    android:name="PUSH_APPKEY"
-		    android:value="4JT3iGVBvW9XVY7c3tbCx1"/><!--替换为第三方应用的APPKEY-->
-		<meta-data
-		    android:name="PUSH_APPSECRET"
-		    android:value="L3zM4z1CUYAijxsN9bXNW3"/><!--替换为第三方应用的APPSECRET-->
-		<meta-data
-		    android:name="PUSH_GROUPID"
-		    android:value=""/>
-		
-		<!-- 百度云推送配置 -->
-		 <!-- 自定义消息处理-->
-        <receiver android:name="com.pancat.fanrong.receiver.PushMsgBaiDuReceiver">
+
+        <service
+            android:name="com.igexin.getuiext.service.GetuiExtService"
+            android:process=":pushservice" />
+        <!-- 个推SDK配置结束 -->
+
+
+        <!-- 配置第三方应用参数属性 -->
+        <meta-data
+            android:name="PUSH_APPID"
+            android:value="Y99EnrVe6o6kOoYsymqEK7" />
+ <!-- 替换为第三方应用的APPID -->
+        <meta-data
+            android:name="PUSH_APPKEY"
+            android:value="4JT3iGVBvW9XVY7c3tbCx1" />
+ <!-- 替换为第三方应用的APPKEY -->
+        <meta-data
+            android:name="PUSH_APPSECRET"
+            android:value="L3zM4z1CUYAijxsN9bXNW3" />
+ <!-- 替换为第三方应用的APPSECRET -->
+        <meta-data
+            android:name="PUSH_GROUPID"
+            android:value="" />
+
+        <!-- 百度云推送配置 -->
+        <!-- 自定义消息处理 -->
+        <receiver android:name=".receiver.PushMsgBaiDuReceiver" >
             <intent-filter>
+
                 <!-- 接收push消息 -->
                 <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
                 <!-- 接收bind,unbind,fetch,delete等反馈消息 -->
@@ -258,10 +271,11 @@
                 <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
             </intent-filter>
         </receiver>
-                
+
         <!-- push必须的receviver和service声明 -->
-        <receiver android:name="com.baidu.android.pushservice.PushServiceReceiver"
-            android:process=":bdservice_v1">
+        <receiver
+            android:name="com.baidu.android.pushservice.PushServiceReceiver"
+            android:process=":bdservice_v1" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -269,38 +283,59 @@
                 <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.baidu.android.pushservice.RegistrationReceiver"
-            android:process=":bdservice_v1">
+        <receiver
+            android:name="com.baidu.android.pushservice.RegistrationReceiver"
+            android:process=":bdservice_v1" >
             <intent-filter>
                 <action android:name="com.baidu.android.pushservice.action.METHOD" />
                 <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
-            </intent-filter>                   
+            </intent-filter>
         </receiver>
+
         <service
             android:name="com.baidu.android.pushservice.PushService"
             android:exported="true"
-            android:process=":bdservice_v1"  >
+            android:process=":bdservice_v1" >
             <intent-filter>
                 <action android:name="com.baidu.android.pushservice.action.PUSH_SERVICE" />
             </intent-filter>
         </service>
-        
-        <meta-data android:name="api_key" android:value="9Ay3feL878KZY88PLChUlEOk" />
-        
+
+        <meta-data
+            android:name="api_key"
+            android:value="9Ay3feL878KZY88PLChUlEOk" />
+
         <!-- 百度云推送配置结束 -->
-        
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="B9e857aecb7e4e427f90e3939ebdfac2" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" >
         </service>
+        
+        <activity android:name="com.pancat.fanrong.activity.SignInActivity"
+			android:label="@string/title_activity_sign_in"
+			android:windowSoftInputMode="adjustResize|stateVisible" />
+
+        <activity
+            android:name="com.pancat.fanrong.activity.SignUpActivity"
+            android:label="@string/title_activity_sign_up"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>
