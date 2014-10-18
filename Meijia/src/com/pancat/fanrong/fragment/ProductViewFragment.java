@@ -36,8 +36,8 @@ import com.pancat.fanrong.adapter.ProductInfoAdapter;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.common.RestClient;
-import com.pancat.fanrong.fragment.MomentFragment.ContentTask;
-import com.pancat.fanrong.fragment.MomentFragment.MyAdapter;
+import com.pancat.fanrong.fragment.CircleFragment.ContentTask;
+import com.pancat.fanrong.fragment.CircleFragment.CircleAdapter;
 import com.pancat.fanrong.gridview.StaggeredGridView;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
@@ -156,7 +156,7 @@ IXListViewListener{
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		contextView = inflater.inflate(R.layout.act_pull_to_refresh_sample, container, false);
+		contextView = inflater.inflate(R.layout.fragment_circle, container, false);
 		mAdapterView = (XListView)contextView.findViewById(R.id.list);
 		mAdapterView.setPullLoadEnable(true);
 		mAdapterView.setXListViewListener(this);

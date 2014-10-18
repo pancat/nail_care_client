@@ -85,7 +85,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" ><!-- 个推运行模式singleTop 不改应该没影响，百度云是singleTask-->
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateHidden" ><!-- 个推运行模式singleTop 不改应该没影响，百度云是singleTask-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -93,7 +94,8 @@
         </activity>
         <activity
             android:name=".activity.HomeActivity"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+		>
         </activity>
         <activity
             android:name=".activity.OrderActivity"
@@ -114,6 +116,10 @@
         <activity
             android:name=".activity.AdvertiseActivity"
             android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activity.NailTechnicianActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
             android:name=".activity.ProductViewFragmentActivity"

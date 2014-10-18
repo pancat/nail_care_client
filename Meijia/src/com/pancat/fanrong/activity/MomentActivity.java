@@ -10,12 +10,12 @@ import android.os.Bundle;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.common.FragmentCallback;
-import com.pancat.fanrong.fragment.MomentFragment;
+import com.pancat.fanrong.fragment.CircleFragment;
 
 
 public class MomentActivity extends Activity implements FragmentCallback{
 	
-	private MomentFragment momentFragment;
+	private CircleFragment momentFragment;
 	private FragmentManager fragmentManager;
 	
 	@Override
@@ -32,7 +32,7 @@ public class MomentActivity extends Activity implements FragmentCallback{
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		if(momentFragment == null){
 			//如果MessageFragment为空，则创建一个并添加到界面上
-			momentFragment = new MomentFragment();
+			momentFragment = new CircleFragment();
 			transaction.add(R.id.content, momentFragment);
 		}
 		else{

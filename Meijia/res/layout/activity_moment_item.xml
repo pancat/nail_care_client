@@ -11,7 +11,7 @@
     android:focusableInTouchMode="true"
     >
 <LinearLayout 
-    android:background="@drawable/news_item_bg"
+    android:background="@drawable/fujian_photo_bg"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
     android:orientation="vertical"
@@ -55,7 +55,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/info_ll"
-    android:background="@drawable/news_item_bg"
+    android:background="@drawable/fujian_photo_bg"
+    android:layout_marginTop="15dp"
     android:id="@+id/user_info_rl"
     android:orientation="vertical"
     >

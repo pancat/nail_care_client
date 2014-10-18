@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import com.j256.ormlite.dao.Dao;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.AdvertiseActivity;
+import com.pancat.fanrong.activity.NailTechnicianActivity;
 import com.pancat.fanrong.activity.ProductViewFragmentActivity;
 import com.pancat.fanrong.bean.AdBannerItem;
 import com.pancat.fanrong.bean.Product;
@@ -52,13 +53,15 @@ public class HomeFragment extends Fragment{
 	private ImageButton meijia;
 	private ImageButton meizhuang;
 	
+	private ImageButton mNailTechnician;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		contextView = inflater
 				.inflate(R.layout.fragment_home, container, false);
 		
-		initLeftButtonArr();
+		initButtonArr();
 		
 		return contextView;
 	}
@@ -97,10 +100,11 @@ public class HomeFragment extends Fragment{
 
     
 	//author Jogrunner
-	private void initLeftButtonArr()
+	private void initButtonArr()
 	{
 		meijia = (ImageButton)contextView.findViewById(R.id.btn_meijia_works);
 		meizhuang = (ImageButton)contextView.findViewById(R.id.btn_meizhuang_works);
+		mNailTechnician = (ImageButton)contextView.findViewById(R.id.btn_meijia_workers);
 		meijia.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -123,6 +127,14 @@ public class HomeFragment extends Fragment{
 				Bundle bundle = new Bundle();
 				bundle.putString(Product.TYPE, Product.MEIZHUANGE);
 				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
+		mNailTechnician.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(),NailTechnicianActivity.class);
 				startActivity(intent);
 			}
 		});
