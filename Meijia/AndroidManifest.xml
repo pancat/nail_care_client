@@ -106,11 +106,15 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name=".activity.CircleCommentActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".activity.MeActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name=".activity.MomentActivity"
+            android:name=".activity.CircleActivity"
             android:label="@string/title_activity_moment" >
         </activity>
         <activity
@@ -143,7 +147,7 @@
              android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
-            android:name=".activity.MomentItemActivity"
+            android:name=".activity.CircleItemActivity"
             android:theme="@style/AppTheme" >
         </activity>
         

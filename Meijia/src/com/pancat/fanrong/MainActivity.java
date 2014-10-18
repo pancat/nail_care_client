@@ -42,7 +42,7 @@ import com.igexin.sdk.PushManager;
 import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.activity.MeActivity;
-import com.pancat.fanrong.activity.MomentActivity;
+import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.activity.OrderActivity;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.common.User;
@@ -129,7 +129,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			subActivity = getLocalActivityManager().startActivity("subActivity3", intent);
 		}
 		else if(segment == 4){
-			intent.setClass(MainActivity.this, MomentActivity.class);
+			intent.setClass(MainActivity.this, CircleActivity.class);
 			subActivity = getLocalActivityManager().startActivity("subActivity4", intent);
 		}
 		container.addView(subActivity.getDecorView());
@@ -215,10 +215,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private void openSendDialog(final String path){
 		sendDialog = new AlertDialog.Builder(this).create();
 		//解决唤不出键盘问题
-		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_moment, null));
+		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_circle, null));
 		sendDialog.show();
 		Window sendWindow = sendDialog.getWindow();
-		sendWindow.setContentView(R.layout.edit_moment);
+		sendWindow.setContentView(R.layout.edit_circle);
 		final EditText etDescription = (EditText)sendWindow.findViewById(R.id.moment_des);			//对话框中的描述控件
 		ImageView selectedImg = (ImageView)sendWindow.findViewById(R.id.selected_image);	//对话框中的图片控件
 		Button btnSendMoment = (Button)sendWindow.findViewById(R.id.btn_send_moment);
@@ -383,7 +383,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			ImageButton btnTabMoment = (ImageButton)tabMoment.findViewById(R.id.btn_tab_moment);
 			btnTabMoment.setImageResource(R.drawable.icon_tab_mass_unfold);
 			
-			intent.setClass(MainActivity.this, MomentActivity.class);
+			intent.setClass(MainActivity.this, CircleActivity.class);
 			subActivity = getLocalActivityManager().startActivity(
 					"subActivity4", intent);
 			container.addView(subActivity.getDecorView());

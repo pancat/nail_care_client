@@ -29,7 +29,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.activity.MomentActivity;
+import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.Infos;
 import com.pancat.fanrong.common.FragmentCallback;
@@ -50,7 +50,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 	private ImageFetcher mImageFetcher;
 	private XListView mAdapterView = null;
 	private CircleAdapter mAdapter = null;
-	private int currentPage = 1;
+	private int mIndex = 0;
 	private ContentTask task = new ContentTask(getActivity(),2);
 	private FragmentCallback fragmentCallback;
 	private List<Circle> mInfos = new ArrayList<Circle>();
@@ -85,17 +85,18 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		fragmentCallback = (MomentActivity)activity;
+		fragmentCallback = (CircleActivity)activity;
 	}
 
 	@Override
 	public void onRefresh() {
-		addItemToContainer(1, 1);
+		mIndex = 0;
+		addItemToContainer(mIndex, 1);
 	}
 
 	@Override
 	public void onLoadMore() {
-		addItemToContainer(++currentPage, 2);
+		addItemToContainer(mIndex, 2);
 	}
 	
 	private void getData(){
@@ -111,9 +112,9 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 	 * @param pageIndex	页数索引
 	 * @param type 刷新类型
 	 */
-	private void addItemToContainer(int pageIndex,int type){
+	private void addItemToContainer(int index,int type){
 		if(task.getStatus() != Status.RUNNING){
-			String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_circles?index="+pageIndex;
+			String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_circles?index="+mIndex;
 			
 //			String url = "http://www.duitang.com/album/1733789/masn/p/"+pageIndex+"/10/";
 			Log.d("MainActivity", "current url:" + url);
@@ -146,7 +147,8 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 		protected List<Circle> doInBackground(String... params) {
 			
 			try {
-				return parseNewsJSON(params[0]);
+				String param = params[0];
+				return parseNewsJSON(param);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -207,6 +209,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 						circles.add(circle);
 						DatabaseManager.getInstance(getActivity()).addCircle(circle);
 					}
+					mIndex += jsonArray.length();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -244,7 +247,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
-			Circle duitangInfo = mInfos.get(position);
+			Circle circle = mInfos.get(position);
 			if(convertView == null){
 				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 				convertView = layoutInflater.inflate(R.layout.circle_item, null);
@@ -254,12 +257,12 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 				convertView.setTag(holder);
 			}
 			holder = (ViewHolder)convertView.getTag();
-			holder.imageView.setImageWidth(duitangInfo.getWidth());
-			holder.imageView.setImageHeight(duitangInfo.getHeight());
-			holder.contentView.setText(duitangInfo.getDescription());
-			mImageFetcher.loadImage(duitangInfo.getPath(), holder.imageView);
+			holder.imageView.setImageWidth(circle.getWidth());
+			holder.imageView.setImageHeight(circle.getHeight());
+			holder.contentView.setText(circle.getDescription());
+			mImageFetcher.loadImage(circle.getPath(), holder.imageView);
 			final Bundle data = new Bundle();
-			data.putSerializable("duitangInfo", duitangInfo);
+			data.putSerializable("circle", circle);
 			convertView.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -279,9 +282,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 		
 		public void addItemTop(List<Circle> data){
 			mInfos.clear();
-			for(Circle info : data){
-				mInfos.add(0, info);
-			}
+			mInfos.addAll(data);
 		}
 		
 		public void addItemLast(List<Circle> data){

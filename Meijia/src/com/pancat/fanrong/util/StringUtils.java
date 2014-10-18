@@ -42,7 +42,6 @@ public class StringUtils {
 
 	/**
 	 * 字符串转化为日期
-	 * 
 	 * @param dateStr
 	 * @return
 	 */

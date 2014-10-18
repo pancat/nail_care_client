@@ -75,7 +75,6 @@ public class DatabaseManager {
 		try {
 			circleList = query.query();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return circleList;

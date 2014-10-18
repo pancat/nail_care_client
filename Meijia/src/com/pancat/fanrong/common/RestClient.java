@@ -100,7 +100,7 @@ public class RestClient {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
-	public static String getStringFromUrl(String url) throws ClientProtocolException, IOException {
+	public String getStringFromUrl(String url) throws ClientProtocolException, IOException {
 		HttpGet get = new HttpGet(url);
 		HttpClient client = new DefaultHttpClient();
 		HttpResponse response = client.execute(get);
