@@ -61,7 +61,6 @@ public class NailTechnicianActivity extends Activity implements IXListViewListen
 			break;
 		case R.id.btn_search:
 			//跳转到技师搜索页面
-			
 			break;
 		default:break;
 		}
