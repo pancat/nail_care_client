@@ -1,0 +1,166 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/grey"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/lin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="left"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:orientation="horizontal" >
+
+                <com.pancat.fanrong.common.CircleImageView
+                    android:id="@+id/usercircleimage"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:onClick="onClick"
+                    android:src="@drawable/player"
+                    app:border_color="#FF000000"
+                    app:border_width="2dp" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:clickable="true"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/nick_name"
+                        android:layout_width="135dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="欢迎你，游客"
+                        android:textSize="20sp" />
+
+                    
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/redpacket"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:gravity="left"
+                android:onClick="onClick"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/order_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:drawableLeft="@drawable/icon_order"
+                        android:drawablePadding="@dimen/user_center_icon_left_padding"
+                        android:drawableRight="@drawable/mm_submenu_normal"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/user_center_my_order" />
+
+                    <Button
+                        android:id="@+id/address_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:layout_marginTop="1dp"
+                        android:drawableLeft="@drawable/icon_order"
+                        android:drawablePadding="@dimen/user_center_icon_left_padding"
+                        android:drawableRight="@drawable/mm_submenu_normal"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/user_center_my_address" />
+
+                    <Button
+                        android:id="@+id/collect_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:layout_marginTop="1dp"
+                        android:drawableLeft="@drawable/icon_order"
+                        android:drawablePadding="@dimen/user_center_icon_left_padding"
+                        android:drawableRight="@drawable/mm_submenu_normal"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/user_center_my_collect" />
+
+                    <Button
+                        android:id="@+id/msg_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:layout_marginTop="1dp"
+                        android:drawableLeft="@drawable/icon_order"
+                        android:drawablePadding="@dimen/user_center_icon_left_padding"
+                        android:drawableRight="@drawable/mm_submenu_normal"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/user_center_my_msg" />
+
+                    <Button
+                        android:id="@+id/feedback_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:layout_marginTop="5dp"
+                        android:drawableLeft="@drawable/icon_order"
+                        android:drawablePadding="@dimen/user_center_icon_left_padding"
+                        android:drawableRight="@drawable/mm_submenu_normal"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/user_center_feedback" />
+
+                    <Button
+                        android:id="@+id/service_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:layout_marginTop="1dp"
+                        android:drawableLeft="@drawable/icon_order"
+                        android:drawablePadding="@dimen/user_center_icon_left_padding"
+                        android:drawableRight="@drawable/mm_submenu_normal"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/user_center_service_call" />
+                    
+                    <Button
+                        android:id="@+id/login_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_white_bg_selector"
+                        android:layout_marginTop="5dp"
+                          android:drawableLeft="@drawable/icon_login_place_holder"
+                        android:text="@string/action_sign_in_short" />
+                    
+                   
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

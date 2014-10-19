@@ -22,7 +22,7 @@
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
     <string name="filter">筛选</string>
-    
+
     <!-- Strings related to login -->
     <string name="title_activity_sign_in">登录</string>
     <string name="title_activity_sign_up">快速注册</string>
@@ -31,6 +31,7 @@
     <string name="prompt_confirm_password">请再次输入密码</string>
     <string name="action_sign_in">登录</string>
     <string name="action_sign_in_short">登录</string>
+    <string name="action_sign_out_short">注销</string>
     <string name="action_sign_up">快速注册</string>
     <string name="action_sign_up_short">注册</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -39,4 +40,14 @@
     <string name="error_field_required">此项不能为空</string>
     <string name="forget_password">忘记密码？</string>
     <string name="register_with_phone">手机快速注册</string>
+    <string name="title_activity_user_center">UserCenterActivity</string>
+    
+    <string name="user_center_my_order">我的订单</string>
+	<string name="user_center_my_address">常用地址</string>
+	<string name="user_center_my_collect">我的收藏</string>
+	<string name="user_center_my_msg">我的消息</string>
+	<string name="user_center_service_call">客服电话</string>
+	<string name="user_center_feedback">意见反馈</string>
+	<string name="service_call_no">10086</string>
+	
 </resources>

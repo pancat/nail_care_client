@@ -11,5 +11,10 @@
     <color name="list_item_pressed">#1A000000</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#9000</color>
-    <color name="button_bg_green">#45C01A</color> 
+    <color name="button_bg_green">#45C01A</color>
+    <drawable name="btn_white_bg">#FFFFFF</drawable>
+    <drawable name="btn_green_bg">#45C01A</drawable> 
+    <drawable name="black">#000000</drawable>
+    <drawable name="white">#FFFFFF</drawable> 
+    <drawable name="red">#FF0000</drawable> 
 </resources>

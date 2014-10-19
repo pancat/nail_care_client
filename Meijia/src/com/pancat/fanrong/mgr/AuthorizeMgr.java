@@ -41,12 +41,8 @@ public class AuthorizeMgr {
 	}
 
 	
-
-	public AuthorizeStatus setSignOut() {
-		return AuthorizeStatus.SUCCESS;
-	}
-
-	public AuthorizeStatus persistUser(User user) {
+	private AuthorizeStatus clearUserDB()
+	{
 		DatabaseOpenHelper helper = DatabaseManager.getInstance().getHelper();
 		Dao<User, Integer> dao = helper.getUserDao();
 
@@ -55,9 +51,31 @@ public class AuthorizeMgr {
 			dao.delete(list);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return AuthorizeStatus.FAIL;
+		}
+		
+		return AuthorizeStatus.SUCCESS;
+	}
+
+	public AuthorizeStatus setLogout() {
+		AuthorizeStatus ret = AuthorizeStatus.SUCCESS;
+		if (clearUserDB() == AuthorizeStatus.FAIL)
+		{
+			ret = AuthorizeStatus.FAIL;
+		}
+		setUser(null);
+		return ret;
+	}
+
+	public AuthorizeStatus persistUser(User user) {
+		if (clearUserDB() == AuthorizeStatus.FAIL)
+		{
+			return AuthorizeStatus.FAIL;
 		}
 
 		try {
+			DatabaseOpenHelper helper = DatabaseManager.getInstance().getHelper();
+			Dao<User, Integer> dao = helper.getUserDao();
 			dao.create(user);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,8 +84,7 @@ public class AuthorizeMgr {
 		return AuthorizeStatus.SUCCESS;
 	}
 
-	@SuppressWarnings("unused")
-	private User getPersistedUser() {
+	public User getPersistedUser() {
 		DatabaseOpenHelper helper = DatabaseManager.getInstance().getHelper();
 		Dao<User, Integer> dao = helper.getUserDao();
 
