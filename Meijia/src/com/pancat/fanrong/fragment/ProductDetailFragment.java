@@ -34,6 +34,7 @@ import android.widget.TextView;
 public class ProductDetailFragment extends Fragment {
    private static final String TAG = "ProductDetailFragment";
 	
+   
    private Product product;
  //  private ImageView productDFImg;
    private ViewPager productDFImgListViewpager;
