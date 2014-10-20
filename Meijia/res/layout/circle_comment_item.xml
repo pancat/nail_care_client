@@ -17,12 +17,12 @@
     android:layout_height="70dp"
     android:layout_width="70dp"
     android:src="@drawable/player"
-    android:id="@+id/img"
+    android:id="@+id/comment_user_img"
     />
 <RelativeLayout 
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
-    android:layout_toRightOf="@id/img"
+    android:layout_width="fill_parent"
+    android:layout_toRightOf="@id/comment_user_img"
     android:layout_centerVertical="true"
     >
     <TextView
@@ -30,7 +30,7 @@
     android:layout_width="wrap_content"
     android:text="Tom"
     android:layout_marginLeft="8dp"
-    android:id="@+id/name"
+    android:id="@+id/comment_user_name"
     android:textSize="16sp"
     android:textStyle="bold"
     android:textColor="@android:color/black"
@@ -39,13 +39,24 @@
 <TextView
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
-    android:layout_alignLeft="@id/name"
-    android:layout_below="@id/name"
-    android:text="大于100公里"
-    android:layout_marginTop="3dp"
-    android:textSize="10sp"
+    android:layout_alignLeft="@id/comment_user_name"
+    android:layout_below="@id/comment_user_name"
+    android:text="This is comment content!"
+    android:layout_marginTop="5dp"
+    android:textSize="12sp"
     android:textColor="@android:color/black"
-    android:id="@+id/distance"
+    android:id="@+id/comment_content"
+    />
+<TextView 
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:id="@+id/comment_time"
+    android:text="5s"
+    android:layout_below="@id/comment_content"
+    android:layout_alignLeft="@id/comment_content"
+    android:textColor="@color/grey"
+    android:textSize="10dp"
+    android:layout_marginTop="5dp"
     />
 </RelativeLayout>
 

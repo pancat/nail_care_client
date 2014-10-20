@@ -41,16 +41,16 @@ import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
 import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.LoginActivity;
-import com.pancat.fanrong.activity.MeActivity;
-import com.pancat.fanrong.activity.MomentActivity;
+import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.activity.OrderActivity;
+import com.pancat.fanrong.activity.SignInActivity;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.common.User;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
+import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
-import com.pancat.fanrong.util.FileUtils;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
 
@@ -125,11 +125,11 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			subActivity = getLocalActivityManager().startActivity("subActivity2", intent);
 		}
 		else if(segment == 3){
-			intent.setClass(MainActivity.this, MeActivity.class);
+			intent.setClass(MainActivity.this, UserCenterActivity.class);
 			subActivity = getLocalActivityManager().startActivity("subActivity3", intent);
 		}
 		else if(segment == 4){
-			intent.setClass(MainActivity.this, MomentActivity.class);
+			intent.setClass(MainActivity.this, CircleActivity.class);
 			subActivity = getLocalActivityManager().startActivity("subActivity4", intent);
 		}
 		container.addView(subActivity.getDecorView());
@@ -215,10 +215,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private void openSendDialog(final String path){
 		sendDialog = new AlertDialog.Builder(this).create();
 		//解决唤不出键盘问题
-		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_moment, null));
+		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_circle, null));
 		sendDialog.show();
 		Window sendWindow = sendDialog.getWindow();
-		sendWindow.setContentView(R.layout.edit_moment);
+		sendWindow.setContentView(R.layout.edit_circle);
 		final EditText etDescription = (EditText)sendWindow.findViewById(R.id.moment_des);			//对话框中的描述控件
 		ImageView selectedImg = (ImageView)sendWindow.findViewById(R.id.selected_image);	//对话框中的图片控件
 		Button btnSendMoment = (Button)sendWindow.findViewById(R.id.btn_send_moment);
@@ -368,12 +368,22 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			segment = 2;
 			break;
 		case R.id.tab_me:
+			
+			// 验证是否已登录
+			if (AuthorizeMgr.getInstance().hasLogined() == false)
+			{
+				Intent signInIntent = new Intent();
+				signInIntent.setClass(MainActivity.this, SignInActivity.class);
+				startActivity(signInIntent);
+				break;
+			}
+			
 			resetBtn();
 			ImageButton btnTabMe = (ImageButton)tabMe.findViewById(R.id.btn_tab_me);
 			btnTabMe.setImageResource(R.drawable.icon_tab_me_unfold);
 			tabMe.setClickable(false);
 			
-			intent.setClass(MainActivity.this,MeActivity.class);
+			intent.setClass(MainActivity.this,UserCenterActivity.class);
 			subActivity = getLocalActivityManager().startActivity("subActivity3", intent);
 			container.addView(subActivity.getDecorView());
 			segment = 3;
@@ -383,7 +393,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			ImageButton btnTabMoment = (ImageButton)tabMoment.findViewById(R.id.btn_tab_moment);
 			btnTabMoment.setImageResource(R.drawable.icon_tab_mass_unfold);
 			
-			intent.setClass(MainActivity.this, MomentActivity.class);
+			intent.setClass(MainActivity.this, CircleActivity.class);
 			subActivity = getLocalActivityManager().startActivity(
 					"subActivity4", intent);
 			container.addView(subActivity.getDecorView());

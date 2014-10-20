@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="btton_font_size">16</integer>
+    <string name="button_font_type">微软雅黑</string>
+</resources>

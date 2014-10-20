@@ -13,7 +13,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @SuppressWarnings("serial")
 @DatabaseTable(tableName="circle")
 public class Circle implements Serializable{
-	@DatabaseField(generatedId=true)
+	@DatabaseField
 	private int id;	
 	@DatabaseField
 	private int width;

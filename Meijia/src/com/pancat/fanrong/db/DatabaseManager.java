@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.User;
 
@@ -27,6 +28,11 @@ public class DatabaseManager {
 			DatabaseManager.context = context;
 		}
 		return instance;
+	}
+	
+	static public DatabaseManager getInstance(){
+		Context context = MainApplication.getAppContext();
+		return getInstance(context);
 	}
 	
 	private DatabaseManager(Context ctx){
@@ -75,7 +81,6 @@ public class DatabaseManager {
 		try {
 			circleList = query.query();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return circleList;
