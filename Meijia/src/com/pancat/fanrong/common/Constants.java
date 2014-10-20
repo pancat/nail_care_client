@@ -18,7 +18,7 @@ public class Constants {
 	
 	public static final int channel =1;
 	
-	public static final String BASE_URL = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_svr/index.php/";
+	public static final String BASE_URL = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_test/index.php/";
 	
 	//显示的列数
 	public static final int COLUMN_count = 2;

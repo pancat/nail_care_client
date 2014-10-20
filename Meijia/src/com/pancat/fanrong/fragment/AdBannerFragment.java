@@ -9,6 +9,25 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+
 import com.j256.ormlite.dao.Dao;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.AdvertiseActivity;
@@ -20,23 +39,7 @@ import com.pancat.fanrong.handler.HandlerFactory;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-
+@SuppressLint("NewApi") 
 public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 	private View contextView;
 	
@@ -94,6 +97,7 @@ public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 		
 		private List<AdBannerItem> parseJsonString(String content) 
 		{
+			Log.d("AdBannerItem", content);
 			List<AdBannerItem> list = new ArrayList<AdBannerItem>();
 			try {
 				JSONArray jsonArray = new JSONArray(content);
@@ -129,8 +133,7 @@ public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 
 		@Override
 		public void onSuccess(String content) {
-			DatabaseOpenHelper helper = DatabaseManager.getHelper(getActivity()
-					.getApplicationContext());
+			DatabaseOpenHelper helper = DatabaseManager.getInstance().getHelper();
 			Dao<AdBannerItem, Integer> dao = helper.getAdBannerItemDao();
 			
 			try {
@@ -154,7 +157,7 @@ public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 	};
 
 	private void requestAdsFromServer() {
-		String url = "product/get_product_list";
+		String url = "product/get_home_ad_list";
 		RestClient.getInstance().get(url, new RequestParams(), adBannerReadyHandler);
 	}
 	
@@ -290,7 +293,7 @@ public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 			int idx = position % this.mListViews.size();
 			ImageView view = mListViews.get(idx);
 			container.removeView(view);
-			container.addView(view);
+			container.addView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override
