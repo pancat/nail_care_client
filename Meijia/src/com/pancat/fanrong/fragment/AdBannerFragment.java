@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -292,9 +293,9 @@ public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 		public Object instantiateItem(ViewGroup container, int position) {
 			int idx = position % this.mListViews.size();
 			ImageView view = mListViews.get(idx);
+			view.setScaleType(ScaleType.CENTER_CROP);
 			container.removeView(view);
-			container.addView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
+			container.addView(view, new LinearLayout.LayoutParams(container.getWidth(), container.getHeight()));
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

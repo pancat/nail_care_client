@@ -6,13 +6,13 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/default_banner_ad" />
 
     <LinearLayout
         android:id="@+id/bottom_bar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/view_pager"
         android:orientation="horizontal" >
