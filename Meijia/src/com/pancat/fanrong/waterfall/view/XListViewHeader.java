@@ -7,9 +7,9 @@
 package com.pancat.fanrong.waterfall.view;
 
 import com.pancat.fanrong.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +75,10 @@ public class XListViewHeader extends LinearLayout {
 		mRotateDownAnim.setFillAfter(true);
 	}
 
+	/**
+	 * 设置状态，0为正常状态，1为松开刷新状态，2为刷新状态
+	 * @param state
+	 */
 	public void setState(int state) {
 		if (state == mState) return ;
 		
@@ -118,11 +122,13 @@ public class XListViewHeader extends LinearLayout {
 			height = 0;
 		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mContainer
 				.getLayoutParams();
+		Log.e("HeadViewVisibleHeight", String.valueOf(height));
 		lp.height = height;
 		mContainer.setLayoutParams(lp);
 	}
 
 	public int getVisiableHeight() {
+		Log.e("head height",String.valueOf(mContainer.getHeight()));
 		return mContainer.getHeight();
 	}
 

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.CircleComment;
@@ -48,7 +49,6 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 		setContentView(R.layout.activity_comment);
 		init();
 		circleId = getIntent().getIntExtra("circleId", 0);
-		
 		onLoadMore();
 	}
 
@@ -60,7 +60,7 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 		mAdapterView = (XListView)findViewById(R.id.comment_list);
 		mAdapterView.setPullLoadEnable(true);
 		//设置列表不可刷新只可以下拉加载更多
-		mAdapterView.setPullRefreshEnable(false);
+		mAdapterView.setPullRefreshEnable(true);
 		mAdapterView.setXListViewListener(this);
 		mAdapter = new CommentAdapter(this,mAdapterView);
 		mAdapterView.setAdapter(mAdapter);
@@ -70,7 +70,7 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 	
 	@Override
 	public void onRefresh() {
-		
+		Toast.makeText(this, "refreshing", Toast.LENGTH_LONG).show();
 	}
 
 	@Override

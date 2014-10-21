@@ -82,7 +82,7 @@ public class CircleItemActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_moment_item);
+		setContentView(R.layout.activity_circle_item);
 		
 		//初始化控件
 		mCommentContent = (EditText)findViewById(R.id.comment_content);

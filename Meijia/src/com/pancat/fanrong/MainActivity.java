@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
+import com.pancat.fanrong.activity.AddCircleActivity;
 import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.activity.CircleActivity;
@@ -159,14 +160,14 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				
-				if(!User.getInstance().isUserLogined())
-				{
-					Intent it=new Intent(MainActivity.this,LoginActivity.class);
-					startActivity(it);
-				}
-				else{
+//				if(!User.getInstance().isUserLogined())
+//				{
+//					Intent it=new Intent(MainActivity.this,LoginActivity.class);
+//					startActivity(it);
+//				}
+//				else{
 					openAddDialog();
-				}
+//				}
 			}
 		});
 	}
@@ -175,15 +176,24 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	 * 弹出添加圈子图片对话框
 	 */
 	private void openAddDialog(){
-		
 		// 创建AlertDialog
 		addPicDialog = new AlertDialog.Builder(this).create();
-		
+		addPicDialog.setView(getLayoutInflater().inflate(R.layout.add_circle, null));
 		addPicDialog.show();
+		addPicDialog.getWindow().setLayout((int) (screenWidth*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
 		Window addPicWindow = addPicDialog.getWindow();
-		addPicWindow.setContentView(R.layout.add_photo);
-		RelativeLayout uploadCamera = (RelativeLayout)addPicWindow.findViewById(R.id.upload_camera);
-		RelativeLayout uploadFile = (RelativeLayout)addPicWindow.findViewById(R.id.upload_file);
+		addPicWindow.setContentView(R.layout.add_circle);
+		LinearLayout uploadCamera = (LinearLayout)addPicWindow.findViewById(R.id.upload_camera);
+		LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
+		Button btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
+		btnAddLocation.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
 		//照相上传图片点击事件
 		uploadCamera.setOnClickListener(new OnClickListener() {
 			

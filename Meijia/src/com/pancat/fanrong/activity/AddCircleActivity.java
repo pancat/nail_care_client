@@ -11,7 +11,7 @@ public class AddCircleActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_circle);
+		setContentView(R.layout.add_circle);
 	}
 
 	public void onClick(View v){
