@@ -60,7 +60,7 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 		mAdapterView = (XListView)findViewById(R.id.comment_list);
 		mAdapterView.setPullLoadEnable(true);
 		//设置列表不可刷新只可以下拉加载更多
-		mAdapterView.setPullRefreshEnable(true);
+		mAdapterView.setPullRefreshEnable(false);
 		mAdapterView.setXListViewListener(this);
 		mAdapter = new CommentAdapter(this,mAdapterView);
 		mAdapterView.setAdapter(mAdapter);
@@ -70,7 +70,7 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 	
 	@Override
 	public void onRefresh() {
-		Toast.makeText(this, "refreshing", Toast.LENGTH_LONG).show();
+		
 	}
 
 	@Override

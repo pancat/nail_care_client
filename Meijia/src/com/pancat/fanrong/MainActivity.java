@@ -34,19 +34,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
-import com.pancat.fanrong.activity.AddCircleActivity;
 import com.pancat.fanrong.activity.HomeActivity;
-import com.pancat.fanrong.activity.LoginActivity;
 import com.pancat.fanrong.activity.CircleActivity;
+import com.pancat.fanrong.activity.ImageBucketActivity;
+import com.pancat.fanrong.activity.ImageGridActivity;
 import com.pancat.fanrong.activity.OrderActivity;
 import com.pancat.fanrong.activity.SignInActivity;
 import com.pancat.fanrong.common.RestClient;
-import com.pancat.fanrong.common.User;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
@@ -211,9 +209,12 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				//到系统相册选择图片
-				Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				
-				startActivityForResult(intent, FROM_LOCAL_FILE);
+//				Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//				
+//				startActivityForResult(intent, FROM_LOCAL_FILE);
+//				Intent intent = new Intent(MainActivity.this,ImageBucketActivity.class);
+				Intent intent = new Intent(MainActivity.this,ImageGridActivity.class);
+				startActivityForResult(intent,FROM_LOCAL_FILE);
 			}
 		});
 	}
@@ -321,15 +322,15 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			else if(requestCode == FROM_LOCAL_FILE){
 				//图片是从本地文件获取
 				
-				final Uri uri = data.getData();
-				//以下操作获取本地图片存储路径
-				String[] proj = {MediaStore.Images.Media.DATA};
-				Cursor cursor = managedQuery(uri, proj, null, null, null);
-				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				cursor.moveToFirst();
-				final String path = cursor.getString(columnIndex);//本地图片存储路径
-				//打开发送对话框
-				openSendDialog(path);
+//				final Uri uri = data.getData();
+//				//以下操作获取本地图片存储路径
+//				String[] proj = {MediaStore.Images.Media.DATA};
+//				Cursor cursor = managedQuery(uri, proj, null, null, null);
+//				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//				cursor.moveToFirst();
+//				final String path = cursor.getString(columnIndex);//本地图片存储路径
+//				//打开发送对话框
+//				openSendDialog(path);
 			}
 		}
 	}
