@@ -4,17 +4,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/ad_banner_fragment"
-        android:name="com.pancat.fanrong.fragment.AdBannerFragment"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="wrap_content" >
 
-    <fragment
-        android:id="@+id/home_fragment"
-        android:name="com.pancat.fanrong.fragment.HomeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <fragment
+                android:id="@+id/ad_banner_fragment"
+                android:name="com.pancat.fanrong.fragment.AdBannerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+
+            <fragment
+                android:id="@+id/home_fragment"
+                android:name="com.pancat.fanrong.fragment.HomeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="猜你喜欢" />
+            
+            <com.pancat.fanrong.customview.ListViewInScrollView
+                android:id="@+id/list_view"
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                
+            </com.pancat.fanrong.customview.ListViewInScrollView>
+        </LinearLayout>
+    </ScrollView>
+
+    
 
 </LinearLayout>

@@ -5,157 +5,113 @@
     android:background="@android:color/white"
     android:scrollbars="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-       
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
 
         <LinearLayout
-            android:id="@+id/option_1ine_1"
-            android:layout_width="fill_parent"
-            android:layout_height="120dp"
-            android:layout_below="@+id/view_pager"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="20dp" >
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/ll_1"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:descendantFocusability="beforeDescendants"
-                android:orientation="vertical" >
-
-                <ImageButton
-                    android:id="@+id/btn_meijia_works"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:src="@drawable/nail_a" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="美甲作品"
-                    android:textColor="#F64D8E" />
-            </LinearLayout>
-            <ImageView 
-                android:layout_height="fill_parent"
+            <ImageButton
+                android:id="@+id/btn_meijia_works"
                 android:layout_width="wrap_content"
-                android:src="@drawable/cutline_2px_upright"
-                />
-            <LinearLayout
-                android:id="@+id/ll_2"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:descendantFocusability="beforeDescendants"
-                android:gravity="center"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:src="@drawable/nail_a" />
 
-                <ImageButton
-                    android:id="@+id/btn_meijia_workers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:src="@drawable/icon_appraise" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="美甲师"
-                    android:textColor="#fec94c" />
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="美甲作品"
+                android:textColor="#F64D8E" />
         </LinearLayout>
-		<LinearLayout
-            android:id="@+id/cut1ine_1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/option_1ine_1"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp" >
-		    <ImageView 
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="1"
-		        android:src="@drawable/cutline_2px"
-		        android:layout_marginRight="2dp"
-		        />
-		    <ImageView 
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="1"
-		        android:src="@drawable/cutline_2px"
-		        android:layout_marginLeft="2dp"
-		        />
-		</LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <LinearLayout
-            android:id="@+id/option_1ine_2"
-            android:layout_width="fill_parent"
-            android:layout_height="120dp"
-            android:layout_below="@+id/cut1ine_1"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp" >
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/ll_3"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:descendantFocusability="beforeDescendants"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <ImageButton
-                    android:id="@+id/btn_meizhuang_works"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:src="@drawable/hair_a" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="美妆作品"
-                    android:textColor="#cc8614" />
-            </LinearLayout>
-			<ImageView 
-                android:layout_height="fill_parent"
+            <ImageButton
+                android:id="@+id/btn_meijia_workers"
                 android:layout_width="wrap_content"
-                android:src="@drawable/cutline_2px_upright"
-                />
-            <LinearLayout
-                android:id="@+id/ll_4"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:descendantFocusability="beforeDescendants"
-                android:gravity="center"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:src="@drawable/icon_appraise" />
 
-                <ImageButton
-                    android:id="@+id/btn_meizhuang_workers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:src="@drawable/icon_trial" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="美妆师"
-                    android:textColor="#a7dc44"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="美甲师"
+                android:textColor="#fec94c" />
         </LinearLayout>
-    </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/btn_meizhuang_works"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:src="@drawable/hair_a" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="美妆作品" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/btn_meizhuang_workers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:src="@drawable/icon_trial" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="美妆师"
+                android:textColor="#a7dc44" />
+        </LinearLayout>
+    </LinearLayout>
 
 </com.pancat.fanrong.common.MyScrollView>
