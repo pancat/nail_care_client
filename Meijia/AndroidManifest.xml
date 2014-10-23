@@ -97,6 +97,10 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name=".activity.PhotoActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".activity.OrderActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

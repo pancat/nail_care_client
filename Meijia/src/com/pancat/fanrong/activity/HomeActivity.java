@@ -38,7 +38,7 @@ import com.pancat.fanrong.fragment.HomeFragment;
         for(int i=0;i<100;i++)  
         {  
             listItem.add("item: " + i);  
-        }  
+        }
        
         //添加并且显示  
         list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItem)); 

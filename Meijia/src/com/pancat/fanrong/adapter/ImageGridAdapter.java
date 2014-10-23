@@ -1,4 +1,4 @@
-package com.pancat.fanrong.activity;
+package com.pancat.fanrong.adapter;
 
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class ImageGridAdapter extends BaseAdapter{
 	private TextCallback textCallback = null;
 	Activity activity;
 	List<ImageItem> dataList;
-	Map<String,String> map = new HashMap<String,String>();
+	public Map<String,String> map = new HashMap<String,String>();
 	BitmapCache cache;
 	private Handler handler;
 	private int selectTotal = 0;

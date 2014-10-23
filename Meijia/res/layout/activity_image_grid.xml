@@ -13,22 +13,25 @@
         <Button 
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:background="@drawable/btn_back_selector"
+            android:background="@null"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:gravity="center_vertical"
             android:id="@+id/btn_to_album"
             android:layout_marginLeft="5dp"
             android:onClick="onClick"
+            android:textSize="18sp"
+            android:text="相册"
+            android:textColor="@drawable/text_selector"
             />
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="相册"
-            android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/btn_to_album"
+            android:textColor="@color/white"
+            android:text="所有图片"
+            android:id="@+id/album_name"
+            android:layout_centerInParent="true"
             />
     </RelativeLayout>
 

@@ -63,6 +63,20 @@
             android:text="Add your location"
             android:textColor="#6c6c6c" />
     </LinearLayout>
+    
+    <!-- 显示选择的图片的GridView -->
+    <GridView 
+        android:id="@+id/selected_image_gridview"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:horizontalSpacing="3dp"        
+        android:numColumns="4"
+        android:scrollbars="none"
+        android:verticalSpacing="5dp"
+        >
+    </GridView>
+    
 	<LinearLayout 
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent"

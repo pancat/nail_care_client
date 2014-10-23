@@ -5,6 +5,8 @@ package com.pancat.fanrong;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -13,12 +15,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -28,29 +33,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
-import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.CircleActivity;
-import com.pancat.fanrong.activity.ImageBucketActivity;
+import com.pancat.fanrong.activity.HomeActivity;
 import com.pancat.fanrong.activity.ImageGridActivity;
 import com.pancat.fanrong.activity.OrderActivity;
+import com.pancat.fanrong.activity.PhotoActivity;
 import com.pancat.fanrong.activity.SignInActivity;
-import com.pancat.fanrong.common.RestClient;
-import com.pancat.fanrong.http.AsyncHttpResponseHandler;
-import com.pancat.fanrong.http.RequestParams;
+import com.pancat.fanrong.adapter.SelectedImgAdapter;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
-import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
+import com.pancat.fanrong.util.album.Bimp;
+import com.pancat.fanrong.util.album.FileUtils;
 
 
 @SuppressWarnings("deprecation")
@@ -79,10 +82,15 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	//手机屏幕的宽度，用来设置dialog的大小
 	private int screenWidth;
 	
+	//选中图片的数据适配器
+	private SelectedImgAdapter selectedImgAdapter; 
+	private GridView selectedImgGridView;
+	
 	//图片存储路径
 	private final String BASE_FILE_PATH = Environment.getExternalStorageDirectory() + "/rongmeme/";
 	//拍照上传照片临时存放文件
-	private final String TEMP_PHOTO_PATH = BASE_FILE_PATH + "temp.jpg";
+//	private final String TEMP_PHOTO_PATH = BASE_FILE_PATH + "temp.jpg";
+	private String cameraPicPath;
 	
 	//消息推送的配置选项
 	private int msgPushType = ConfigHelperUtils.BAIDUMSGPUSH;
@@ -134,7 +142,16 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		container.addView(subActivity.getDecorView());
 	}
 	
-	
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				selectedImgAdapter.notifyDataSetChanged();
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
 	
 	@Override
 	protected void onResume() {
@@ -175,6 +192,11 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	 */
 	private void openAddDialog(){
 		// 创建AlertDialog
+		
+		Bimp.bmp.clear();
+		Bimp.drr.clear();
+		Bimp.max = 0;
+		handler.sendEmptyMessage(1);
 		addPicDialog = new AlertDialog.Builder(this).create();
 		addPicDialog.setView(getLayoutInflater().inflate(R.layout.add_circle, null));
 		addPicDialog.show();
@@ -184,6 +206,24 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		LinearLayout uploadCamera = (LinearLayout)addPicWindow.findViewById(R.id.upload_camera);
 		LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
 		Button btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
+		selectedImgGridView = (GridView)addPicWindow.findViewById(R.id.selected_image_gridview);
+		selectedImgGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		selectedImgAdapter = new SelectedImgAdapter(this, getResources(),handler);
+		selectedImgGridView.setAdapter(selectedImgAdapter);
+		selectedImgGridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Intent intent = new Intent(MainActivity.this,
+						PhotoActivity.class);
+				intent.putExtra("ID", arg2);
+				startActivity(intent);
+				
+			}
+			
+		});
+		//添加位置按钮点击事件
 		btnAddLocation.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -198,7 +238,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(TEMP_PHOTO_PATH)));
+				File file = new File(BASE_FILE_PATH,String.valueOf(System.currentTimeMillis())+".jpg");
+				cameraPicPath = file.getPath();
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+				
 				startActivityForResult(intent, FROM_CAMERA);
 			}
 		});
@@ -208,131 +251,42 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
-				//到系统相册选择图片
-//				Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//				
-//				startActivityForResult(intent, FROM_LOCAL_FILE);
-//				Intent intent = new Intent(MainActivity.this,ImageBucketActivity.class);
+				//到相册选择图片
 				Intent intent = new Intent(MainActivity.this,ImageGridActivity.class);
 				startActivityForResult(intent,FROM_LOCAL_FILE);
 			}
 		});
 	}
 	
-	/**
-	 * 弹出发送圈子内容对话框
-	 * @param path 图片存储路径
-	 */
-	private void openSendDialog(final String path){
-		sendDialog = new AlertDialog.Builder(this).create();
-		//解决唤不出键盘问题
-		sendDialog.setView(getLayoutInflater().inflate(R.layout.edit_circle, null));
-		sendDialog.show();
-		Window sendWindow = sendDialog.getWindow();
-		sendWindow.setContentView(R.layout.edit_circle);
-		final EditText etDescription = (EditText)sendWindow.findViewById(R.id.moment_des);			//对话框中的描述控件
-		ImageView selectedImg = (ImageView)sendWindow.findViewById(R.id.selected_image);	//对话框中的图片控件
-		Button btnSendMoment = (Button)sendWindow.findViewById(R.id.btn_send_moment);
-		//设置图片控件参数
-		android.view.ViewGroup.LayoutParams params = selectedImg.getLayoutParams();
-		
-		selectedImg.setScaleType(ScaleType.CENTER_CROP);
-		
-		//获取图片的原始宽和高
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(path, options);
-		final int originalHeight = options.outHeight;
-		final int originalWidth = options.outWidth;
-		//按比例缩放图片
-		int iWidth = (int) (screenWidth*0.9);
-		int iHeight = iWidth*originalHeight/originalWidth;
-		params.height = iHeight;
-		params.width = iWidth;
-		selectedImg.setLayoutParams(params);
-		//得到缩略图
-		Bitmap bitmap = ImageResizer.decodeSampledBitmapFromFile(path, iWidth, iHeight);
-		selectedImg.setImageBitmap(bitmap);
-		btnSendMoment.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				//这里实现点击发送圈子按钮操作(上传图文到服务器)
-				String description = etDescription.getText().toString();
-				File file = new File(path);
-				//设置请求url
-				String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/save_circle";
-				RequestParams params = new RequestParams();
-				try {
-					//设置post参数
-					params.put("uid", String.valueOf(1));
-					params.put("height", String.valueOf(originalHeight));
-					params.put("width", String.valueOf(originalWidth));
-					params.put("description", description);
-					params.put("cre_time",String.valueOf(System.currentTimeMillis()));
-					params.put("img", file);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				//显示正在上传对话框
-				progressDialog = ProgressDialog.show(MainActivity.this, "uploading", "Please wait...");
-				RestClient.getInstance().postFromAbsoluteUrl(MainActivity.this, requestUrl, params,
-						new AsyncHttpResponseHandler(){
-							
-							@Override
-							public void onSuccess(String content) {
-								super.onSuccess(content);
-								progressDialog.dismiss();
-								
-								sendDialog.dismiss();
-								Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
-							}
-
-							@Override
-							public void onFailure(Throwable error,
-									String content) {
-								// TODO Auto-generated method stub
-								super.onFailure(error, content);
-								progressDialog.dismiss();
-								Toast.makeText(MainActivity.this, "上传失败", Toast.LENGTH_LONG).show();
-							}
-
-				});
-			}
-		});
-	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if(resultCode == Activity.RESULT_OK){
-			if(addPicDialog.isShowing()){
-				addPicDialog.dismiss();
-			}
 			if(requestCode == FROM_CAMERA){
 				//图片从相机获取
-				File file = new File(BASE_FILE_PATH);
-				if(!file.exists()){
-					file.mkdirs();
+				if (Bimp.drr.size() < 9) {
+					Bimp.drr.add(cameraPicPath);
 				}
-				//打开发送对话框
-				openSendDialog(TEMP_PHOTO_PATH);
 			}
 			else if(requestCode == FROM_LOCAL_FILE){
 				//图片是从本地文件获取
 				
-//				final Uri uri = data.getData();
-//				//以下操作获取本地图片存储路径
-//				String[] proj = {MediaStore.Images.Media.DATA};
-//				Cursor cursor = managedQuery(uri, proj, null, null, null);
-//				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//				cursor.moveToFirst();
-//				final String path = cursor.getString(columnIndex);//本地图片存储路径
-//				//打开发送对话框
-//				openSendDialog(path);
+				//得到选择的图片路径列表
+				ArrayList<String> list = (ArrayList<String>)data.getSerializableExtra(ImageGridActivity.SELECTED_IMAGE_LIST);
+				Log.i(ImageGridActivity.SELECTED_IMAGE_LIST,String.valueOf(list));
 			}
 		}
+	}
+
+	
+	
+	@Override
+	protected void onRestart() {
+		selectedImgAdapter.loading();
+		super.onRestart();
 	}
 
 	/**
