@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.pancat.fanrong.util.StringUtils;
-
 import android.util.Log;
+
+import com.pancat.fanrong.util.StringUtils;
 
 public class Product implements Serializable{
 	private static final String TAG = "Product";
@@ -57,6 +57,11 @@ public class Product implements Serializable{
 	private int productHot = 0;
 	private int productId = 0;
 	private Date productDate;
+	
+	public Product()
+	{
+		
+	}
 	
 	public Product(Map<String, String> productMap)
 	{
