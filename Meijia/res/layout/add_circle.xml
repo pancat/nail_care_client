@@ -30,6 +30,7 @@
     </RelativeLayout>
 
     <EditText
+        android:id="@+id/circle_description"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:layout_margin="10dp"
@@ -74,6 +75,7 @@
         android:numColumns="4"
         android:scrollbars="none"
         android:verticalSpacing="5dp"
+        android:visibility="gone"
         >
     </GridView>
     
@@ -148,6 +150,7 @@
 	        android:layout_width="wrap_content"
 	        android:background="@drawable/ic_send_green_24"
 	        android:layout_marginRight="15dp"
+	        android:id="@+id/btn_send_circle"
 	        />
 	    </LinearLayout>
 	    

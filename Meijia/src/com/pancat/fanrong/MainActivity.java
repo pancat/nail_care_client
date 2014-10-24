@@ -3,10 +3,9 @@ package com.pancat.fanrong;
 
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -15,8 +14,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -39,6 +36,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.igexin.sdk.PushManager;
@@ -49,6 +48,9 @@ import com.pancat.fanrong.activity.OrderActivity;
 import com.pancat.fanrong.activity.PhotoActivity;
 import com.pancat.fanrong.activity.SignInActivity;
 import com.pancat.fanrong.adapter.SelectedImgAdapter;
+import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.http.AsyncHttpResponseHandler;
+import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
@@ -71,6 +73,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	
 	//发送圈子按钮
 	private Button btnSendMoment;
+	private ImageButton btnSendCircle;
 	
 	private final int FROM_CAMERA = 1;
 	private final int FROM_LOCAL_FILE = 2;
@@ -78,6 +81,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private AlertDialog addPicDialog;
 	private AlertDialog sendDialog;
 	private ProgressDialog progressDialog;
+	
+	private int finishedUploadNum = 0;
+	
+	private List<String> pathList;
 	
 	//手机屏幕的宽度，用来设置dialog的大小
 	private int screenWidth;
@@ -155,7 +162,6 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		addView();
 	}
@@ -205,6 +211,8 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		addPicWindow.setContentView(R.layout.add_circle);
 		LinearLayout uploadCamera = (LinearLayout)addPicWindow.findViewById(R.id.upload_camera);
 		LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
+		final TextView circleDescription = (TextView)addPicWindow.findViewById(R.id.circle_description);
+		btnSendCircle = (ImageButton)addPicWindow.findViewById(R.id.btn_send_circle);
 		Button btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
 		selectedImgGridView = (GridView)addPicWindow.findViewById(R.id.selected_image_gridview);
 		selectedImgGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -219,7 +227,6 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 						PhotoActivity.class);
 				intent.putExtra("ID", arg2);
 				startActivity(intent);
-				
 			}
 			
 		});
@@ -256,8 +263,115 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 				startActivityForResult(intent,FROM_LOCAL_FILE);
 			}
 		});
+		//圈子发送按钮点击事件
+		btnSendCircle.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/save_circle";
+				finishedUploadNum = 0;
+				RequestParams params = new RequestParams();
+				pathList = Bimp.drr;
+				Log.i("pathlist",String.valueOf(pathList));
+				String description = circleDescription.getText().toString();
+				if(pathList.size() > 0){
+					String path = pathList.get(0);
+					File file = new File(path);
+					List<Integer> sizeList = FileUtils.getImageSize(path);
+					int width = sizeList.get(0);
+					int height = sizeList.get(1);
+					try {
+						params.put("uid", String.valueOf(1));
+						params.put("img", file);
+						params.put("description", description);
+						params.put("width", String.valueOf(width));
+						params.put("height",String.valueOf(height));
+						params.put("cre_time",String.valueOf(System.currentTimeMillis()));
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					//设置ProgressDialog参数
+					progressDialog = new ProgressDialog(MainActivity.this);
+					progressDialog.setTitle("uploading...");
+					progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+					progressDialog.setCancelable(false);
+					progressDialog.show();
+					RestClient.getInstance().postFromAbsoluteUrl(MainActivity.this, requestUrl, params,
+							new AsyncHttpResponseHandler(){
+								
+								@Override
+								public void onSuccess(String content) {
+									//圈子创建成功，继续通过圈子id上传图片
+									super.onSuccess(content);
+									finishedUploadNum++;
+									progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+									int circleId = Integer.valueOf(content);
+									if(pathList.size() > 1){
+										for(int i = 1;i < pathList.size();i++){
+											String imgPath = pathList.get(i);
+											uploadCircleImg(circleId, imgPath); 
+										}
+									}
+									else{
+										progressDialog.dismiss();
+										Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
+										addPicDialog.dismiss();
+									}
+								}
+
+								@Override
+								public void onFailure(Throwable error,
+										String content) {
+									super.onFailure(error, content);
+									progressDialog.dismiss();
+									Toast.makeText(MainActivity.this, "上传失败", Toast.LENGTH_LONG).show();
+								}
+					});
+				}
+			}
+		});
 	}
 	
+	public void uploadCircleImg(int circleId,String path){
+		String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/save_circle_img";
+		RequestParams params = new RequestParams();
+		File file = new File(path);
+		List<Integer> imageSize = FileUtils.getImageSize(path);
+		int width = imageSize.get(0);
+		int height = imageSize.get(1);
+		
+		try {
+			params.put("circle_id", String.valueOf(circleId));
+			params.put("height", String.valueOf(height));
+			params.put("width", String.valueOf(width));
+			params.put("img",file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		RestClient.getInstance().postFromAbsoluteUrl(this, url, params, 
+				new AsyncHttpResponseHandler(){
+
+					@Override
+					public void onSuccess(String content) {
+						super.onSuccess(content);
+						finishedUploadNum++;
+						progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+						if(finishedUploadNum == pathList.size()){
+							progressDialog.dismiss();
+							Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
+							addPicDialog.dismiss();
+						}
+					}
+
+					@Override
+					public void onFailure(Throwable error, String content) {
+						super.onFailure(error, content);
+						Toast.makeText(MainActivity.this, "上传中断，上传成功"+finishedUploadNum+"，上传失败"+(pathList.size()-finishedUploadNum), Toast.LENGTH_LONG).show();
+						addPicDialog.dismiss();
+					}
+			
+		});
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -267,6 +381,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		if(resultCode == Activity.RESULT_OK){
 			if(requestCode == FROM_CAMERA){
 				//图片从相机获取
+				selectedImgGridView.setVisibility(View.VISIBLE);
 				if (Bimp.drr.size() < 9) {
 					Bimp.drr.add(cameraPicPath);
 				}
@@ -275,6 +390,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 				//图片是从本地文件获取
 				
 				//得到选择的图片路径列表
+				selectedImgGridView.setVisibility(View.VISIBLE);
 				ArrayList<String> list = (ArrayList<String>)data.getSerializableExtra(ImageGridActivity.SELECTED_IMAGE_LIST);
 				Log.i(ImageGridActivity.SELECTED_IMAGE_LIST,String.valueOf(list));
 			}
@@ -285,25 +401,12 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	
 	@Override
 	protected void onRestart() {
-		selectedImgAdapter.loading();
+		if(selectedImgAdapter != null){
+			selectedImgAdapter.loading();
+		}
 		super.onRestart();
 	}
 
-	/**
-	 * 根据路径获取本地本地图片bitmap对象
-	 * @param url 本地图片路径
-	 * @return
-	 */
-	private Bitmap getLocalBitmap(String url){
-		 try {
-	          FileInputStream fis = new FileInputStream(url);
-	          return BitmapFactory.decodeStream(fis);
-	     } catch (FileNotFoundException e) {
-	          e.printStackTrace();
-	          return null;
-	     }
-	}
-	
 	
 	public void onClick(View v){
 		
