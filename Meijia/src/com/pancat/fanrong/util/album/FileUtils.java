@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
@@ -88,4 +91,21 @@ public class FileUtils {
 		return true;
 	}
 
+	/**
+	 * 得到图片的原始宽高
+	 * @param path 图片路径
+	 * @return 图片原始宽高列表
+	 */
+	public static List<Integer> getImageSize(String path){
+		List<Integer> sizeList = new ArrayList<Integer>(2);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+		int width = options.outWidth;
+		int height = options.outHeight;
+		sizeList.add(width);
+		sizeList.add(height);
+		options.inJustDecodeBounds = false;
+		return sizeList;
+	}
 }

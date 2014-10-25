@@ -1391,6 +1391,7 @@ public class PLA_ListView extends PLA_AbsListView {
             if (p.viewType == PLA_AdapterView.ITEM_VIEW_TYPE_HEADER_OR_FOOTER) {
                 p.recycledHeaderFooter = true;
             }
+            
             addViewInLayout(child, flowDown ? -1 : 0, p, true);
         }
 

@@ -18,13 +18,32 @@
         android:layout_height="wrap_content"
         android:singleLine="false"
         android:textColor="#656565" />
+<ImageView 
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:background="@drawable/cutline_1px"
+    android:layout_marginTop="10dp"
+    />
+<RelativeLayout 
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+	android:paddingTop="5dp"
+	android:paddingLeft="5dp"
+	>
+     <com.pancat.fanrong.common.CircleImageView
+	android:id="@+id/user_img"
+	android:layout_width="40dp"
+	android:layout_height="40dp"
+	android:src="@drawable/player"
+	 />
+     <TextView 
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:text="Tom"
+         android:layout_toRightOf="@id/user_img"
+         android:id="@+id/username"
+         />
+</RelativeLayout>
 
-    <TextView
-        android:id="@+id/news_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:gravity="right"
-        android:textColor="#000000" />
-
+    
 </LinearLayout>
