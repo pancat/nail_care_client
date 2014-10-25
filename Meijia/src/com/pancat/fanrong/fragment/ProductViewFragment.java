@@ -212,7 +212,7 @@ public class ProductViewFragment extends Fragment implements IXListViewListener{
 	private void addProductToDatabase(List<Product> products)
 	{
 		for (Product product : products) {
-			Log.d(TAG, product.toString());
+			//Log.d(TAG, product.toString());
 			DatabaseManager.getInstance(getActivity()).addProduct(product);
 		}
 	}
