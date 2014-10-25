@@ -7,11 +7,16 @@ import java.util.Map;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Product;
+import com.pancat.fanrong.common.FilterQueryAndParse;
 
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +32,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -40,6 +47,7 @@ public class ProductTabFragment extends Fragment
 	
 	private static final int LeftAndRightBottomBlank = 20;
 	
+	//按Tab监听器
 	private OnProductTabClickListenser onProductTabClickListenter = null;
 	private List<String> tab = null;
 	private TextView filter = null;
@@ -47,13 +55,16 @@ public class ProductTabFragment extends Fragment
 	private View bottomLine = null;
 	private TextView hotTab = null;
 	private TextView newTab = null;
+	private ImageView arrowDown = null;
 	private String productType = Product.MEIJIA;
 	private PopupWindow popWindow = null;
-	private ArrayAdapter<String> filteradapter = null;
+	private TempAdapter filteradapter = null;
+	
+	private int curIndex = -1;
 	
 	public interface OnProductTabClickListenser
 	{
-		public void setOnProductTabClickListenser(int tab,Map<String,String> map);
+		public void setOnProductTabClickListenser(int tab,Map<String,Object> map);
 	}
 
 	@Override
@@ -76,42 +87,13 @@ public class ProductTabFragment extends Fragment
 			bottomLine = (View)currentView.findViewById(R.id.bottom_line);
 			hotTab = (TextView)currentView.findViewById(R.id.product_hot_tab);
 			newTab = (TextView)currentView.findViewById(R.id.product_new_tab);
-			
+			arrowDown = (ImageView)currentView.findViewById(R.id.product_tabpage_arrowdown);
+			arrowDown.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.arrow_down_grey_jog));
 			InitTabEvent();
-			
-		    
-		    //TODO 这里之后再改
-			/*spinner.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, temp));
-			spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-				@Override
-				public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id)
-				{
-					// TODO 自动生成的方法存根
-					Map<String,String>map = new HashMap<String, String>();
-					String param = (String) adapterView.getItemAtPosition(position);
-					if(param.contains("-"))
-					{
-						String[] ar = param.split("-");
-						map.put(ProductViewFragment.SELECT_LEFT, ar[0]);
-						map.put(ProductViewFragment.SELECT_RIGHT, ar[1]);
-					}
-					else{
-						map.put(ProductViewFragment.SELECT_LEFT, "600");
-					}
-					onProductTabClickListenter.setOnProductTabClickListenser(2, map);
-					Log.d(TAG, "cao ni ma");
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO 自动生成的方法存根
-					
-				}
-			});*/
-			
+            
+			changeBottomLine(0);
 			onProductTabClickListenter.setOnProductTabClickListenser(0, null);
-			//
-		    //Log.d(TAG,"yes set");
+
 		}
 	}
 
@@ -132,20 +114,17 @@ public class ProductTabFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO 自动生成的方法存根
 		super.onCreate(savedInstanceState);
-		
-		tab = new ArrayList<String>();
-		tab.add("Hot");
-		tab.add("New");
 	}
 	
 	private void InitTabEvent()
 	{
-		Map<String,String>param = new HashMap<String,String>();
-		param.put(ProductViewFragment.KEYWORD, "hot");
-		param.put(ProductViewFragment.QUERY_TYPE, "0");
+		Map<String,Object>param = new HashMap<String,Object>();
+		param.put(FilterQueryAndParse.Q_KEYWORD, FilterQueryAndParse.HOT);
+		param.put(FilterQueryAndParse.Q_QUERY_TYPE, FilterQueryAndParse.QT_1);
 		hotTab.setOnClickListener(new TabOnClickEvent(param,0));
 		
-		param.put(ProductViewFragment.KEYWORD, "new");
+		param.put(FilterQueryAndParse.Q_KEYWORD, FilterQueryAndParse.NEW);
+		param.put(FilterQueryAndParse.Q_QUERY_TYPE, FilterQueryAndParse.QT_2);
 		//param.put(ProductViewFragment.QUERY_TYPE, "0");
 		newTab.setOnClickListener(new TabOnClickEvent(param,1));
 		
@@ -189,42 +168,36 @@ public class ProductTabFragment extends Fragment
 				@Override
 				public void onItemClick(AdapterView<?> adapter, View lv,
 						int pos, long arg3) {
-					// TODO Auto-generated method stub
 					String text = adapter.getItemAtPosition(pos).toString();
-					Map<String,String>map = new HashMap<String, String>();
+					
+					Map<String,Object>map = new HashMap<String, Object>();
 					if(text.contains("-"))
 					{
 						String[] ar = text.split("-");
-						map.put(ProductViewFragment.SELECT_LEFT, ar[0]);
-						map.put(ProductViewFragment.SELECT_RIGHT, ar[1]);
+						map.put(FilterQueryAndParse.Q_SELECT_LEFT, ar[0]);
+						map.put(FilterQueryAndParse.Q_SELECT_RIGHT, ar[1]);
 					}
 					else{
-						map.put(ProductViewFragment.SELECT_LEFT, "600");
+						map.put(FilterQueryAndParse.Q_SELECT_LEFT, "600");
 					}
-					//map.put("text", text);
+					
 					filter.setText(text);
 					onProductTabClickListenter.setOnProductTabClickListenser(2, map);
-					Log.d(TAG, "cao ni ma");
 					
 					if(popWindow!=null) changePopWindowState();
 				}
 			});
 			
-		    List<String> temp = new ArrayList<String>();
-		    temp.add("0-200");
-		    temp.add("200-299");
-		    temp.add("300-399");
-		    temp.add("400-499");
-		    temp.add("500-599");
-		    temp.add("高于600");
-		    
-		    filteradapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,temp);
+            
+		    filteradapter = new TempAdapter();
 		    list.setAdapter(filteradapter);
-		    list.setDivider(null);
 		    
-		    popWindow = new PopupWindow(v,filter.getWidth(),400);
+		    DisplayMetrics dm = new DisplayMetrics();
+			
+		    popWindow = new PopupWindow(v,filter.getWidth()+200,400);
 		    popWindow.setFocusable(true);  
-		    popWindow.setBackgroundDrawable(getResources().getDrawable(R.color.orange));
+		    popWindow.setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(R.color.blue)));
+		    
 		    //popWindow.setBackgroundDrawable(new BitmapDrawable());  
 		    popWindow.setOutsideTouchable(true); 
 		    popWindow.update();  
@@ -256,15 +229,17 @@ public class ProductTabFragment extends Fragment
         	if(filter.getText() == getResources().getText(R.string.filter))
         		filter.setText("0-200");
         }
+        
+        changeColor(which);
 	}
 	
 	//按钮监听
 	private class TabOnClickEvent implements View.OnClickListener
 	{
-        private Map<String,String> params = null;
+        private Map<String,Object> params = null;
         private int curIndex = 0;
         
-        public TabOnClickEvent(Map<String,String>param,int index)
+        public TabOnClickEvent(Map<String,Object>param,int index)
         {
         	params = param;
         	//TODO 判断
@@ -273,7 +248,7 @@ public class ProductTabFragment extends Fragment
 		@Override
 		public void onClick(View arg0) {
 			// TODO 自动生成的方法存根
-			changeBottomLine(curIndex);
+			//changeBottomLine(curIndex);
 			if(onProductTabClickListenter != null)
 			{
 				onProductTabClickListenter.setOnProductTabClickListenser(curIndex,params);
@@ -282,24 +257,66 @@ public class ProductTabFragment extends Fragment
 		
 	}
 	
-	private class TempAdapter extends ArrayAdapter<String>{
-		private Context context;
-		
-		public TempAdapter(Context context, int resource) {
-			super(context, resource);
-			this.context = context;
-			// TODO Auto-generated constructor stub
+	private void changeColor(int index){
+		TextView [] a = new TextView[]{hotTab,newTab,filter};
+		if(index >= 3 || index < 0 || (index == curIndex)){
+			return ;
+		}
+		if(curIndex != -1){
+			a[curIndex].setTextColor(getActivity().getResources().getColor(R.color.labelgrey));
+		}
+		if(curIndex == 2){
+			arrowDown.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.arrow_down_grey_jog));
+		}
+		curIndex = index;
+		a[curIndex].setTextColor(getActivity().getResources().getColor(R.color.labelblue));
+		if(curIndex == 2){
+			arrowDown.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.arrow_down_blue_jog));
+		}
+	}
+	
+	private class TempAdapter extends BaseAdapter{
+        private List<String> datas;
+        
+		public TempAdapter() {
+			super();
+			datas = new ArrayList<String>();
+			datas.add("0-200");
+			datas.add("200-299");
+			datas.add("300-399");
+			datas.add("400-499");
+			datas.add("500-599");
+			datas.add("高于600");
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
 			if(convertView == null){
-				convertView = LayoutInflater.from(context).inflate(R.layout.tab_filter_list_item, parent);
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_filter_list_item, parent,false);
 			}
 			((TextView)convertView.findViewById(R.id.tab_filter_list_item)).setText(getItem(position));
 			return convertView;
 		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return datas.size();
+		}
+
+		@Override
+		public String getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return datas.get(arg0);
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
 		
 	}
+
 }

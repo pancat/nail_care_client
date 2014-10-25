@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.adapter.ProductInfoAdapter.ViewHolder;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -10,6 +10,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.bean.Circle;
+import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.bean.User;
 
 public class DatabaseManager {
@@ -85,4 +86,29 @@ public class DatabaseManager {
 		}
 		return circleList;
 	}
+	
+	//增加产品
+	public void addProduct(Product product){
+		Dao<Product, Integer> dao = getHelper().getProductDao();
+		if(product != null){
+			try{
+				dao.create(product);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public List<Product> getProduct(){
+		Dao<Product,Integer> dao = getHelper().getProductDao();
+		List<Product> productList = new ArrayList<Product>();
+		QueryBuilder<Product, Integer> query = dao.queryBuilder();
+		try{
+			productList = query.query();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return productList;
+	}
+	
 }

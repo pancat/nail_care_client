@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.bean.SearchLabelAndTab;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
@@ -22,25 +24,25 @@ import android.widget.TextView;
 
 public class CommonTabSearchComponent extends Fragment{
 	private static final String TAG = "CommonTabSearchComponent";
-	
-	private static final String TABKEY = "tabOption";
-	private static final String TABLABEL = "tabLable";
+
 	private View contextView;
-    private ArrayList<String> tabOption;
-    private List<Button> tabButton;
+    private ArrayList<SearchLabelAndTab> tabOption;
+    private List<View> tabButton;
     private TableLayout tableLayout;
     private String label;
     private TextView textLabel;
     private OnClickSearchTabListener onClickSearchTabListener;
     private static final int TABLECOLNUM = 4;
+    private int labelnum = 0;
+    private boolean[] flags;
+    private int normalColor ;
+    private int selColor;
     
-    public static CommonTabSearchComponent newInstance(ArrayList<String> strArr,String label)
+    public static CommonTabSearchComponent newInstance(ArrayList<SearchLabelAndTab> labelTabList,String label)
     {
     	CommonTabSearchComponent instance = new CommonTabSearchComponent();
-    	Bundle bundle = new Bundle();
-    	bundle.putStringArrayList(TABKEY, strArr);
-    	bundle.putString(TABLABEL, label);
-    	instance.setArguments(bundle);
+    	instance.tabOption = labelTabList;
+    	instance.label = label;
     	return instance;
     }
     
@@ -49,22 +51,40 @@ public class CommonTabSearchComponent extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Bundle bundle = getArguments();
-        tabOption = bundle.getStringArrayList(TABKEY);
-        label = bundle.getString(TABLABEL);
-        tabButton = new ArrayList<Button>();
+        tabButton = new ArrayList<View>();
         InitTabButton();
 	}
 
     public void InitTabButton()
     {
-    	for(String str:tabOption)
+    	normalColor = getActivity().getResources().getColor(R.color.depthred);
+    	selColor = getActivity().getResources().getColor(R.color.blue);
+    	
+    	for(SearchLabelAndTab tab:tabOption)
     	{
     		Button b= new Button(getActivity());
-    		b.setText(str);
+    		b.setText(tab.getName());
+    		b.setTextColor(getActivity().getResources().getColor(R.color.depthred));
     		b.setGravity(Gravity.CENTER);
-    	    b.setBackgroundColor(getActivity().getResources().getColor(R.color.blue));
+    	    b.setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.stylelabel));
     		tabButton.add(b);
+    	}
+    	labelnum = tabOption.size();
+    	
+    	int left = TABLECOLNUM-tabOption.size()%TABLECOLNUM;
+    	if(left != TABLECOLNUM){
+    		for(int i=0;i<left;i++){
+    			TextView t = new TextView(getActivity());
+    			t.setText("");
+    			t.setGravity(Gravity.CENTER);
+    			t.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+    			t.setFocusable(false);
+    			tabButton.add(t);
+    		}
+    	}
+    	flags = new boolean[labelnum];
+    	for(int i=0; i<labelnum; i++){
+    		flags[i] = false;
     	}
     }
     
@@ -90,9 +110,11 @@ public class CommonTabSearchComponent extends Fragment{
 	    getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 	    
 	    //set button params
-	    int w = (dm.widthPixels - 50) / TABLECOLNUM;
-	    LayoutParams vlp = new LayoutParams(w, ViewGroup.LayoutParams.WRAP_CONTENT);
+	    //int w = (dm.widthPixels - 50) / TABLECOLNUM;
+	    LayoutParams vlp = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
 		vlp.setMargins(10, 10, 10, 10);
+		vlp.gravity = Gravity.CENTER;
+		vlp.weight = 1;
 		
 	    TableRow tableRow = null;
 	    for(int i=0;i<tabButton.size();i++)
@@ -110,16 +132,21 @@ public class CommonTabSearchComponent extends Fragment{
 	    }
 	    tableLayout.addView(tableRow);
 	    
-		for(int i=0;i<tabButton.size();i++)
+		for(int i=0;i<labelnum;i++)
 		{
-			final String v = tabOption.get(i);
+			final SearchLabelAndTab v = tabOption.get(i);
+			final int sel = i;
+			
 			tabButton.get(i).setOnClickListener(new OnClickListener() {
 				
 				@Override
 			
-				public void onClick(View arg0) {
+				public void onClick(View view) {
 					// TODO Auto-generated method stub
-					onClickSearchTabListener.setOnClickSearchTabListener(label,v);
+					onClickSearchTabListener.setOnClickSearchTabListener(label,v,!flags[sel]);
+					flags[sel] = !flags[sel];
+					if(flags[sel]) ((Button)view).setTextColor(selColor);
+					else ((Button)view).setTextColor(normalColor);
 				}
 			});
 		}
@@ -128,6 +155,6 @@ public class CommonTabSearchComponent extends Fragment{
 	}
 	
 	public interface OnClickSearchTabListener{
-		void setOnClickSearchTabListener(String label,String v);
+		void setOnClickSearchTabListener(String label,SearchLabelAndTab v,boolean flag);
 	}
 }

@@ -8,10 +8,11 @@ import java.util.Map;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Product;
+import com.pancat.fanrong.common.FilterQueryAndParse;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.fragment.ProductTabFragment;
 import com.pancat.fanrong.fragment.ProductTabFragment.OnProductTabClickListenser;
 import com.pancat.fanrong.fragment.ProductViewFragment;
-import com.pancat.fanrong.fragment.ProductViewFragment.OnClickListItem;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -35,13 +36,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class ProductViewFragmentActivity extends ActionBarActivity implements OnProductTabClickListenser ,OnClickListItem{
+public class ProductViewFragmentActivity extends ActionBarActivity implements OnProductTabClickListenser ,FragmentCallback{
 	private static final String TAG = "ProductViewFragment";
 
 	//static title
 	public static final String MEIJIA = "美甲";
 	public static final String MEIZHUANG = "美妆";
     
+	//Tab框架
 	private ProductTabFragment productTabFragment;
 	private FragmentManager fragmentManager = null;
 	
@@ -53,6 +55,7 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 	private List<Fragment> lf;
 	private FragmentPagerAdapter fpa;
     
+	//产品类型
 	private String productType;
 	
 	@Override
@@ -64,9 +67,11 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 		fragmentManager = getSupportFragmentManager();
 		productTabFragment = (ProductTabFragment)fragmentManager.findFragmentById(R.id.product_tabs_page);
 		
+		//解析参数
 		Map<String,String> map = getMapParam(getIntent().getExtras());
-		setPageTitle(map.get(ProductViewFragment.QUERY_PRODUCT_TYPE));
+		setPageTitle(map.get(FilterQueryAndParse.Q_PRODUCT_TYPE));
 		
+		//设置ViewPage适配器
 		setFragmentAdapterAndViewPage(map);
 		
 		InitActionBar();
@@ -75,14 +80,10 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 	//设置当前页面标题
 	public void setPageTitle(String type)
 	{
-		if(type == Product.MEIJIA)
-		{
+		if(type.equals(Product.MEIJIA)){
 			setTitle(MEIJIA);
 			productType = type;
-		}
-			
-		else
-		{
+		}else{
 			setTitle(MEIZHUANG);
 			productType = type;
 		}
@@ -100,11 +101,8 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO 自动生成的方法存根
-		
 		getMenuInflater().inflate(R.menu.searchtab, menu);
 		searchButton = menu.findItem(R.id.searchtab);
-		
 		return true;
 	}
  
@@ -122,8 +120,9 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 		return super.onOptionsItemSelected(item);
 	}
 
+	//按Tab按钮的回调函数
 	@Override
-	public void setOnProductTabClickListenser(int tab,Map<String,String>map) {
+	public void setOnProductTabClickListenser(int tab,Map<String,Object>map) {
 		// TODO 自动生成的方法存根
        if(tab < 2 && tab >= 0){
     	   viewpage.setCurrentItem(tab);
@@ -146,23 +145,23 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 			while(iter.hasNext())
 			{
 				String key = iter.next();
-				if(key == Product.TYPE)
-					map.put(ProductViewFragment.QUERY_PRODUCT_TYPE, bundle.getString(key));
+				if(key.equals(Product.TYPE))
+					map.put(FilterQueryAndParse.Q_PRODUCT_TYPE, bundle.getString(key));
 				else map.put(key, bundle.getString(key));
 			}
 		}
 		else
 		{
-			map.put(ProductViewFragment.QUERY_PRODUCT_TYPE, Product.MEIJIA);
+			map.put(FilterQueryAndParse.Q_PRODUCT_TYPE, Product.MEIJIA);
 		}
 		return map;
 	}
 	
 	private void setFragmentAdapterAndViewPage(Map<String,String> map)
 	{
-		Fragment a = ProductViewFragment.getHotInstance(map);
-		Fragment b = ProductViewFragment.getNewInstance(map);
-		Fragment c = ProductViewFragment.getFilterInstance(map);
+		Fragment a = ProductViewFragment.getHotInstance(productType);
+		Fragment b = ProductViewFragment.getNewInstance(productType);
+		Fragment c = ProductViewFragment.getFilterInstance(null,productType);
 		
 		lf = new ArrayList<Fragment>();
 		lf.add(a);
@@ -186,6 +185,7 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 
 		viewpage.setAdapter(fpa);
 		viewpage.setCurrentItem(0);
+		//productTabFragment.changeBottomLine(0);
 		viewpage.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
@@ -209,16 +209,21 @@ public class ProductViewFragmentActivity extends ActionBarActivity implements On
 		});
       
 	}
-
+	
+	//点击产品视图产生的回调函数，转到详细视图
 	@Override
-	public void setOnClickListItem(Product product) {
-		// TODO 自动生成的方法存根
+	public void callback(Bundle bundle) {
+		// TODO Auto-generated method stub
 		Intent intent = new Intent(this,ProductDetailViewFragmentActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putString(Product.KEY, product.toString());
 		intent.putExtras(bundle);
 
 		startActivity(intent);
+	}
+
+	@Override
+	public void finishActivity() {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

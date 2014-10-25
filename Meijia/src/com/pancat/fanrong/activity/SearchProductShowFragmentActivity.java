@@ -6,15 +6,18 @@ import java.util.Map;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Product;
+import com.pancat.fanrong.common.FilterQueryAndParse;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.fragment.ProductViewFragment;
-import com.pancat.fanrong.fragment.ProductViewFragment.OnClickListItem;
+import com.pancat.fanrong.util.DataTransfer;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
-public class SearchProductShowFragmentActivity extends FragmentActivity implements OnClickListItem{
+public class SearchProductShowFragmentActivity extends FragmentActivity implements FragmentCallback{
 	private static final String TAG = "SearchProductShowFragmentActivity";
 	
 	private ProductViewFragment productViewFragment;
@@ -24,43 +27,29 @@ public class SearchProductShowFragmentActivity extends FragmentActivity implemen
 		super.onCreate(arg0);
 		setContentView(R.layout.search_product_fragment_layout);
 		
-		Map<String,String>map = getMapParam(getIntent().getExtras());
+		Map<String,Object>map = DataTransfer.getMap(getIntent().getExtras());
+		
+		Log.d(TAG, map.toString());
 		
 		productViewFragment = ProductViewFragment.newInstance(map);
+		
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		fragmentTransaction.add(R.id.serarch_product_fragment_activity_layout, productViewFragment);
 		fragmentTransaction.commit();
 	}
 
-	private Map<String,String> getMapParam(Bundle bundle)
-	{
-		Map<String,String> map = new HashMap<String, String>();
-		if(bundle != null)
-		{
-			Iterator<String> iter = bundle.keySet().iterator();
-			while(iter.hasNext())
-			{
-				String key = iter.next();
-				if(key == Product.TYPE)
-					map.put(ProductViewFragment.QUERY_PRODUCT_TYPE, bundle.getString(key));
-				else map.put(key, bundle.getString(key));
-			}
-		}
-		else
-		{
-			map.put(ProductViewFragment.QUERY_PRODUCT_TYPE, Product.MEIJIA);
-		}
-		return map;
-	}
-
 	@Override
-	public void setOnClickListItem(Product product) {
+	public void callback(Bundle bundle) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(this,ProductDetailViewFragmentActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putString(Product.KEY, product.toString());
 		intent.putExtras(bundle);
 
 		startActivity(intent);
+	}
+
+	@Override
+	public void finishActivity() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -80,7 +80,7 @@ public class RestClient {
 	}
 
 	
-	private String getAbsoluteUrl(String relativeUrl) {
+	public String getAbsoluteUrl(String relativeUrl) {
 		if (relativeUrl.toLowerCase().startsWith("http://")
 				|| relativeUrl.toLowerCase().startsWith("https://")) {
 			return relativeUrl;
