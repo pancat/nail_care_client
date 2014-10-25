@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.CircleItemActivity"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+     <RelativeLayout
+            android:id="@+id/head_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/head" >
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/btn_back_selector"
+                android:gravity="center_vertical"
+                android:onClick="onClick" />
+        </RelativeLayout>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp"
+     >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+       
+
+        <LinearLayout
+            android:id="@+id/info_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/head_rl"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/corner_bg_white"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/img_parent_ll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <!-- 动态添加view到这个LinearLayout中 -->
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cutline_1px" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp" >
+
+                <ImageView
+                    android:id="@+id/ic_web"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_web" />
+
+                <TextView
+                    android:id="@+id/img_path"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/ic_web"
+                    android:textColor="#CCCCCC"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/user_info_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_ll"
+            android:layout_margin="10dp"
+            android:background="@drawable/corner_bg_white"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp" >
+
+                <com.pancat.fanrong.common.CircleImageView
+                    android:id="@+id/user_img"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/player" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/user_img"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/user_img"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tom"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="This is description of the circle"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/added_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="added 10m"
+                        android:textColor="@color/grey"
+                        android:textSize="10sp" />
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/cutline_1px" />
+
+                    <RelativeLayout
+                        android:id="@+id/to_comment_page"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:onClick="onClick" >
+
+                        <ImageView
+                            android:id="@+id/comment_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/afi" />
+
+                        <TextView
+                            android:id="@+id/tv_comment_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="3dp"
+                            android:layout_toRightOf="@id/comment_icon"
+                            android:text="0"
+                            android:textSize="12dp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cutline_1px" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp" >
+
+                <EditText
+                    android:id="@+id/comment_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.98"
+                    android:background="@drawable/input_comment_bg_selector"
+                    android:gravity="center_vertical"
+                    android:hint="Add a comment..."
+                    android:padding="5dp" />
+
+                <Button
+                    android:id="@+id/btn_send_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="0.02"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="Add" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>
+</LinearLayout>

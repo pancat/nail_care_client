@@ -10,9 +10,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.pancat.fanrong.MainApplication;
@@ -62,5 +65,7 @@ public class FileUtils {
 		byteStream.close();
 		return data;
 	}
+	
+	
 	
 }

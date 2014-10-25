@@ -82,7 +82,7 @@ public class CircleItemActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_moment_item);
+		setContentView(R.layout.activity_circle_item);
 		
 		//初始化控件
 		mCommentContent = (EditText)findViewById(R.id.comment_content);
@@ -147,6 +147,9 @@ public class CircleItemActivity extends Activity{
 	public void onClick(View v){
 		Intent intent;
 		switch(v.getId()){
+		case R.id.btn_back:
+			finish();
+			break;
 		case R.id.btn_send_comment:
 			final ProgressDialog progressDialog = ProgressDialog.show(CircleItemActivity.this, "uploading", "Please wait...");
 			String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/add_comment";
@@ -164,8 +167,8 @@ public class CircleItemActivity extends Activity{
 				public void onSuccess(String content) {
 					super.onSuccess(content);
 					mCommentContent.setText("");
-					InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+//					InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 					progressDialog.dismiss();
 					Toast.makeText(CircleItemActivity.this, "评论成功", Toast.LENGTH_LONG).show();
 					try {

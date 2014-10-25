@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.CircleComment;
@@ -48,7 +49,6 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 		setContentView(R.layout.activity_comment);
 		init();
 		circleId = getIntent().getIntExtra("circleId", 0);
-		
 		onLoadMore();
 	}
 

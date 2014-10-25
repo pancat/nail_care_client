@@ -97,7 +97,6 @@ public class Product implements Serializable{
 	public Product(){
 		
 	}
-	//构造函数，需提供参数的值键对,如果为空，则全部使用默认值
 	public Product(Map<String, String> productMap)
 	{
 		setProductType(getDefault(productMap, TYPE, PD_TYPE));
@@ -269,10 +268,10 @@ public class Product implements Serializable{
     public int getProductId() {
     	return productId ;
     }
-    public String  getProduct_Date() {
+    public String  getProductDate() {
     	return productDate.toString();
     }
-    public Date getProductDate(){
+    public Date getProductate(){
     	return productDate;
     }
     public String getProductPrice(){

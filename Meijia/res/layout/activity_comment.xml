@@ -23,17 +23,6 @@
             android:layout_marginLeft="5dp"
             android:onClick="onClick"
             />
-        <!-- 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="0 comments"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/btn_back"
-            />
-         -->
     </RelativeLayout>
 <com.pancat.fanrong.waterfall.view.XListView
         android:id="@+id/comment_list"

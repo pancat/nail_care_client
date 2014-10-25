@@ -168,6 +168,7 @@ public class ProductViewFragment extends Fragment implements IXListViewListener{
 		public void onFailure(Throwable error, String content) {
 			// TODO 自动生成的方法存根
 			super.onFailure(error, content);
+			Log.d(TAG, content+"***"+error);
 		}
 		
 	};

@@ -143,7 +143,7 @@ public class FilterQueryAndParse {
 	public static final String SP_credate = "cre_date";
 	public static final String SP_hit = "hit";
 	public static final String SP_image_uri = "image_uri";
-	public static final String SP_m_name = "m_name";
+	public static final String SP_m_name = "nick_name";
 	
 	//有关标签的服务器端返回字段
 	public static final String SP_TAG_NAME = "name";
@@ -359,12 +359,14 @@ public class FilterQueryAndParse {
 	//对返回结果，解析成产品数组
 	public static ArrayList<Product> ParseToProductArr(String content) throws Exception
 	{
+		//Log.d(TAG, content);
 		ArrayList<Product> product = new ArrayList<Product>();
 		try{
 			JSONArray jsonArray = new JSONArray(content);
 			for(int i=0; i<jsonArray.length(); i++)
 			{
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				Log.d(TAG,jsonObject.getString(SP_image_uri));
 				Map<String,String> map = new HashMap<String,String>();
 				map.put(Product.ID, String.valueOf(jsonObject.getInt(SP_ID)));
 				map.put(Product.TITLE, jsonObject.getString(SP_name));
@@ -373,6 +375,7 @@ public class FilterQueryAndParse {
 				map.put(Product.URL, jsonObject.getString(SP_image_uri));
 				map.put(Product.AUTHOR, jsonObject.getString(SP_m_name));
 				Product tmp = new Product(map);
+				//Log.d(TAG, tmp.getProductURL());
 				product.add(tmp);
 			}
 		}catch(Exception e)
