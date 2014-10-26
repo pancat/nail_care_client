@@ -20,4 +20,9 @@
     <drawable name="black">#000000</drawable>
     <drawable name="white">#FFFFFF</drawable> 
     <drawable name="red">#FF0000</drawable> 
+    <color name="product_bkg">#eeeeee</color>
+    <color name="depthred">#ff6666</color>
+    <color name="labelgrey">#666666</color>
+    <color name="labelblue">#17eef1</color>
+    <color name="lightgrey">#cccccc</color>
 </resources>

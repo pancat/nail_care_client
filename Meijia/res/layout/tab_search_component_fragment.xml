@@ -3,7 +3,9 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical" 
-	    android:paddingBottom="20dp"
+	    android:background="@color/white"
+	    android:paddingTop="8dp"
+	    android:paddingBottom="12dp"
 	    >
 	    
 	    <LinearLayout android:layout_width="match_parent"
@@ -17,7 +19,7 @@
 	        <TextView android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:gravity="left"
-	            android:background="@color/grey"
+	            android:background="#ccffff"
 	            android:id="@+id/tab_search_component_fragment_label"
 	            android:padding="8dp"
 	            android:textSize="18dp"

@@ -1,71 +1,132 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/product_detail_fragment_style" >
+    android:background="@color/product_bkg"
+    android:gravity="center"
+    >
     
-    <!--<ImageView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:id="@+id/product_detail_fragment_img"/>
-        -->
-      
-      <!-- 作者的系列图片显示  具备左箭头右箭头-->
-      <RelativeLayout android:id="@+id/product_detail_fragment_img"
-          android:layout_width="wrap_content"
-          android:layout_height="150dp"
-          android:background="#ff0000" >
-         
-	     <android.support.v4.view.ViewPager
-	        android:id="@+id/product_detail_fragment_viewpage"
-	        android:layout_width="match_parent"
-	        android:layout_height="150dp"
-	        android:layout_weight="1"
-	        android:background="#00ff00"
-	        />
-	     
-	    <ImageView android:id="@+id/product_detail_fragment_left"
-              android:layout_height="150dp"
-              android:layout_width="50dp"
-              android:gravity="center"
-              android:src="@drawable/left"
-              android:layout_alignLeft="@id/product_detail_fragment_viewpage" />
-	    
-	    <ImageView android:id="@+id/product_detail_fragment_right"
-              android:layout_height="150dp"
-              android:layout_width="50dp"
-              android:gravity="center"
-              android:layout_alignRight="@id/product_detail_fragment_viewpage"
-              android:src="@drawable/right"/>
-	</RelativeLayout>
-	
-      
-    <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/product_detail_fragment_description"/>
+    <!-- android:background="@drawable/product_detail_fragment_style"  -->
+    <!-- 产品图品 -->
+    <FrameLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <ImageView android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:scaleType="fitXY"
+	        android:id="@+id/product_detail_fragment_img"/>
+	    <ImageView android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:scaleType="fitXY"
+	        android:src="@drawable/product_background"/>
+    </FrameLayout>
     
-    <LinearLayout android:layout_width="match_parent"
+    <RelativeLayout 
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:paddingTop="5dp"
+        >
+           
+        <!-- 产品价格 -->
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:id="@+id/affirm_position_nouse">
+            
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                
+	            <!-- App价产品标签 -->
+	            <TextView android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:textSize="18sp"
+	                android:textColor="@color/pink"
+	                android:text="@string/product_application_price"/>
+	            
+	            <!-- App价 -->
+	             <TextView android:layout_width="wrap_content"
+		                android:layout_height="wrap_content" 
+		               	android:id="@+id/product_detail_fragment_price_label"
+		                android:focusable="false"
+		                android:text="1.00"
+		                />
+	         </LinearLayout>
+	         
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+	            
+                <!-- 商店价标签 -->
+	            <TextView android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:textSize="14sp"
+	                android:text="@string/product_shop_price"
+	                />
+	            
+	            <!-- 商店价 -->
+	            <TextView android:layout_width="wrap_content"
+	                android:layout_height="wrap_content" 
+	                android:id="@+id/product_detail_fragment_price"
+	                android:focusable="false"
+	                android:text="5.00"
+	                />
+            </LinearLayout>
+            
+        </LinearLayout>
+          
+        <!-- 收藏按钮 -->
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/search_frame_jog"
+            android:layout_marginTop="3dp"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignRight="@id/affirm_position_nouse">
+            
+            <!-- 收藏按钮图片 -->
+            <ImageView android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/collect"/>
+            
+            <!-- 收藏按钮 -->
+	        <TextView android:id="@+id/product_collect_button"
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:paddingLeft="5dp"
+	            android:paddingRight="8dp"
+	            android:textSize="18sp"
+				android:gravity="center_vertical"
+	            android:textColor="@color/depthred"
+	            android:text="@string/product_collection"
+	            />
+        </LinearLayout> 
         
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_detail_fragment_price_label"
-                android:text="优惠价:"/>
-            
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_detail_fragment_price"
-                />
-            
-            <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_detail_fragment_order"
-                android:text="马上预约" />
-                        
-    </LinearLayout>
-    <View  android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/green"/>
+    </RelativeLayout>
+    
+       <!-- 产品的描述 -->
+       <LinearLayout android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="8dp"
+           android:background="@drawable/product_background_white"
+           android:orientation="vertical">
+         
+        <TextView 
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:text="产品的细节描述1--product_detail_fragment_description"
+        	android:textColor="@color/blue"
+        	android:id="@+id/product_detail_fragment_description"/>
+		<TextView
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content"
+    	    android:textColor="@color/blue"
+    	    android:text="需要在product_detail_fragment中加入相关关于产品的描述"
+    	    />
+	   </LinearLayout>
+    
+    
 </LinearLayout>
