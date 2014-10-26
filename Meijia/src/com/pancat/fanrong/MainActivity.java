@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +39,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -181,15 +185,46 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				
-//				if(!User.getInstance().isUserLogined())
-//				{
-//					Intent it=new Intent(MainActivity.this,LoginActivity.class);
-//					startActivity(it);
-//				}
-//				else{
-					openAddDialog();
-//				}
+				showpopwindow();
+					//openAddDialog();
+
 			}
+		});
+	}
+	private void showpopwindow(){
+		LayoutInflater inflater=getLayoutInflater();
+		View dropDownList=inflater.inflate(R.layout.dropdownlist, null);
+		final PopupWindow menuWindow = new PopupWindow(dropDownList,
+				LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		menuWindow.setFocusable(true);
+		menuWindow.setOutsideTouchable(true); 
+		menuWindow.update(); 
+		menuWindow.setBackgroundDrawable(new BitmapDrawable()); 
+		menuWindow.showAsDropDown(btnSendMoment, -100, 12);
+		Button sendmoment=(Button)dropDownList.findViewById(R.id.sendmomentbtn);
+		Button usersetting=(Button)dropDownList.findViewById(R.id.usersettingbtn);
+		sendmoment.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				openAddDialog();
+				menuWindow.dismiss();
+			}
+		});
+		usersetting.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {	
+				if (AuthorizeMgr.getInstance().hasLogined() == false)
+				{
+					menuWindow.dismiss();
+					Intent signInIntent = new Intent();
+					signInIntent.setClass(MainActivity.this, SignInActivity.class);
+					startActivity(signInIntent);	
+				}
+				// TODO 跳转到个人设置activity
+				
+				
+			}	
 		});
 	}
 	

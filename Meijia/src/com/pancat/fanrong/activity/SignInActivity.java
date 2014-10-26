@@ -1,21 +1,32 @@
 package com.pancat.fanrong.activity;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcel;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,7 +61,7 @@ public class SignInActivity extends Activity {
 	private EditText mPasswordView;
 	private View mProgressView;
 	private View mLoginFormView;
-
+	private TextView recommend;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,21 +69,23 @@ public class SignInActivity extends Activity {
 
 		// Set up the login form.
 		mAccount = (EditText) findViewById(R.id.account);
-
+		recommend=(TextView)findViewById(R.id.recommend);
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
 					public boolean onEditorAction(TextView textView, int id,
 							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+						if (id == R.id.login || id == EditorInfo.IME_ACTION_DONE) {
 							attemptLogin();
 							return true;
 						}
 						return false;
 					}
 				});
-
+		//不弹出输入框
+		//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		
 		Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
 		mEmailSignInButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -80,7 +93,19 @@ public class SignInActivity extends Activity {
 				attemptLogin();
 			}
 		});
-
+		TextView registerBtn = (TextView) findViewById(R.id.register_btn);
+		registerBtn.setClickable(true);
+		//registerBtn.setFocusable(true);
+		//registerBtn.setFocusableInTouchMode(true);
+		registerBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent(getApplicationContext(),
+						SignUpActivity.class);
+				// 带返回值的启动activity
+				startActivityForResult(intent, 1);
+			}
+		});
 		mLoginFormView = findViewById(R.id.login_form);
 		mProgressView = findViewById(R.id.login_progress);
 
@@ -101,18 +126,27 @@ public class SignInActivity extends Activity {
 			}
 		});
 
-		TextView registerBtn = (TextView) findViewById(R.id.register_btn);
-		registerBtn.setClickable(true);
-		registerBtn.setFocusable(true);
-		registerBtn.setFocusableInTouchMode(true);
-		registerBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intent = new Intent(getApplicationContext(),
-						SignUpActivity.class);
-				startActivity(intent);
-			}
-		});
+		
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+				switch (resultCode) {
+					case 2:
+						String email=data.getStringExtra("mAccount");
+						String password=data.getStringExtra("mPassword");
+						mAccount.setText(email);
+						mPasswordView.setText(password);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
 	}
 
 	/**
@@ -138,18 +172,25 @@ public class SignInActivity extends Activity {
 
 		// Check for a valid password, if the user entered one.
 		if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-			mPasswordView.setError(getString(R.string.error_invalid_password));
+			showerror(getString(R.string.error_invalid_password));
+			//mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
 		}
 
 		// Check for a valid email address.
 		if (TextUtils.isEmpty(email)) {
-			mAccount.setError(getString(R.string.error_field_required));
+			showerror(getString(R.string.error_field_required));
+			//mAccount.setError(getString(R.string.error_field_required));
 			focusView = mAccount;
 			cancel = true;
-		} else if (!isEmailValid(email)) {
-			mAccount.setError(getString(R.string.error_invalid_email));
+		} else if (TextUtils.isEmpty(password)) {
+			showerror(getString(R.string.error_field_required));
+			//mAccount.setError(getString(R.string.error_invalid_email));
+			focusView = mPasswordView;
+			cancel = true;
+		}else if (!isEmailValid(email)) {
+		//	mAccount.setError(getString(R.string.error_invalid_email));
 			focusView = mAccount;
 			cancel = true;
 		}
@@ -171,7 +212,13 @@ public class SignInActivity extends Activity {
 		RequestParams params = new RequestParams();
 		params.put("username", username);
 		params.put("password", password);// 不用md5登录
+		
+		//进行登录时隐藏输入法框
+		InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		imm.hideSoftInputFromWindow(mAccount.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
+		
 		RestClient.getInstance().post(MainApplication.getAppContext(), url,
 				params, adBannerReadyHandler);
 		Log.i("start_login", "fff");
@@ -185,11 +232,27 @@ public class SignInActivity extends Activity {
 			if (msg.what == 0) {
 				finish();
 				
-				AuthorizeMgr.getInstance().setUser((User)msg.obj);
-				AuthorizeMgr.getInstance().persistUser((User)msg.obj);
+				//持久化保存用户登录数据
+				AuthorizeMgr.getInstance().setUser((User) msg.obj);
+				AuthorizeMgr.getInstance().persistUser((User) msg.obj);
 			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+				
+				String  errstring=getString(R.string.error_incorrect_password);
+				Spannable spn = new SpannableString(errstring);
+				
+				
+			//	Parcel p = Parcel.obtain();
+			//	p.writeInt(Color.GREEN);
+			//	p.setDataPosition(0);
+			//	BackgroundColorSpan bcs = new BackgroundColorSpan(p);
+				
+			//	spn.setSpan(bcs, 0, errstring.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				
+				
+				TextView recommend=(TextView)findViewById(R.id.recommend);
+				recommend.setText(spn);
+				recommend.setVisibility(View.VISIBLE);
+				//mPasswordView.setError(spn);
 				mPasswordView.requestFocus();
 			}
 			super.handleMessage(msg);
@@ -222,12 +285,57 @@ public class SignInActivity extends Activity {
 	private boolean isEmailValid(String email) {
 		// TODO: Replace this with your own logic
 		// return email.contains("@");
-		return true;
+		boolean b=false;
+		if(email.contains("@")){
+			//判断email是否合法
+			
+			Pattern p=Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");  
+		    Matcher m=p.matcher(email);
+		    b=m.matches();
+		    if(b)Log.i("emial","email合法");
+		    else
+		    	showerror(getString(R.string.error_format));
+		    	Log.i("emial","email不合法");
+		}else if(email.length()==11){
+			Log.i("emial","手机长度合法，开始验证");
+			//验证手机号合法
+			Pattern p=Pattern.compile("[0-9]+");  
+		    Matcher m=p.matcher(email);
+		    b=m.matches();	
+		    if(b)Log.i("emial","手机合法");
+		    else
+		    	showerror(getString(R.string.error_format));
+		}else{
+			showerror(getString(R.string.error_format));
+		}
+		 if(b){
+		    	return true;
+		    }else{
+		        return false;  
+		    }
+		
 	}
-
+	private void showerror(String errstring){
+		Spannable spn = new SpannableString(errstring);	
+		recommend.setText(spn);
+		recommend.setVisibility(View.VISIBLE);
+		mPasswordView.requestFocus();
+	}
 	private boolean isPasswordValid(String password) {
 		// TODO: Replace this with your own logic
-		return password.length() >= 3;
+		boolean b=false;
+		
+		Pattern p=Pattern.compile("[a-zA-Z0-9]{5}");  
+	    Matcher m=p.matcher(password);
+	    b=m.matches();	
+		if(b){
+			Log.i("emial","密码合法");
+			return true;	
+		}
+		else{
+			Log.i("emial","密码不合法");
+		return false;
+		}
 	}
 
 	/**
