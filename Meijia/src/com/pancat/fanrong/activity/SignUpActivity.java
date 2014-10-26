@@ -148,7 +148,7 @@ public class SignUpActivity extends Activity {
 			focusView = mAccount;
 			cancel = true;
 		}else if(!password.equals(mConfirmPasswordView.getText().toString())){
-			showerror("ä¸¤æ¬¡å¯†ç ä¸ä¸€è‡´");
+			showerror("Á½´ÎÃÜÂë²»Ò»ÖÂ");
 			cancel = true;
 			focusView=mPasswordView;
 		}
@@ -171,22 +171,22 @@ public class SignUpActivity extends Activity {
 		// return email.contains("@");
 		boolean b=false;
 		if(email.contains("@")){
-			//åˆ¤æ–­emailæ˜¯å¦åˆæ³•
+			//ÅĞ¶ÏemailÊÇ·ñºÏ·¨
 			
 			Pattern p=Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");  
 		    Matcher m=p.matcher(email);
 		    b=m.matches();
-		    if(b)Log.i("emial","emailåˆæ³•");
+		    if(b)Log.i("emial","emailºÏ·¨");
 		    else
 		    	showerror(getString(R.string.error_format));
-		    	Log.i("emial","emailä¸åˆæ³•");
+		    	Log.i("emial","email²»ºÏ·¨");
 		}else if(email.length()==11){
-			Log.i("emial","æ‰‹æœºé•¿åº¦åˆæ³•ï¼Œå¼€å§‹éªŒè¯");
-			//éªŒè¯æ‰‹æœºå·åˆæ³•
+			Log.i("emial","ÊÖ»ú³¤¶ÈºÏ·¨£¬¿ªÊ¼ÑéÖ¤");
+			//ÑéÖ¤ÊÖ»úºÅºÏ·¨
 			Pattern p=Pattern.compile("[0-9]+");  
 		    Matcher m=p.matcher(email);
 		    b=m.matches();	
-		    if(b)Log.i("emial","æ‰‹æœºåˆæ³•");
+		    if(b)Log.i("emial","ÊÖ»úºÏ·¨");
 		    else
 		    	showerror(getString(R.string.error_format));
 		}else{
@@ -204,15 +204,15 @@ public class SignUpActivity extends Activity {
 		// TODO: Replace this with your own logic
 		boolean b=false;
 		
-		Pattern p=Pattern.compile("[a-zA-Z0-9]{1ï¼Œ8}");  
+		Pattern p=Pattern.compile("[a-zA-Z0-9]{1£¬8}");  
 	    Matcher m=p.matcher(password);
 	    b=m.matches();	
 		if(b){
-			Log.i("emial","å¯†ç åˆæ³•");
+			Log.i("emial","ÃÜÂëºÏ·¨");
 			return true;	
 		}
 		else{
-			Log.i("emial","å¯†ç ä¸åˆæ³•");
+			Log.i("emial","ÃÜÂë²»ºÏ·¨");
 		return false;
 		}
 	}
@@ -301,18 +301,18 @@ public class SignUpActivity extends Activity {
 			
              HttpClient httpClient = new DefaultHttpClient();  
                
-             //è¿™é‡Œæ˜¯ä½ ä¸æœåŠ¡å™¨äº¤äº’çš„åœ°å€  
+             //ÕâÀïÊÇÄãÓë·şÎñÆ÷½»»¥µÄµØÖ·  
              String validateUrl = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_test/index.php/user/register";         
           
          //    System.out.println(validateUrl);
-             //è®¾ç½®é“¾æ¥è¶…æ—¶  
+             //ÉèÖÃÁ´½Ó³¬Ê±  
              httpClient.getParams().setParameter(CoreConnectionPNames.  
                                  CONNECTION_TIMEOUT, 5000);             
-             //è®¾ç½®è¯»å–è¶…æ—¶  
+             //ÉèÖÃ¶ÁÈ¡³¬Ê±  
              httpClient.getParams().setParameter(  
                                  CoreConnectionPNames.SO_TIMEOUT, 5000);            
               
-             //å‡†å¤‡ä¼ è¾“çš„æ•°æ®  
+             //×¼±¸´«ÊäµÄÊı¾İ  
              List<NameValuePair> paramsq = new ArrayList<NameValuePair>(); 
              System.out.println("mEmail="+mEmail);
              System.out.println("mPassword="+mPassword);
@@ -323,17 +323,17 @@ public class SignUpActivity extends Activity {
              HttpPost httpRequest = new HttpPost(validateUrl);  
                        
              try {
-            	//å‘é€è¯·æ±‚  
+            	//·¢ËÍÇëÇó  
 				httpRequest.setEntity(new UrlEncodedFormEntity(paramsq, HTTP.UTF_8));
 				
-	            //å¾—åˆ°å“åº”  
+	            //µÃµ½ÏìÓ¦  
 	            HttpResponse response = httpClient.execute(httpRequest); 
 	            if(response.getStatusLine().getStatusCode() == 200)  
                 {
-	            	Log.i("http", "å¾—åˆ°äº†å“åº”");
+	            	Log.i("http", "µÃµ½ÁËÏìÓ¦");
 	            	 StringBuilder builder = new StringBuilder();  
                      
-                     //å°†å¾—åˆ°çš„æ•°æ®è¿›è¡Œè§£æ  
+                     //½«µÃµ½µÄÊı¾İ½øĞĞ½âÎö  
                      BufferedReader buffer = new BufferedReader(  
                                          new InputStreamReader(response.getEntity().getContent()));  
                        
@@ -341,11 +341,11 @@ public class SignUpActivity extends Activity {
                      {   builder.append(s);  }  
                      
                      System.out.println("hahahahah"+builder.toString());  
-                     //å¾—åˆ°Jsonå¯¹è±¡  
+                     //µÃµ½Json¶ÔÏó  
                      Log.i("http", "json=: "+builder.toString());
                      JSONObject jsonObject   = new JSONObject(builder.toString());  
                        
-                     //é€šè¿‡å¾—åˆ°é”®å€¼å¯¹çš„æ–¹å¼å¾—åˆ°å€¼  
+                     //Í¨¹ıµÃµ½¼üÖµ¶ÔµÄ·½Ê½µÃµ½Öµ  
                  	code = jsonObject.getInt("code");  
         			Log.i("http", "code=: "+code);
 	
@@ -371,8 +371,8 @@ public class SignUpActivity extends Activity {
 			showProgress(false);
 			
 			if (code==1) {
-				// æ³¨å†ŒæˆåŠŸ
-				Toast.makeText(SignUpActivity.this, "æ³¨å†ŒæˆåŠŸ", Toast.LENGTH_LONG).show();
+				// ×¢²á³É¹¦
+				Toast.makeText(SignUpActivity.this, "×¢²á³É¹¦", Toast.LENGTH_LONG).show();
 
 				Bundle bundle = new Bundle();
 				bundle.putString("mAccount", mEmail);
@@ -385,17 +385,17 @@ public class SignUpActivity extends Activity {
 				
 				switch(code){
 				case 101:
-					errstring="ç”¨æˆ·åå¯†ç ç»„åˆä¸åˆæ³•";
-					//Toast.makeText(SignUpActivity.this, "ç”¨æˆ·åå¯†ç ç»„åˆä¸åˆæ³•", Toast.LENGTH_LONG).show();
-					Log.i("signup","code 101 ç”¨æˆ·åå¯†ç ç»„åˆä¸åˆæ³•");break;
+					errstring="ÓÃ»§ÃûÃÜÂë×éºÏ²»ºÏ·¨";
+					//Toast.makeText(SignUpActivity.this, "ÓÃ»§ÃûÃÜÂë×éºÏ²»ºÏ·¨", Toast.LENGTH_LONG).show();
+					Log.i("signup","code 101 ÓÃ»§ÃûÃÜÂë×éºÏ²»ºÏ·¨");break;
 				case 102:
-					errstring="ç”¨æˆ·åå·²ç»è¢«æ³¨å†Œ";
-					//Toast.makeText(SignUpActivity.this, "ç”¨æˆ·åå·²ç»è¢«æ³¨å†Œ", Toast.LENGTH_LONG).show();
-					Log.i("signup","code 102 ç”¨æˆ·åå·²ç»è¢«æ³¨å†Œ");break;
+					errstring="ÓÃ»§ÃûÒÑ¾­±»×¢²á";
+					//Toast.makeText(SignUpActivity.this, "ÓÃ»§ÃûÒÑ¾­±»×¢²á", Toast.LENGTH_LONG).show();
+					Log.i("signup","code 102 ÓÃ»§ÃûÒÑ¾­±»×¢²á");break;
 				case 103:
-					errstring="æœåŠ¡å™¨æˆ–æ•°æ®åº“æ•…éšœ";
-					//Toast.makeText(SignUpActivity.this, "æœåŠ¡å™¨æˆ–è€…æ•°æ®åº“æ•…éšœ", Toast.LENGTH_LONG).show();
-					Log.i("signup","code 103 æœåŠ¡å™¨æˆ–è€…æ•°æ®åº“æ•…éšœ");	break;
+					errstring="·şÎñÆ÷»òÊı¾İ¿â¹ÊÕÏ";
+					//Toast.makeText(SignUpActivity.this, "·şÎñÆ÷»òÕßÊı¾İ¿â¹ÊÕÏ", Toast.LENGTH_LONG).show();
+					Log.i("signup","code 103 ·şÎñÆ÷»òÕßÊı¾İ¿â¹ÊÕÏ");	break;
 				default:
 					break;
 				}
