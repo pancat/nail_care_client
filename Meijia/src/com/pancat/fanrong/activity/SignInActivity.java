@@ -146,7 +146,7 @@ public class SignInActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
+        recommend.setVisibility(View.GONE);
 	}
 
 	/**

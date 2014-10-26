@@ -41,7 +41,7 @@
     <string name="error_field_required">此项不能为空</string>
     <string name="error_format">email或者手机号格式错误</string>
     <string name="confirm_password_faile">两次密码不一致</string>
-    
+    <string name="signup_success">注册成功，请登录</string>
     <string name="forget_password">忘记密码？</string>
     <string name="register_with_phone">手机快速注册</string>
     <string name="title_activity_user_center">UserCenterActivity</string>

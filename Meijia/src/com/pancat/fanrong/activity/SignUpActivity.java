@@ -372,7 +372,7 @@ public class SignUpActivity extends Activity {
 
 			if (code==1) {
 				// ע��ɹ�
-				Toast.makeText(SignUpActivity.this, "ע��ɹ�", Toast.LENGTH_LONG).show();
+				Toast.makeText(SignUpActivity.this, getString(R.string.signup_success), Toast.LENGTH_LONG).show();
 
 				Bundle bundle = new Bundle();
 				bundle.putString("mAccount", mEmail);
