@@ -119,7 +119,7 @@ public class SignUpActivity extends Activity {
 		// Store values at the time of the login attempt.
 		String email = mAccount.getText().toString();
 		String password = mPasswordView.getText().toString();
-		
+
 		boolean cancel = false;
 		View focusView = null;
 
@@ -148,7 +148,7 @@ public class SignUpActivity extends Activity {
 			focusView = mAccount;
 			cancel = true;
 		}else if(!password.equals(mConfirmPasswordView.getText().toString())){
-			showerror("两次密码不一致");
+			showerror(getString(R.string.confirm_password_faile));
 			cancel = true;
 			focusView=mPasswordView;
 		}
@@ -172,8 +172,8 @@ public class SignUpActivity extends Activity {
 		boolean b=false;
 		if(email.contains("@")){
 			//判断email是否合法
-			
-			Pattern p=Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");  
+
+			Pattern p=Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");
 		    Matcher m=p.matcher(email);
 		    b=m.matches();
 		    if(b)Log.i("emial","email合法");
@@ -183,9 +183,9 @@ public class SignUpActivity extends Activity {
 		}else if(email.length()==11){
 			Log.i("emial","手机长度合法，开始验证");
 			//验证手机号合法
-			Pattern p=Pattern.compile("[0-9]+");  
+			Pattern p=Pattern.compile("[0-9]+");
 		    Matcher m=p.matcher(email);
-		    b=m.matches();	
+		    b=m.matches();
 		    if(b)Log.i("emial","手机合法");
 		    else
 		    	showerror(getString(R.string.error_format));
@@ -195,7 +195,7 @@ public class SignUpActivity extends Activity {
 		 if(b){
 		    	return true;
 		    }else{
-		        return false;  
+		        return false;
 		    }
 		//return true;
 	}
@@ -203,13 +203,13 @@ public class SignUpActivity extends Activity {
 	private boolean isPasswordValid(String password) {
 		// TODO: Replace this with your own logic
 		boolean b=false;
-		
-		Pattern p=Pattern.compile("[a-zA-Z0-9]{1，8}");  
+
+		Pattern p=Pattern.compile("[a-zA-Z0-9]{1，8}");
 	    Matcher m=p.matcher(password);
-	    b=m.matches();	
+	    b=m.matches();
 		if(b){
 			Log.i("emial","密码合法");
-			return true;	
+			return true;
 		}
 		else{
 			Log.i("emial","密码不合法");
@@ -290,86 +290,86 @@ public class SignUpActivity extends Activity {
 					// Account exists, return true if the password matches.
 					if(pieces[1].equals(mPassword))
 					return 0;
-					
+
 				}
 			}
 
 			// TODO: register the new account here.
-		
+
 			int code = 0;
-             
-			
-             HttpClient httpClient = new DefaultHttpClient();  
-               
-             //这里是你与服务器交互的地址  
-             String validateUrl = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_test/index.php/user/register";         
-          
+
+
+             HttpClient httpClient = new DefaultHttpClient();
+
+             //这里是你与服务器交互的地址
+             String validateUrl = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_test/index.php/user/register";
+
          //    System.out.println(validateUrl);
-             //设置链接超时  
-             httpClient.getParams().setParameter(CoreConnectionPNames.  
-                                 CONNECTION_TIMEOUT, 5000);             
-             //设置读取超时  
-             httpClient.getParams().setParameter(  
-                                 CoreConnectionPNames.SO_TIMEOUT, 5000);            
-              
-             //准备传输的数据  
-             List<NameValuePair> paramsq = new ArrayList<NameValuePair>(); 
+             //设置链接超时
+             httpClient.getParams().setParameter(CoreConnectionPNames.
+                                 CONNECTION_TIMEOUT, 5000);
+             //设置读取超时
+             httpClient.getParams().setParameter(
+                                 CoreConnectionPNames.SO_TIMEOUT, 5000);
+
+             //准备传输的数据
+             List<NameValuePair> paramsq = new ArrayList<NameValuePair>();
              System.out.println("mEmail="+mEmail);
              System.out.println("mPassword="+mPassword);
-             paramsq.add(new BasicNameValuePair("username", mEmail));  
+             paramsq.add(new BasicNameValuePair("username", mEmail));
              paramsq.add(new BasicNameValuePair("password", mPassword));
-     		
-           
-             HttpPost httpRequest = new HttpPost(validateUrl);  
-                       
+
+
+             HttpPost httpRequest = new HttpPost(validateUrl);
+
              try {
-            	//发送请求  
+            	//发送请求
 				httpRequest.setEntity(new UrlEncodedFormEntity(paramsq, HTTP.UTF_8));
-				
-	            //得到响应  
-	            HttpResponse response = httpClient.execute(httpRequest); 
-	            if(response.getStatusLine().getStatusCode() == 200)  
+
+	            //得到响应
+	            HttpResponse response = httpClient.execute(httpRequest);
+	            if(response.getStatusLine().getStatusCode() == 200)
                 {
 	            	Log.i("http", "得到了响应");
-	            	 StringBuilder builder = new StringBuilder();  
-                     
-                     //将得到的数据进行解析  
-                     BufferedReader buffer = new BufferedReader(  
-                                         new InputStreamReader(response.getEntity().getContent()));  
-                       
-                     for(String s =buffer.readLine(); s!= null; s = buffer.readLine())  
-                     {   builder.append(s);  }  
-                     
-                     System.out.println("hahahahah"+builder.toString());  
-                     //得到Json对象  
+	            	 StringBuilder builder = new StringBuilder();
+
+                     //将得到的数据进行解析
+                     BufferedReader buffer = new BufferedReader(
+                                         new InputStreamReader(response.getEntity().getContent()));
+
+                     for(String s =buffer.readLine(); s!= null; s = buffer.readLine())
+                     {   builder.append(s);  }
+
+                     System.out.println("hahahahah"+builder.toString());
+                     //得到Json对象
                      Log.i("http", "json=: "+builder.toString());
-                     JSONObject jsonObject   = new JSONObject(builder.toString());  
-                       
-                     //通过得到键值对的方式得到值  
-                 	code = jsonObject.getInt("code");  
+                     JSONObject jsonObject   = new JSONObject(builder.toString());
+
+                     //通过得到键值对的方式得到值
+                 	code = jsonObject.getInt("code");
         			Log.i("http", "code=: "+code);
-	
+
                 }else{
-                	
+
                 }
-	            
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
-                         
+			}
+
            return code;
-            	 
+
        //   return true;
          	//startSignup(mEmail, mPassword);
-    		
+
 		}
 
 		@Override
 		protected void onPostExecute(final Integer code) {
 			mAuthTask = null;
 			showProgress(false);
-			
+
 			if (code==1) {
 				// 注册成功
 				Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_LONG).show();
@@ -382,7 +382,7 @@ public class SignUpActivity extends Activity {
 				setResult(2, it);
 				finish();
 			} else {
-				
+
 				switch(code){
 				case 101:
 					errstring="用户名密码组合不合法";
@@ -399,36 +399,279 @@ public class SignUpActivity extends Activity {
 				default:
 					break;
 				}
-				
+
 				showerror(errstring);
-				
+
 			//	Parcel p = Parcel.obtain();
 			//	p.writeInt(Color.GREEN);
 			//	p.setDataPosition(0);
 			//	BackgroundColorSpan bcs = new BackgroundColorSpan(p);
-				
+
 		//		spn.setSpan(bcs, 0, errstring.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				
-				
-				
-				
-				
+
+
+
+
+
 			//	mPasswordView.setError(getString(R.string.error_incorrect_password));
 			//	mPasswordView.setError("good");
 			}
 		}
-	
+
 		@Override
 		protected void onCancelled() {
 			mAuthTask = null;
 			showProgress(false);
 		}
 	}
-	
+
 	private void showerror(String errstring){
-		Spannable spn = new SpannableString(errstring);	
+		Spannable spn = new SpannableString(errstring);
 		recommend.setText(spn);
 		recommend.setVisibility(View.VISIBLE);
 		mPasswordView.requestFocus();
 	}
 }
+=======
+package com.pancat.fanrong.activity;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.pancat.fanrong.R;
+
+/**
+ * A login screen that offers login via email/password.
+ */
+public class SignUpActivity extends Activity {
+
+	/**
+	 * A dummy authentication store containing known user names and passwords.
+	 * TODO: remove after connecting to a real authentication system.
+	 */
+	private static final String[] DUMMY_CREDENTIALS = new String[] {
+			"foo@example.com:hello", "bar@example.com:world" };
+	/**
+	 * Keep track of the login task to ensure we can cancel it if requested.
+	 */
+	private UserLoginTask mAuthTask = null;
+
+	// UI references.
+	private EditText mAccount;
+	private EditText mPasswordView;
+	private View mProgressView;
+	private View mLoginFormView;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_sign_up);
+
+		// Set up the login form.
+		mAccount = (EditText) findViewById(R.id.account);
+
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(TextView textView, int id,
+							KeyEvent keyEvent) {
+						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+							attemptLogin();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+		mEmailSignInButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				attemptLogin();
+			}
+		});
+
+		mLoginFormView = findViewById(R.id.login_form);
+		mProgressView = findViewById(R.id.login_progress);
+	}
+
+
+
+	/**
+	 * Attempts to sign in or register the account specified by the login form.
+	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * errors are presented and no actual login attempt is made.
+	 */
+	public void attemptLogin() {
+		if (mAuthTask != null) {
+			return;
+		}
+
+		// Reset errors.
+		mAccount.setError(null);
+		mPasswordView.setError(null);
+
+		// Store values at the time of the login attempt.
+		String email = mAccount.getText().toString();
+		String password = mPasswordView.getText().toString();
+
+		boolean cancel = false;
+		View focusView = null;
+
+		// Check for a valid password, if the user entered one.
+		if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+			mPasswordView.setError(getString(R.string.error_invalid_password));
+			focusView = mPasswordView;
+			cancel = true;
+		}
+
+		// Check for a valid email address.
+		if (TextUtils.isEmpty(email)) {
+			mAccount.setError(getString(R.string.error_field_required));
+			focusView = mAccount;
+			cancel = true;
+		} else if (!isEmailValid(email)) {
+			mAccount.setError(getString(R.string.error_invalid_email));
+			focusView = mAccount;
+			cancel = true;
+		}
+
+		if (cancel) {
+			// There was an error; don't attempt login and focus the first
+			// form field with an error.
+			focusView.requestFocus();
+		} else {
+			// Show a progress spinner, and kick off a background task to
+			// perform the user login attempt.
+			showProgress(true);
+			mAuthTask = new UserLoginTask(email, password);
+			mAuthTask.execute((Void) null);
+		}
+	}
+
+	private boolean isEmailValid(String email) {
+		// TODO: Replace this with your own logic
+		//return email.contains("@");
+		return true;
+	}
+
+	private boolean isPasswordValid(String password) {
+		// TODO: Replace this with your own logic
+		return password.length() >= 3;
+	}
+
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	public void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			mLoginFormView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mLoginFormView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
+
+			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mProgressView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mProgressView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
+	}
+
+
+	/**
+	 * Represents an asynchronous login/registration task used to authenticate
+	 * the user.
+	 */
+	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+		private final String mEmail;
+		private final String mPassword;
+
+		UserLoginTask(String email, String password) {
+			mEmail = email;
+			mPassword = password;
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				// Simulate network access.
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				return false;
+			}
+
+			for (String credential : DUMMY_CREDENTIALS) {
+				String[] pieces = credential.split(":");
+				if (pieces[0].equals(mEmail)) {
+					// Account exists, return true if the password matches.
+					return pieces[1].equals(mPassword);
+				}
+			}
+
+			// TODO: register the new account here.
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mAuthTask = null;
+			showProgress(false);
+
+			if (success) {
+				finish();
+			} else {
+				mPasswordView
+						.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.requestFocus();
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			mAuthTask = null;
+			showProgress(false);
+		}
+	}
+}
+
