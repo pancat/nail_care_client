@@ -21,9 +21,9 @@ import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.util.PhoneUtils;
 
 /**
- *
+ * 
  * @author trhuo
- *
+ * 
  */
 public class RestClient {
 
@@ -47,13 +47,13 @@ public class RestClient {
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
 		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
-
+	
 	public void setCookieStore(){
-		PersistentCookieStore cookieStore = new PersistentCookieStore(MainApplication.getAppContext());
+		PersistentCookieStore cookieStore = new PersistentCookieStore(MainApplication.getAppContext()); 
 		client.setCookieStore(cookieStore);
 		Log.i("setcookie", "setcookies");
 	}
-
+	
 	public void get(String url, RequestParams params,
 			AsyncHttpResponseHandler responseHandler) {
 		client.setUserAgent(PhoneUtils.getUserAgent(MainApplication.getAppContext()));
@@ -65,7 +65,7 @@ public class RestClient {
 		client.setUserAgent(PhoneUtils.getUserAgent(context));
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
-
+	
 	/**
 	 * 测试使用，url地址未拼接BASE_URL
 	 * @param context
@@ -79,7 +79,7 @@ public class RestClient {
 		client.post(absoluteUrl, params, responseHandler);
 	}
 
-
+	
 	public String getAbsoluteUrl(String relativeUrl) {
 		if (relativeUrl.toLowerCase().startsWith("http://")
 				|| relativeUrl.toLowerCase().startsWith("https://")) {
@@ -92,9 +92,9 @@ public class RestClient {
 	public static interface CallBaskFromHttp {
 		void callback();
 	}
-
+	
 	/**
-	 *	从url获取json字符串
+	 *	从url获取json字符串 
 	 * @param url
 	 * @return
 	 * @throws IOException
