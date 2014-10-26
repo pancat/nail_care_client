@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="5dp" >
+    
+	<TextView android:id="@+id/product_order_button"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="5dp"
+	    android:background="@drawable/order_button"
+	    android:text="@string/product_order"
+	    android:textSize="20sp"
+	    android:textColor="@color/white"
+	    android:gravity="center"/>
+</LinearLayout>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/product_bkg">
+    
+  
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:background="@color/white">
+        
+        <ImageView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:id="@+id/activity_nail_technicial_detail_back"
+            android:src="@drawable/back_arrow_pressed"
+            />
+        <TextView android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="爱美"
+            android:textColor="@color/pink"
+            android:gravity="center"
+            android:id="@+id/activity_nail_technicial_detail_title"
+            android:layout_alignBottom="@id/activity_nail_technicial_detail_back"
+            android:layout_alignLeft="@id/activity_nail_technicial_detail_back"/>
+    </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"/>
+    
+    <!--  
+	<fragment android:name="com.pancat.fanrong.fragment.ProductAuthorFragment" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/activity_nail_technicial_detail_author"/>
+	-->
+	
+	<LinearLayout 
+	   	android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="5dp"
+	    android:id="@+id/activity_nail_technicial_detail_author"
+	    >
+	    
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/white"
+	    android:orientation="horizontal"
+	    >
+	    <LinearLayout android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:orientation="vertical"
+	        android:paddingTop="5dp"
+	        android:id="@+id/activity_nail_technicial_detail_share_btn" 
+	        android:paddingBottom="5dp">
+	        
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:id="@+id/activity_nail_technicial_detail_share" 
+	            android:text = "4202"
+	            />
+	        
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	             android:id="@+id/activity_nail_technicial_detail_share_label" 
+	            android:text = "@string/author_share"
+	            />
+	    </LinearLayout>
+	    
+	    <View android:layout_width="1dp"
+	        android:layout_height="match_parent"
+	        android:background="@color/blue"
+	        />
+	    
+	    <LinearLayout android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:orientation="vertical"
+	        android:id="@+id/activity_nail_technicial_detail_collect_btn" 
+	        android:paddingTop="5dp"
+	        android:paddingBottom="5dp">
+	        
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:id="@+id/activity_nail_technicial_detail_collect" 
+	            android:text = "123"
+	            />
+	        
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:id="@+id/activity_nail_technicial_detail_collect_label" 
+	            android:text = "@string/author_collect"
+	            />
+	    </LinearLayout>
+	    
+		<View android:layout_width="1dp"
+	        android:layout_height="match_parent"
+	        android:background="@color/blue"
+	        />
+	    	    
+	    <LinearLayout android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:orientation="vertical"
+	        android:paddingTop="5dp"
+	        android:id="@+id/activity_nail_technicial_detail_honor_btn" 
+	        android:paddingBottom="5dp">
+	        
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:id="@+id/activity_nail_technicial_detail_honor" 
+	            android:text = "4202"
+	            />
+	        
+	        <TextView android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:id="@+id/activity_nail_technicial_detail_honor_label"
+	            android:text = "@string/author_honor"
+	            />
+	    </LinearLayout>
+	</LinearLayout>
+	
+	<!-- 
+	<fragment android:name="com.pancat.fanrong.fragment.ProductViewFragment" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/activity_nail_technicial_detail_fromauthor"/>
+	 -->
+	 
+	 <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/activity_nail_technicial_detail_fromauthor">
+	     
+	 </LinearLayout>
+	 
+</LinearLayout>

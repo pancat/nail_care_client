@@ -8,8 +8,11 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -18,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.adapter.HomeProductListAdapter;
 import com.pancat.fanrong.bean.Product;
 import com.pancat.fanrong.fragment.HomeFragment;
 
@@ -34,16 +38,35 @@ public class HomeActivity extends Activity {
 		scrollView = (ScrollView) findViewById(R.id.home_scroll_view);
 		// setFragment();
 		setListView();
+		
+		setScrollViewListener();
 	}
 	protected void onResume() {
 		super.onResume();
 	}
-	private void setListView()
-	{
-		//绑定Layout里面的ListView  
-        ListView list = (ListView) findViewById(R.id.list_view);  
-        list.setBackgroundColor(getResources().getColor(R.color.grey));
-          
+
+	private void setScrollViewListener() {
+		scrollView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (v.getScrollY() >= scrollView.getHeight())
+				{
+					Log.i("ScrollView", "滑动到底");
+				}
+				else if (v.getScrollY() < 0)
+				{
+					Log.i("ScrollView", "滑动到顶");
+				}
+				return false;
+			}
+		});
+	}
+
+	private void setListView() {
+		// 绑定Layout里面的ListView
+		ListView list = (ListView) findViewById(R.id.list_view);
+		list.setBackgroundColor(getResources().getColor(R.color.grey));
+
 		list.post(new Runnable() {
 			@Override
 			public void run() {
@@ -52,63 +75,14 @@ public class HomeActivity extends Activity {
 
 		});
 		// 生成动态数组，加入数据
-		ArrayList<Product> listItem = new ArrayList<Product>();
-		for (int i = 0; i < 100; i++) {
+		List<Object> listItem = new ArrayList<Object>();
+		for (int i = 0; i < 30; i++) {
 			listItem.add(new Product(null));
 		}
 
 		// 添加并且显示
-		list.setAdapter(new ProductListAdapter(this, listItem));
+		list.setAdapter(new HomeProductListAdapter(this, list, listItem));
 	}
 
-	public class ProductListAdapter extends BaseAdapter {
-
-		private List<Product> data;
-		private LayoutInflater layoutInflater;
-		private Context context;
-
-		public ProductListAdapter(Context context, List<Product> data) {
-			this.context = context;
-			this.data = data;
-			this.layoutInflater = LayoutInflater.from(context);
-		}
-
-		@Override
-		public int getCount() {
-			return data.size();
-		}
-
-		/**
-		 * 获得某一位置的数据
-		 */
-		@Override
-		public Object getItem(int position) {
-			return data.get(position);
-		}
-
-		/**
-		 * 获得唯一标识
-		 */
-		@Override
-		public long getItemId(int position) {
-			return data.get(position).getProductId();
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = layoutInflater.inflate(R.layout.home_item_view,
-						null);
-			}
-
-			ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
-
-			TextView title = (TextView) convertView.findViewById(R.id.title);
-			title.setText("123123123");
-
-			return convertView;
-		}
-
-	}
 
 }

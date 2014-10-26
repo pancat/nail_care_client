@@ -39,18 +39,23 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class OrderAuthorActivity extends FragmentActivity  implements onItemClickToActivity{
     private static final String TAG = "OrderAuthorActivity";
 	
-	private EditText mTime;
-	private EditText mPosition;
-	private EditText mDetail;
+	private TextView mTime;
+	private TextView mPosition;
+	private TextView mDetail;
     private View mMoreLabel;
     private EditText mMore;
+    private ImageView timeCancel;
+    private ImageView positionCancel;
+    private ImageView detailCancel;
     
 	FreeTimeTableView timeView = null;
 	
@@ -65,11 +70,21 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 
 	//添加响应事件
 	private void initView(){
-		mTime = (EditText)findViewById(R.id.order_author_activity_time);
-		mPosition = (EditText)findViewById(R.id.order_author_activity_position);
-		mDetail = (EditText)findViewById(R.id.order_author_activity_detail);
+		mTime = (TextView)findViewById(R.id.order_author_activity_time);
+		mPosition = (TextView)findViewById(R.id.order_author_activity_position);
+		mDetail = (TextView)findViewById(R.id.order_author_activity_detail);
+		timeCancel = (ImageView)findViewById(R.id.order_author_activity_cancel_time);
+		positionCancel = (ImageView)findViewById(R.id.order_author_activity_cancel_position);
+		detailCancel = (ImageView)findViewById(R.id.order_author_activity_cancel_detail);
+		
+		//初始化不显示取消按钮
+		timeCancel.setVisibility(View.GONE);
+		positionCancel.setVisibility(View.GONE);
+		detailCancel.setVisibility(View.GONE);
+		
 		mMoreLabel = findViewById(R.id.order_author_activity_morelabel);
 		mMore = (EditText)findViewById(R.id.order_author_activity_moremsg);
+		
 		mMore.setVisibility(View.GONE);
 		
 		hideSoftKeyBoard(mTime);
@@ -82,7 +97,9 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 				dismissWindow();
 			}
 		});
+		
 		setListenEvent();
+		setCancelListener();
 	}
 	
 	//添加响应事件
@@ -130,6 +147,39 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		});
 	}
 	
+	private void setCancelListener()
+	{
+		timeCancel.setOnClickListener(new OnClickListener() {
+			final TextView timeTmp = mTime;
+			final String str = getResources().getString(R.string.order_time);
+			@Override
+			public void onClick(View v) {
+				timeTmp.setText(str);
+				v.setVisibility(View.GONE);
+			}
+		});
+		
+		positionCancel.setOnClickListener(new OnClickListener() {
+			final TextView positionTmp = mPosition;
+			final String str = getResources().getString(R.string.location);
+			@Override
+			public void onClick(View v) {
+				positionTmp.setText(str);
+				v.setVisibility(View.GONE);
+			}
+		});
+		
+		detailCancel.setOnClickListener(new OnClickListener() {
+			final TextView detailTmp = mDetail;
+			final String str = getResources().getString(R.string.detail_location);
+			@Override
+			public void onClick(View v) {
+				detailTmp.setText(str);
+				v.setVisibility(View.GONE);
+			}
+		});
+		
+	}
 	public void showWindow(View view){
 		Map<Integer,Map<Integer,Integer>>m = new HashMap<Integer,Map<Integer,Integer>>();
 		Map<Integer,Integer>ma = new HashMap<Integer,Integer>();
@@ -179,6 +229,8 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		res +=timeView.getCurrentPageClickTime()+ " "+time+":00";
 		if(mTime != null){
 			mTime.setText(res);
+			timeCancel.setVisibility(View.VISIBLE);
+			
 			dismissWindow();
 		}
 	}
