@@ -1,9 +1,11 @@
 package com.pancat.fanrong.fragment;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,9 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,16 +31,22 @@ import android.support.v4.app.FragmentManager;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.*;
+import android.view.LayoutInflater.Filter;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.ProductDetailViewFragmentActivity;
 import com.pancat.fanrong.activity.ProductViewFragmentActivity;
-import com.pancat.fanrong.adapter.ProductInfoAdapter;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.Product;
+import com.pancat.fanrong.common.FilterQueryAndParse;
+import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.fragment.CircleFragment.ContentTask;
 import com.pancat.fanrong.fragment.CircleFragment.CircleAdapter;
 import com.pancat.fanrong.gridview.StaggeredGridView;
@@ -46,90 +57,41 @@ import com.pancat.fanrong.util.PhoneUtils;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
 import com.pancat.fanrong.waterfall.view.XListView;
 import com.pancat.fanrong.waterfall.view.XListView.IXListViewListener;
+import com.pancat.fanrong.waterfall.widget.ScaleImageView;
 
-public class ProductViewFragment extends Fragment implements
-IXListViewListener{
+/*
+ * 产品视图，
+ * @author JogRunner
+ * 于2014.10.20移除向服务器端询问细节工作，向FilterQueryAndParse类转移
+ * 
+ */
+public class ProductViewFragment extends Fragment implements IXListViewListener{
 	private static final String TAG = "ProductViewFragment";
-	
-	/*public static final String QUERY_TYPE = "querytype";
-	public static final String KEYWORD = "keyword";
-	public static final String QUERY_NUM = "querynum";
-	public static final String QUERY_ID = "queryid";
-	public static final String QUERY_TOTAL_NUM = "querytotalnum";
-	public static final String SORT_ORDER_KEY = "sortorderkey";
-	public static final String SORT_ORDER = "sortorder";
-	public static final String SELECT_LEFT = "selectleft";
-	public static final String SELECT_RIGHT = "selectright";
-	public static final String SELECT_LIKE = "selectlike";
-	public static final String SELECT_KEYWORDS = "selectkeywords";
-	public static final String QUERY_PRODUCT_TYPE = "query_product_type";
-	public static final String LAST_QUERY_ID = "last_query_id";
-	public static final String AUTHOR = "author";
-	public static final String STYLE = "style";
-	public static final String COLOR = "color";
-	public static final String HOTSEARCH = "hotsearch"; */
-	
-	public static final String QUERY_TYPE = "querytype";
-	public static final String KEYWORD = "keyword";
-	public static final String QUERY_NUM = "limit";
-	public static final String QUERY_ID = "product_id";
-	public static final String QUERY_TOTAL_NUM = "offset";
-	public static final String SORT_ORDER_KEY = "order";
-	public static final String SORT_ORDER = "desc";
-	public static final String SELECT_LEFT = "selectleft";
-	public static final String SELECT_RIGHT = "selectright";
-	public static final String SELECT_LIKE = "selectlike";
-	public static final String SELECT_KEYWORDS = "selectkeywords";
-	public static final String QUERY_PRODUCT_TYPE = "query_product_type";
-	public static final String LAST_QUERY_ID = "last_query_id";
-	public static final String AUTHOR = "author";
-	public static final String STYLE = "style";
-	public static final String COLOR = "color";
-	public static final String HOTSEARCH = "hotsearch";
-	
-	public static final String SP_ID = "p_id";
-	public static final String SP_name = "name";
-	public static final String SP_describe = "p_describe";
-	public static final String SP_credate = "cre_date";
-	public static final String SP_hit = "hit";
-	public static final String SP_image_uri = "image_uri";
-	public static final String SP_m_name = "m_name";
-	
-	public static final int Server_Query_num = 10;
-	public static final int DATA_WAIT = 0;
-	public static final int DATA_END = 1;
-	public static final int DATA_MORE = 2;
-	
-	public static enum STATE{REFRESH,LOAD,IDLE};
-	
+
 	private static final String url = "product/get_product_list";
 	
 	private View contextView;
+	//加载图像的工具
 	private ImageFetcher mImageFetcher;
+	//列表视图
 	private XListView mAdapterView = null;
 	
-	private int mHasRequestedMore = DATA_WAIT;//是否加载更多
 	private ProductInfoAdapter mAdapter;
     private Map<String,String> pageParam;//主导布局的参数
     
-	private ArrayList<Product> mData; //数据
-    private OnClickListItem onClickListItem;
+	private List<Product> mData; //数据
+	// private OnClickListItem onClickListItem;
+	//采用通用接口的回调函数
+    private FragmentCallback onClickListItem;
     
-    private STATE state = STATE.IDLE;
-	//新建一个实例
-	public static ProductViewFragment newInstance(Map<String,String> pageParams)
+    private int state = FilterQueryAndParse.IDLE;
+	
+    //新建一个实例
+	public static ProductViewFragment newInstance(Map<String,Object> pageParams)
 	{
 		ProductViewFragment instance = new ProductViewFragment();
-		if(pageParams != null){
-			Bundle bundle = new Bundle();
-		    Iterator<String> iter = pageParams.keySet().iterator();
-		    while(iter.hasNext())
-		    {
-		    	String key = iter.next();
-		    	bundle.putString(key, pageParams.get(key));
-		    }
-		    instance.setArguments(bundle);
-		}
+		instance.pageParam = FilterQueryAndParse.FilterAndRepairDefault(pageParams);
+		Log.d(TAG,instance.pageParam.toString());
 		return instance;
 	}
 
@@ -138,74 +100,61 @@ IXListViewListener{
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		
-		Bundle bundle = getArguments();
-		pageParam = new HashMap<String,String>();
-		if(bundle != null)
-		{
-			Iterator<String>  iter = bundle.keySet().iterator();
-			while(iter.hasNext())
-			{
-				String key = iter.next();
-				pageParam.put(key, bundle.getString(key));
-				Log.d(TAG,key+":----");
-			}
-		}
-		InitAllParams();
-		QueryProductDataFromServer();
+		mData = new ArrayList<Product>();
 	}
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		contextView = inflater.inflate(R.layout.fragment_circle, container, false);
-		mAdapterView = (XListView)contextView.findViewById(R.id.list);
+		//它对应的视图
+		contextView = inflater.inflate(R.layout.fragment_product, container, false);
+		mAdapterView = (XListView)contextView.findViewById(R.id.fragment_product_list);
 		mAdapterView.setPullLoadEnable(true);
-		mAdapterView.setXListViewListener(this);
+		mAdapterView.setXListViewListener(this);//
 		
+		//设置图片预加载宽度及占位图
 		mImageFetcher = new ImageFetcher(getActivity(), 240);
 		mImageFetcher.setLoadingImage(R.drawable.defaultproduct);
+		mImageFetcher.setExitTasksEarly(false);
 		
 		if (mAdapter == null) {
-			mAdapter = new ProductInfoAdapter(getActivity(), R.id.product_img,mImageFetcher,onClickListItem);
+			mAdapter = new ProductInfoAdapter();
 		}
-
-		if (mData == null) {
-			QueryProductDataFromServer();
-		}
-		
 		mAdapterView.setAdapter(mAdapter);
+		
+		ExecuteFirstLoad();
 		
 		return contextView;
 	}
 
 	@Override
-	public void onActivityCreated(final Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		if (savedInstanceState == null) {
-			final LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-
-		}
-
-	}
-
-    
-	@Override
 	public void onAttach(Activity activity) {
 		// TODO 自动生成的方法存根
 		super.onAttach(activity);
-		onClickListItem = (OnClickListItem)activity;
+		onClickListItem = (FragmentCallback)activity;
+	}
+    
+	@Override
+	public void onRefresh() {
+		// TODO 自动生成的方法存根
+		state = FilterQueryAndParse.REFRESH;
+        QueryProductDataFromServer();
 	}
 
-
+	@Override
+	public void onLoadMore() {
+		// TODO 自动生成的方法存根
+		state = FilterQueryAndParse.LOAD;
+		QueryProductDataFromServer();
+	}
+	
 	private AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler(){
 
 		@Override
 		public void onSuccess(String content) {
-			// TODO 自动生成的方法存根
-			Log.d(TAG, "success---"+content);
 			ArrayList<Product> res = null;
+			//TODO 以后在这提取返回的状态码执行进一步动作
 			try{
-				res  = ParseToProductArr(content);
+				res  = FilterQueryAndParse.ParseToProductArr(content);
 			}catch(Exception e)
 			{
 				e.printStackTrace();
@@ -219,6 +168,7 @@ IXListViewListener{
 		public void onFailure(Throwable error, String content) {
 			// TODO 自动生成的方法存根
 			super.onFailure(error, content);
+			Log.d(TAG, content+"***"+error);
 		}
 		
 	};
@@ -226,149 +176,213 @@ IXListViewListener{
 	{
 		if(product != null)
 		{
-			for(Product p:product)
-			{
-				if(state == STATE.REFRESH)
-					mAdapter.addProductToHead(p);
-				else
-					mAdapter.addProductToTail(p);
-			}
-			
-			int num = product.size();
-			try{
-				String value = pageParam.get(QUERY_TOTAL_NUM);
-				int v = ((value == null) || (value == "0") )? num:Integer.parseInt(value)+num;
-				pageParam.put(QUERY_TOTAL_NUM, String.valueOf(v));
-
-				//
-				value = pageParam.get(QUERY_NUM);
-				v = (value == null)?Server_Query_num:Integer.parseInt(value);
-				if(num < v) mHasRequestedMore = DATA_END;
-				else mHasRequestedMore = DATA_WAIT;
-				
-			}catch(Exception e){
-				state = STATE.IDLE;
-				e.printStackTrace();
-			}
-				
-		}
-		else
-		{
-			
-		}
-		state = STATE.IDLE;
-	}
-	private ArrayList<Product> ParseToProductArr(String content) throws Exception
-	{
-		ArrayList<Product> product = new ArrayList<Product>();
+			if(state == FilterQueryAndParse.REFRESH)
+				mAdapter.addAllProductToHead(product);
+			else
+				mAdapter.addAllProductToTail(product);
 		
-		try{
-			JSONArray jsonArray = new JSONArray(content);
-			for(int i=0; i<jsonArray.length(); i++)
-			{
-				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				Map<String,String> map = new HashMap<String,String>();
-				map.put(Product.ID, String.valueOf(jsonObject.getInt(SP_ID)));
-				map.put(Product.TITLE, jsonObject.getString(SP_name));
-				map.put(Product.DESCRIPTION, jsonObject.getString(SP_describe));
-				map.put(Product.DATE, jsonObject.getString(SP_credate));
-				map.put(Product.URL, jsonObject.getString(SP_image_uri));
-				map.put(Product.AUTHOR, jsonObject.getString(SP_m_name));
-				Product tmp = new Product(map);
-				product.add(tmp);
-			}
-		}catch(Exception e)
-		{
-			throw e;
+			mAdapter.notifyDataSetChanged();
+			addProductToDatabase(product);
 		}
-		return product;
+		//停止刷新与加载
+		if(state == FilterQueryAndParse.REFRESH)
+			mAdapterView.stopRefresh();
+		else if(state == FilterQueryAndParse.LOAD)
+			mAdapterView.stopRefresh();
 	}
 	
+	private void ExecuteFirstLoad()
+	{
+		mData = DatabaseManager.getInstance().getProduct();
+		mAdapter.notifyDataSetChanged();
+		QueryProductDataFromServer();
+	}
 	private void QueryProductDataFromServer()
 	{
-		RequestParams requestParams = new RequestParams(pageParam);
-		RestClient.getInstance().get(url, requestParams, responseHandler);	
-	}
-	//如果参数不存在，设置为默认值
-	private void setDefaultQueyParam(String key,String defaultValue)
-	{
-		if(!pageParam.containsKey(key) || ( pageParam.get(key) == "" ))
-			 pageParam.put(key, defaultValue);
-			
+		//首先判断是否连接网络
+		
+		if(PhoneUtils.isNetworkConnected(getActivity())){
+			RequestParams requestParams = new RequestParams(pageParam);
+			state = FilterQueryAndParse.LOAD;
+			RestClient.getInstance().get(url, requestParams, responseHandler);
+		}else{
+			Log.d(TAG, "network isn't connected");
+		}
 	}
 	
-	private void InitAllParams()
+	private void addProductToDatabase(List<Product> products)
 	{
-		setDefaultQueyParam(QUERY_PRODUCT_TYPE, String.valueOf(Product.MEIJIA));
-		setDefaultQueyParam(QUERY_TYPE, "0");
-		setDefaultQueyParam(KEYWORD, "hot");
-		setDefaultQueyParam(QUERY_NUM, "10");
-		setDefaultQueyParam(QUERY_ID, "-1");
-		setDefaultQueyParam(QUERY_TOTAL_NUM, "0");
-		setDefaultQueyParam(SORT_ORDER_KEY, "create_date");
-		setDefaultQueyParam(SORT_ORDER, "1");
-		setDefaultQueyParam(SELECT_LEFT, "-1");
-		setDefaultQueyParam(SELECT_RIGHT, "-1");
-		setDefaultQueyParam(SELECT_KEYWORDS, "");
-		setDefaultQueyParam(LAST_QUERY_ID, "-1");
+		for (Product product : products) {
+			//Log.d(TAG, product.toString());
+			DatabaseManager.getInstance(getActivity()).addProduct(product);
+		}
 	}
-    private void setParam(String key,String value)
+	
+    public static ProductViewFragment getHotInstance(String productType)
     {
-    	pageParam.put(key, value);
-    }
-    
-    public static ProductViewFragment getHotInstance(Map<String,String>map)
-    {
-    	if(map == null)
-    	{
-    		map = new HashMap<String, String>();
-    		map.put(QUERY_PRODUCT_TYPE, ProductViewFragmentActivity.MEIJIA);
-    	}
-    	map.put(KEYWORD	, "hot");
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	if(productType == null)
+    		map.put(FilterQueryAndParse.Q_PRODUCT_TYPE, FilterQueryAndParse.MEIJIA);
+    	else map.put(FilterQueryAndParse.Q_PRODUCT_TYPE,productType);
+    	
+    	map.put(FilterQueryAndParse.Q_KEYWORD, FilterQueryAndParse.HOT);
+    	map.put(FilterQueryAndParse.Q_QUERY_TYPE, FilterQueryAndParse.QT_1);
     	return newInstance(map);
     }
     
-    public static ProductViewFragment getNewInstance(Map<String,String>map)
+    public static ProductViewFragment getNewInstance(String productType)
     {
-    	if(map == null)
-    	{
-    		map = new HashMap<String, String>();
-    		map.put(QUERY_PRODUCT_TYPE, ProductViewFragmentActivity.MEIJIA);
-    	}
-    	map.put(KEYWORD	, "new");
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	if(productType == null)
+    		map.put(FilterQueryAndParse.Q_PRODUCT_TYPE, FilterQueryAndParse.MEIJIA);
+    	else map.put(FilterQueryAndParse.Q_PRODUCT_TYPE,productType);
+
+    	map.put(FilterQueryAndParse.Q_KEYWORD, FilterQueryAndParse.NEW);
+    	map.put(FilterQueryAndParse.Q_QUERY_TYPE, FilterQueryAndParse.QT_2);
     	return newInstance(map);
     } 
     
-    public static ProductViewFragment getFilterInstance(Map<String,String>map)
+    public static ProductViewFragment getFilterInstance(String content,String productType)
     {
-    	if(map == null)
-    	{
-    		map = new HashMap<String, String>();
-    		map.put(QUERY_PRODUCT_TYPE, ProductViewFragmentActivity.MEIJIA);
-    	}
-    	map.put(QUERY_TYPE, "1");
-    	map.put(SELECT_LEFT, "0");
-    	map.put(SELECT_RIGHT, "200");
+
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	if(content == null){
+			map.put(FilterQueryAndParse.Q_SELECT_RIGHT, "200");
+    	}else if(content.contains("-")){
+			String[] ar = content.split("-");
+			map.put(FilterQueryAndParse.Q_SELECT_LEFT, ar[0]);
+			map.put(FilterQueryAndParse.Q_SELECT_RIGHT, ar[1]);
+		}else{
+			map.put(FilterQueryAndParse.Q_SELECT_LEFT, "600");
+		}
     	
+    	if(productType == null)
+    		map.put(FilterQueryAndParse.Q_PRODUCT_TYPE, FilterQueryAndParse.MEIJIA);
+    	else map.put(FilterQueryAndParse.Q_PRODUCT_TYPE,productType);
+    	
+    	map.put(FilterQueryAndParse.Q_QUERY_TYPE, FilterQueryAndParse.QT_3);
     	return newInstance(map);
     }
 
-	@Override
-	public void onRefresh() {
-		// TODO 自动生成的方法存根
-		state = STATE.REFRESH;
-        QueryProductDataFromServer();
+	//产品适配器类
+	private class ProductInfoAdapter extends BaseAdapter{
+		
+		class ViewHolder{
+			ScaleImageView productImg;
+			TextView productTitle;
+			TextView productPrice;
+			ImageView productAuthorImg;
+			TextView productAuthor;
+			ImageView productHot;
+			TextView productHotNum;
+		}
+		public ProductInfoAdapter() {
+		}
+
+		@Override
+		public View getView(int position, View productItemView, ViewGroup parent) {
+			ViewHolder vh;
+			if(productItemView == null)
+			{
+				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+				productItemView = layoutInflater.inflate(R.layout.product_item_view, parent,false);
+				vh = new ViewHolder();
+				vh.productImg = (ScaleImageView) productItemView.findViewById(R.id.product_img);
+				vh.productTitle = (TextView)productItemView.findViewById(R.id.product_title);
+				vh.productPrice = (TextView)productItemView.findViewById(R.id.product_price);
+				vh.productAuthorImg = (ImageView)productItemView.findViewById(R.id.product_author_img);
+				vh.productAuthor = (TextView)productItemView.findViewById(R.id.product_author);
+				vh.productHot = (ImageView)productItemView.findViewById(R.id.product_hot);
+				vh.productHotNum = (TextView)productItemView.findViewById(R.id.product_hotnum);
+				productItemView.setTag(vh);
+			}
+			else
+			{
+				vh = (ViewHolder)productItemView.getTag();
+			}
+			
+			Product product = getItem(position);
+			
+			//TODO 这里之后应该改成产品图片的宽高大小
+			Bitmap bmp = BitmapFactory.decodeResource(parent.getContext().getResources(), R.drawable.defaultproduct);
+			vh.productImg.setImageWidth(bmp.getWidth());
+			vh.productImg.setImageHeight(bmp.getHeight());
+			
+			try
+			{
+				if(product.getProductURL() != "" )
+					mImageFetcher.loadImage(product.getProductURL(), vh.productImg);
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+	
+			vh.productAuthor.setText(product.getProductAuthor());
+			
+			//设置作者头像的图片
+			vh.productAuthorImg.setImageResource(R.drawable.user);
+			
+			vh.productPrice.setText(product.getProductPrice());
+			vh.productTitle.setText(product.getProductTitle());
+			vh.productHotNum.setText("2");
+			vh.productHot.setImageResource(R.drawable.heart_gray);
+			
+			final TextView textViewTemp = vh.productHotNum;
+			final ImageView productHotTemp = vh.productHot;
+			vh.productHot.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if(view.getId() == R.id.product_hot){
+
+						Drawable d = getActivity().getResources().getDrawable(R.drawable.heart_red);
+						if(d == null)
+							Log.d(TAG, "Cao ni ma");
+						productHotTemp.setImageResource(R.drawable.heart_red);
+						textViewTemp.setText(""+(Integer.parseInt(textViewTemp.getText().toString())+1));
+					}
+				}
+			});
+			final Product prod = product;
+			vh.productImg.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(Product.KEY, prod);
+					onClickListItem.callback(bundle);
+				}
+			});
+			//TODO 点击作者图像事件
+			return productItemView;
+		}
+	    
+		public void addAllProductToHead(List<Product> products)
+		{
+			mData.clear();
+			mData.addAll(products);
+		}
+		public void addAllProductToTail(List<Product> products)
+		{
+			mData.addAll(products);
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mData.size();
+		}
+
+		@Override
+		public Product getItem(int position) {
+			// TODO Auto-generated method stub
+			return mData.get(position);
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	}
 
-	@Override
-	public void onLoadMore() {
-		// TODO 自动生成的方法存根
-		state = STATE.LOAD;
-		QueryProductDataFromServer();
-	}
-	
-	public interface OnClickListItem
-	{
-		public void setOnClickListItem(Product product);
-	}
 }

@@ -5,32 +5,39 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.util.Log;
-
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.util.StringUtils;
 
+import android.util.Log;
+
+/*
+ * 产品类
+ */
+@SuppressWarnings("serial")
+@DatabaseTable(tableName="product")
 public class Product implements Serializable{
 	private static final String TAG = "Product";
-	public static final String KEY = "product";
 	
-	//��Ʒ���ͳ���
+	//数据传递关键字
+	public static final String KEY = "product_key";
+	
+	//产品类型
 	public static final String MEIJIA = "0";
 	public static final String MEIFA = "1";
 	public static final String MEIZHUANGE = "2";
 	
-	//��Ʒͼ��߶���������
+/*	//产品图片规格类型
 	public static final int TINY = 0;
 	public static final int SMALL = 1;
 	public static final int NORMAL = 2;
 	public static final int LARGE = 3;
 	public static final int HUGE = 4;
-	public static final int SUPERLARGE = 5;
+	public static final int SUPERLARGE = 5;*/
 	
-	//��Ʒͼ��߶���ʼ�߶��빫��
-	public static final double IMAGESTARTHIGH = 12.0;
-	public static final double IMAGEINCREMENT = 5.0;
-	
-	//��Ʒ�ؼ���ӳ���
+
+	//产品字段关键字
 	public static final String TYPE = "type";
 	public static final String AUTHOR = "author";
 	public static final String WIDTH = "width";
@@ -44,67 +51,109 @@ public class Product implements Serializable{
 	public static final String PRICE = "price";
 	public static final String URL = "url";
 	
-	//��Ʒ����
+	//产品字
+	@DatabaseField
 	private String productType = MEIJIA;
+	@DatabaseField
 	private String productUrl = "";
-	private int productWidth = -1; //default;
-	private int productHeight = NORMAL;
+	@DatabaseField
+	private double productWidth = -1; //default;
+	@DatabaseField
+	private double productHeight = -1;
+	@DatabaseField
 	private String productTitle = "";
+	@DatabaseField
 	private String productDescription = "";
+	@DatabaseField
 	private String productAuthor = "unkown";
+	@DatabaseField
 	private double productPrice = 0.0;
+	@DatabaseField
 	private String productAuthorImg = "";
+	@DatabaseField
 	private int productHot = 0;
+	@DatabaseField(id = true)
 	private int productId = 0;
+	@DatabaseField
 	private Date productDate;
 	
-	public Product()
-	{
+	//服务器端产品列表的相对路径
+	public static final String relativeURL="product";
+	
+	//产品字段的默认值
+	public String PD_TYPE = MEIJIA;
+	public String PD_URL = "";
+	public String PD_WIDTH = "-1";
+	public String PD_HEIGHT = "-1";
+	public String PD_TITLE = "unkown";
+	public String PD_DESCRIPTION = "产品";
+	public String PD_AUTHOR = "unkown";
+	public String PD_PRICE = "0.00";
+	public String PD_AUTHORIMG = "";
+	public String PD_HOT = "0";
+	public String PD_ID = "0";
+	public String PD_DATE = "2014-10-20";
+	
+	public Product(){
 		
 	}
-	
 	public Product(Map<String, String> productMap)
 	{
-		try{
-			setProductType(productMap.get(TYPE) );
-			setProductURL(productMap.get(URL));
-			//setProductWidth()
-			setProductHeight(productMap.get(HEIGHT));
-			setProductTitle(productMap.get(TITLE));
-			Log.d(TAG, productMap.get(TITLE));
-			
-			setProductDescription(productMap.get(DESCRIPTION));
-			setProductAuthor(productMap.get(AUTHOR));
-			setProductAuthorImg(productMap.get(AUTHORIMG));
-			//setProductDate(productMap.get(DATE));
-			setProductHot(productMap.get(HOT));
-			setProductId(productMap.get(ID));
-			setProductPrice(productMap.get(PRICE));
-		}catch(Exception e)
-		{
-			Log.d(TAG, "data bug" +e.getMessage());
-		}
+		setProductType(getDefault(productMap, TYPE, PD_TYPE));
+		setProductURL(getDefault(productMap, URL, PD_URL));
+		setProductWidth(getDefault(productMap, WIDTH, PD_WIDTH));
+
+		setProductHeight(getDefault(productMap, HEIGHT, PD_HEIGHT));
+		setProductTitle(getDefault(productMap, TITLE, PD_TITLE));
+
+		setProductDescription(getDefault(productMap, DESCRIPTION, PD_DESCRIPTION));
+		setProductAuthor(getDefault(productMap, AUTHOR, PD_AUTHOR));
+		setProductAuthorImg(getDefault(productMap, AUTHORIMG, PD_AUTHORIMG));
+
+		setProductDate(getDefault(productMap, DATE, PD_DATE));
+		setProductHot(getDefault(productMap, HOT, PD_HOT));
+		setProductId(getDefault(productMap, ID, PD_ID));
+		setProductPrice(getDefault(productMap, PRICE, PD_PRICE));
 	}
 	
-	public void setProductType(String types)
-	{
-		if(types == null)
-		{
+	/*
+	 * 获取productMap 中关键字key对应的值，如果不存在或者为null，则设置为默认值
+	 * @param productMap 值键对
+	 * @param key 参数键
+	 * @param def 默认值
+	 */
+	private String getDefault(Map<String,String>productMap,String key,String def){
+		if(productMap == null) return def;
+		
+		if(productMap.containsKey(key)){
+			String res = productMap.get(key);
+			if(res == null) return def;
+			return res;
+		}
+		return def;
+	}
+	
+	public void setProductType(String types){
+		if((types == null) || types.equals("")){
 			productType = MEIJIA;
 			return ;
 		}
-		int type = Integer.parseInt(types);
+		int type = 0;
 		
-		if(type <= 0 || type > 2)
-		{
+		try{
+			type = Integer.parseInt(types);
+		}catch(Exception e){
+			productType = PD_TYPE;
+			return ;
+		}
+		
+		if(type <= 0 || type > 2){
 			productType = MEIJIA;
 		}
-		else if(type == 1)
-		{
+		else if(type == 1){
 			productType = MEIFA;
 		}
-		else
-		{
+		else{
 			productType = MEIZHUANGE;
 		}
 	}
@@ -112,24 +161,20 @@ public class Product implements Serializable{
     { 
     	productUrl = (url == null) ? "":url;
     }
-    public void setProductWidth(int width)
-    {
-    	productWidth = width;
+
+    public void setProductWidth(String width){
+    	try{
+    		this.productWidth = Double.valueOf(width);
+    	}catch(Exception e){
+    		this.productWidth = Double.valueOf(PD_WIDTH);
+    	}
     }
     public void setProductHeight(String heights)
     {
-    	int height = NORMAL;
-    	if(heights != null)
-    		height = Integer.parseInt(heights);
-    	switch(height)
-    	{
-	    	case TINY: productHeight = TINY; break;
-	    	case SMALL: productHeight = SMALL; break;
-	    	case NORMAL: productHeight = NORMAL; break;
-	    	case LARGE: productHeight = LARGE; break;
-	    	case HUGE: productHeight = HUGE; break;
-	    	case SUPERLARGE: productHeight = SUPERLARGE;break;
-	    	default:productHeight = NORMAL;break;
+    	try{
+    		this.productHeight = Double.valueOf(heights);
+    	}catch(Exception e){
+    		this.productHeight = Double.valueOf(PD_HEIGHT);
     	}
     }
     public void setProductTitle(String title)
@@ -143,98 +188,103 @@ public class Product implements Serializable{
     public void setProductAuthor(String author)
     {
     	if(author == "" ||author == null || author.length() == 0)
-    		productAuthor = "unkown";
+    		productAuthor = PD_AUTHOR;
     	else productAuthor = author;
     }
     public void setProductAuthorImg(String url)
     {
-    	productAuthorImg = url;
+    	productAuthorImg = (url == null)?"":url;
     }
     public void setProductHot(String hots)
     {
-    	int hot = 0;
-    	if(hots != null) hot = Integer.parseInt(hots);
+    	int hot = Integer.valueOf(PD_HOT);
+    	try{
+    		hot = Integer.parseInt(hots);
+    	}catch(Exception e){
+    		
+    	}
     	
-    	if(hot < 0) productHot =0;
+    	if(hot < 0) productHot = 0;
     	else productHot = hot;
     }
     public void setProductId(String ids)
     {
-    	int id = 0;
-    	if(ids != null) id = Integer.parseInt(ids);
+    	int id = Integer.valueOf(PD_ID);
+    	try{
+    		id = Integer.parseInt(ids);
+    	}catch(Exception e){
+    		
+    	}
+    	if(id < 0) id = 0;
     	productId = id;
     }
-    //TODO ʱ�ڵ�ʱ����Ҫ���һ��
     public void  setProductDate(String date)
     {  
     	try{
     		productDate = StringUtils.getDateByString(date);
+    		Log.d(TAG, "the format for date isn't right"+"--v: "+date);
     	}catch(Exception e)
     	{
-    		
+    		//TODO
+    		productDate = StringUtils.getDateByString(PD_DATE);
     	}
     }
-    public void setProductPrice(String prices)
-    {
-    	double price = 0;
-    	if(prices != null) price = Double.parseDouble(prices);
-    	productPrice = price > 0 ? price:0.0;
+    public void setProductPrice(String prices){
+    	double price = Double.valueOf(PD_PRICE);
+    	try{
+    		price = Double.parseDouble(prices);
+    	}catch(Exception e){
+    		price = Double.valueOf(PD_PRICE);
+    	}
+    	productPrice = price >= 0 ? price: Double.valueOf(PD_PRICE);
     }
-	public String getProductType()
-	{
+	public String getProductType(){
 		return  productType;
 	}
-    public String getProductURL()
-    {
+    public String getProductURL() {
     	return productUrl;
     }
-    public int getProductWidth()
-    {
+    public double getProductWidth(){
     	return productWidth;
     }
-    public int getProductHeight()
-    {
+    public double getProductHeight(){
     	return productHeight;
     }
-    public String getProductTitle()
-    {
+    public String getProductTitle(){
     	return productTitle ;
     }
-    public String getProductDescription()
-    {
+    public String getProductDescription(){
     	return productDescription;
     }
-    public String getProductAuthor()
-    {
+    public String getProductAuthor(){
     	return productAuthor;
     }
-    public String getProductAuthorImg()
-    {
+    public String getProductAuthorImg(){
     	return productAuthorImg;
     }
-    public String getProductHot()
-    {
+    public String getProductHot(){
     	return String.valueOf(productHot);
     }
-    public int getProductId()
-    {
+    public int getProductId() {
     	return productId ;
     }
-    //TODO ʱ�ڵ�ʱ����Ҫ���һ��
-    public String  getProductDate()
-    {
+    public String  getProductDate() {
     	return productDate.toString();
     }
-    public String getProductPrice()
-    {
+    public Date getProductate(){
+    	return productDate;
+    }
+    public String getProductPrice(){
     	return String.valueOf(productPrice) ;
     }
 
+   /*
 	@Override
 	public String toString() {
-		// TODO 自动生成的方法存根
 		String res = "";
-		res = ID+"*:"+productId+"#,"+
+		res = 	ID+"*:"+productId+"#,"+
+				WIDTH+"*:"+productWidth+"#,"+
+				HEIGHT+"*:"+productHeight+"#,"+
 				TYPE+"*:"+productType+"#,"+
 				URL+"*:"+productUrl+"#,"+
 				TITLE+"*:"+productTitle+"#,"+
@@ -246,6 +296,8 @@ public class Product implements Serializable{
 				DATE+"*:"+productDate;
 		return res;
 	}
+	
+	//从toString中的字符串提取产品
 	public static Product ParseFromString(String content)
 	{
 		String[] arr = content.split("#,");
@@ -264,5 +316,5 @@ public class Product implements Serializable{
 		}
 		return new Product(param);
 	}
-    
+    */
 }

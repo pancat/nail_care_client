@@ -1,16 +1,22 @@
 package com.pancat.fanrong.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.util.Log;
 
+import com.pancat.fanrong.bean.NailTechnician;
 import com.pancat.fanrong.bean.Product;
+import com.pancat.fanrong.bean.SearchLabelAndTab;
 
 public class FilterQueryAndParse {
 	public static final String TAG = "FilterQueryAndParse";
 	
-	//产品相关模块的询问参数
+	//产品、技师、标签、搜索的相关模块的询问参数
 	public static final String Q_QUERY_TYPE = "query_type";
 	public static final String Q_KEYWORD = "keyword";
 	public static final String Q_LIMIT = "limit";
@@ -20,7 +26,7 @@ public class FilterQueryAndParse {
 	public static final String Q_SORT_ORDER = "desc";
 	public static final String Q_SELECT_LEFT = "select_left";
 	public static final String Q_SELECT_RIGHT = "select_right";
-	public static final String Q_SELECT_LIKE = "select_like";
+	public static final String Q_SELECT_LIKE = "like";
 	public static final String Q_SELECT_KEYWORDS = "select_keyword";
 	public static final String Q_PRODUCT_TYPE = "product_type";
 	public static final String Q_LAST_QUERY_ID = "last_query_id";
@@ -39,6 +45,9 @@ public class FilterQueryAndParse {
 	public static final String Q_PRODUCT_ID = "product_id";
 	public static final String Q_NEXT = "next";
 	
+	//新增询问字段
+	public static final String Q_LABLE = "labels";
+	
 	//询问类型常量
 	public static final int QT_1 = 1;
 	public static final int QT_2 = 2;
@@ -54,9 +63,28 @@ public class FilterQueryAndParse {
 	public static final int QT_12 = 12;
 	public static final int QT_13 = 13;
 	
-	//动作类别
+	//询问类型对应的服务器端的响应URL
+	public static String[] relativeUrls = new String[]{
+		"",//QT_0
+		"product/get_product_list" ,//QT_1
+		"product/get_product_list",//QT_2
+		"product/get_product_list",//QT_3
+		"product/search",//QT_4
+		"",//暂无//QT_5
+		"product/get_all_labels",//QT_6
+		"",//QT_7
+		"",//QT_8
+		"",//QT_9
+		"",//QT_10
+		"",//QT_11
+		"",//QT_12
+		"",//QT_13
+	};
+	
+	//对应此询问类型相应的动作类别
 	public static final int LOAD = 0;
 	public static final int REFRESH = 1;
+	public static final int IDLE = 2;
 	
 	//产品类型常量
 	public static final int MEIJIA = 0;
@@ -108,10 +136,24 @@ public class FilterQueryAndParse {
 		public static final int UNKOWN = 7;
 	}
 	
+	//服务器返回字段
+	public static final String SP_ID = "p_id";
+	public static final String SP_name = "name";
+	public static final String SP_describe = "p_describe";
+	public static final String SP_credate = "cre_date";
+	public static final String SP_hit = "hit";
+	public static final String SP_image_uri = "image_uri";
+	public static final String SP_m_name = "nick_name";
+	
+	//有关标签的服务器端返回字段
+	public static final String SP_TAG_NAME = "name";
+	public static final String SP_TAG_ID = "id";
+	
+	//对于询问参数，这里进行默认值修复
 	public static Map<String,String> FilterAndRepairDefault(Map<String,Object> map){
 		int query_type = QT_1;
 		if(map != null && map.containsKey(Q_QUERY_TYPE)) {
-			query_type = ParseErrorInt(map, Q_QUERY_TYPE,-1);
+			query_type = ParseErrorInt(map, Q_QUERY_TYPE,PD_QUERY_TYPE);
 		}
 		
 		switch (query_type) {
@@ -223,6 +265,7 @@ public class FilterQueryAndParse {
 		filter.put(Q_SELECT_KEYWORDS, ParseErrorString(map, Q_SELECT_KEYWORDS, PD_SELECT_KEYWORD));
 		filter.put(Q_LIMIT, S(ParseErrorInt(map, Q_LIMIT, PD_LIMIT)));
 		filter.put(Q_OFFSET, S(ParseErrorInt(map, Q_OFFSET, PD_OFFSET)));
+		
 		return filter;
 	}
 	private static Map<String,String> FilterAndRepairDefault7(Map<String,Object> map){
@@ -311,5 +354,65 @@ public class FilterQueryAndParse {
 			e.printStackTrace();
 		}
 		return def;
+	}
+	
+	//对返回结果，解析成产品数组
+	public static ArrayList<Product> ParseToProductArr(String content) throws Exception
+	{
+		//Log.d(TAG, content);
+		ArrayList<Product> product = new ArrayList<Product>();
+		try{
+			JSONArray jsonArray = new JSONArray(content);
+			for(int i=0; i<jsonArray.length(); i++)
+			{
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				Log.d(TAG,jsonObject.getString(SP_image_uri));
+				Map<String,String> map = new HashMap<String,String>();
+				map.put(Product.ID, String.valueOf(jsonObject.getInt(SP_ID)));
+				map.put(Product.TITLE, jsonObject.getString(SP_name));
+				map.put(Product.DESCRIPTION, jsonObject.getString(SP_describe));
+				map.put(Product.DATE, jsonObject.getString(SP_credate));
+				map.put(Product.URL, jsonObject.getString(SP_image_uri));
+				map.put(Product.AUTHOR, jsonObject.getString(SP_m_name));
+				Product tmp = new Product(map);
+				//Log.d(TAG, tmp.getProductURL());
+				product.add(tmp);
+			}
+		}catch(Exception e)
+		{
+			throw e;
+		}
+		return product;
+	}
+	
+	//对返回结果，解析成都搜索标签数组
+	public static ArrayList<SearchLabelAndTab> ParseToSearchLabelAndTab(String content) throws Exception
+	{
+		ArrayList<SearchLabelAndTab> labels = new ArrayList<SearchLabelAndTab>();
+		try{
+			JSONArray jsonArray = new JSONArray(content);
+			for(int i=0;i<jsonArray.length();i++){
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				SearchLabelAndTab label = new SearchLabelAndTab(
+						jsonObject.getString(SP_TAG_ID),
+						jsonObject.getString(SP_TAG_NAME), null);
+				labels.add(label);
+			}
+		}catch(Exception e){
+			throw e;
+		}
+		return labels;
+	}
+	
+	//对返回结果，解析成技师数组
+	public static ArrayList<NailTechnician> ParseToNailTechnician(String content) throws Exception
+	{
+		return null;
+	}
+	
+	//返回每次询问的URL
+	public static String getRelativeURL(Map<String,Object>map){
+		int queryType = ParseErrorInt(map, Q_QUERY_TYPE, PD_QUERY_TYPE);
+		return relativeUrls[queryType];
 	}
 }
