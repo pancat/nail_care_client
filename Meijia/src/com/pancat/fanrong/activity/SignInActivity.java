@@ -325,7 +325,7 @@ public class SignInActivity extends Activity {
 		// TODO: Replace this with your own logic
 		boolean b=false;
 
-		Pattern p=Pattern.compile("[a-zA-Z0-9]{5}");
+		Pattern p=Pattern.compile("[a-zA-Z0-9]{1,8}");
 	    Matcher m=p.matcher(password);
 	    b=m.matches();
 		if(b){
