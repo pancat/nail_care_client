@@ -27,7 +27,7 @@
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="15dp"
+    android:layout_weight="1.0"
      >
 
     <RelativeLayout
@@ -42,13 +42,15 @@
             android:id="@+id/info_ll"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-          
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/corner_bg_white"
             android:orientation="vertical" >
-
+			<FrameLayout 
+			    android:layout_height="wrap_content"
+			    android:layout_width="fill_parent"
+			    >
             <LinearLayout
                 android:id="@+id/img_parent_ll"
                 android:layout_width="fill_parent"
@@ -56,44 +58,17 @@
 
                 <!-- 动态添加view到这个LinearLayout中 -->
             </LinearLayout>
-
+            <ImageView 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/circle_head"
+    />
+</FrameLayout>
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cutline_1px" />
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp" >
-
-                <ImageView
-                    android:id="@+id/ic_web"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_web" />
-
-                <TextView
-                    android:id="@+id/img_path"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/ic_web"
-                    android:textColor="#CCCCCC"
-                    android:textSize="10sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/user_info_rl"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/info_ll"
-            android:layout_margin="10dp"
-            android:background="@drawable/corner_bg_white"
-            android:orientation="vertical" >
-
-            <RelativeLayout
+<RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp" >
@@ -164,42 +139,46 @@
                             android:text="0"
                             android:textSize="12dp" />
                     </RelativeLayout>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/cutline_1px" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp" >
-
-                <EditText
-                    android:id="@+id/comment_content"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.98"
-                    android:background="@drawable/input_comment_bg_selector"
-                    android:gravity="center_vertical"
-                    android:hint="Add a comment..."
-                    android:padding="5dp" />
-
-                <Button
-                    android:id="@+id/btn_send_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="0.02"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="Add" />
-            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-
+</RelativeLayout>
+</LinearLayout>
+</RelativeLayout>
 </ScrollView>
+
+<LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:orientation="vertical"
+    >
+    <ImageView 
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:background="@drawable/cutline_2px"
+        />
+    <LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    >
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.82"
+        android:id="@+id/comment_content"
+        android:background="@drawable/btn_input_selector"
+        />
+    <Button 
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.18"
+        android:text="评论"
+        android:id="@+id/btn_send_comment"
+        android:onClick="onClick"
+        android:background="@drawable/btn_send_bg_selector"
+        android:layout_marginLeft="4dp"
+        />
+    </LinearLayout>
+</LinearLayout>
 </LinearLayout>

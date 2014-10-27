@@ -104,7 +104,6 @@ public class CircleItemActivity extends Activity{
 		mCreTime.setText("added in "+info.getCreTime().toString());
 		
 		mImgParent = (LinearLayout)findViewById(R.id.img_parent_ll);
-		mImgPath = (TextView)findViewById(R.id.img_path);
 		//设置ImageView的显示宽度和高度
 		ViewTreeObserver observer = mImgParent.getViewTreeObserver();
 		observer.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -112,7 +111,6 @@ public class CircleItemActivity extends Activity{
 			@Override
 			public void onGlobalLayout() {
 				mImgParent.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				mImgPath.setText(info.getPath());
 				int  parentWidth = mImgParent.getWidth();
 				//按比例缩放图片
 				int iWidth = parentWidth;

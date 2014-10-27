@@ -27,10 +27,12 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
 import com.pancat.fanrong.BuildConfig;
+import com.pancat.fanrong.util.FileUtils;
 
 /**
  * This class wraps up completing some arbitrary long running work when loading
@@ -76,6 +78,7 @@ public abstract class ImageWorker {
 		
 		if (bitmap != null) {
 			//在内存缓存中找到了该bitmap对象
+			bitmap = FileUtils.getRoundedCornerBitmap(bitmap);
 			imageView.setImageBitmap(bitmap);
 		}
 		else if (cancelPotentialWork(data, imageView)) {
@@ -277,7 +280,7 @@ public abstract class ImageWorker {
 			if (bitmap != null && mImageCache != null) {
 				mImageCache.addBitmapToCache(dataString, bitmap);
 			}
-
+//			bitmap = FileUtils.getRoundedCornerBitmap(bitmap);
 			return bitmap;
 		}
 
@@ -343,6 +346,7 @@ public abstract class ImageWorker {
 	 * @param imageView
 	 * @param bitmap
 	 */
+	@SuppressWarnings("deprecation")
 	private void setImageBitmap(ImageView imageView, Bitmap bitmap) {
 		if (mFadeInBitmap) {
 			// Transition drawable with a transparent drwabale and the final
@@ -351,7 +355,6 @@ public abstract class ImageWorker {
 					new BitmapDrawable(mContext.getResources(), bitmap) });
 			// Set background to loading bitmap
 			imageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
-
 			imageView.setImageDrawable(td);
 			td.startTransition(FADE_IN_TIME);
 		} else {

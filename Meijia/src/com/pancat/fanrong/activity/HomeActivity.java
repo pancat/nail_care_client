@@ -76,7 +76,7 @@ public class HomeActivity extends Activity {
 		});
 		// 生成动态数组，加入数据
 		List<Object> listItem = new ArrayList<Object>();
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 1; i++) {
 			listItem.add(new Product(null));
 		}
 

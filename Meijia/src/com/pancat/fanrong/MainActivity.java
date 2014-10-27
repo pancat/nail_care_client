@@ -239,11 +239,11 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		Bimp.max = 0;
 		handler.sendEmptyMessage(1);
 		addPicDialog = new AlertDialog.Builder(this).create();
-		addPicDialog.setView(getLayoutInflater().inflate(R.layout.add_circle, null));
+		addPicDialog.setView(getLayoutInflater().inflate(R.layout.dialog_add_circle, null));
 		addPicDialog.show();
 		addPicDialog.getWindow().setLayout((int) (screenWidth*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
 		Window addPicWindow = addPicDialog.getWindow();
-		addPicWindow.setContentView(R.layout.add_circle);
+		addPicWindow.setContentView(R.layout.dialog_add_circle);
 		LinearLayout uploadCamera = (LinearLayout)addPicWindow.findViewById(R.id.upload_camera);
 		LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
 		final TextView circleDescription = (TextView)addPicWindow.findViewById(R.id.circle_description);

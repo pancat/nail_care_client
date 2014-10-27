@@ -76,13 +76,6 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 	
 	
 	@Override
-	public void onResume() {
-		Log.e(TAG, "resume");
-        super.onResume();
-    }
-	
-	
-	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		fragmentCallback = (CircleActivity)activity;
@@ -250,7 +243,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 			Circle circle = mInfos.get(position);
 			if(convertView == null){
 				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-				convertView = layoutInflater.inflate(R.layout.circle_item, null);
+				convertView = layoutInflater.inflate(R.layout.item_circle, null);
 				holder = new ViewHolder();
 				holder.imageView = (ScaleImageView)convertView.findViewById(R.id.news_pic);
 				holder.contentView = (TextView)convertView.findViewById(R.id.news_title);
@@ -267,7 +260,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 				
 				@Override
 				public void onClick(View v) {
-					//回调MomentActivity的接口
+					//回调CircleActivity的接口
 					fragmentCallback.callback(data);
 				}
 			});
