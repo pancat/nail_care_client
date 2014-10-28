@@ -7,16 +7,13 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp"
+    android:padding="10dp"
 >
     
 <com.pancat.fanrong.common.CircleImageView 
-    android:layout_height="70dp"
-    android:layout_width="70dp"
-    android:src="@drawable/player"
+    android:layout_height="40dp"
+    android:layout_width="40dp"
+    android:src="@drawable/hair_styles"
     android:id="@+id/comment_user_img"
     />
 <RelativeLayout 
@@ -31,9 +28,9 @@
     android:text="Tom"
     android:layout_marginLeft="8dp"
     android:id="@+id/comment_user_name"
-    android:textSize="16sp"
+    android:textSize="15sp"
     android:textStyle="bold"
-    android:textColor="@android:color/black"
+    android:textColor="#1269c2"
     />
 
 <TextView

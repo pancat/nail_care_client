@@ -3,6 +3,7 @@ package com.pancat.fanrong.activity;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,26 +13,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.baidu.platform.comapi.map.m;
-import com.pancat.fanrong.MainActivity;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.CircleComment;
+import com.pancat.fanrong.common.CircleImageView;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
@@ -55,6 +55,15 @@ public class CircleItemActivity extends Activity{
 	
 	private int circleId;
 	
+	private LinearLayout mCommentInfo;
+	
+	private Button mBtnAllComments;
+	//当前页面显示的评论数，已有四条则不再添加
+	private int mCurrentCommentNum = 0;
+	
+	/**
+	 * 获取评论条数并显示
+	 */
 	private Handler handler = new Handler(){
 
 		@Override
@@ -64,8 +73,54 @@ public class CircleItemActivity extends Activity{
 				String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comments_count?circle_id="+circleId;
 				try {
 					String json = RestClient.getInstance().getStringFromUrl(url);
-					mCommentCount.setText(json);
-					Log.e("json", json);
+					if(json != null){
+						
+						mCommentCount.setText(json);
+						mBtnAllComments.setText("全部评论("+json+"条)");
+						int commentCount = Integer.valueOf(json);//评论总数
+						if(commentCount>0){
+							if(mCurrentCommentNum < 4){
+								String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comment_list";
+								RequestParams params = new RequestParams();
+								params.put("circle_id", String.valueOf(circleId));
+								params.put("index", String.valueOf(mCurrentCommentNum));
+								params.put("size",String.valueOf(4-mCurrentCommentNum));
+								RestClient.getInstance().postFromAbsoluteUrl(CircleItemActivity.this, requestUrl, params, 
+									new AsyncHttpResponseHandler(){
+
+										@Override
+										public void onSuccess(String content) {
+											super.onSuccess(content);
+											try {
+												
+												JSONArray jsonArray = new JSONArray(content);
+												for(int i = 0; i < jsonArray.length();i++){
+													JSONObject jsonObject = jsonArray.getJSONObject(i);
+													CircleComment comment = new CircleComment();
+													comment.setId(jsonObject.getInt("comment_id"));
+													comment.setCircleId(jsonObject.getInt("circle_id"));
+													comment.setComment(jsonObject.getString("comment"));
+													comment.setCommentTime(jsonObject.getString("comment_time"));
+													comment.setUid(jsonObject.getInt("uid"));
+													mCurrentCommentNum++;
+													mCommentInfo.addView(addCommentInfo(comment));
+												}
+											} catch (JSONException e) {
+												e.printStackTrace();
+											}
+										}
+
+										@Override
+										public void onFailure(Throwable error, String content) {
+											super.onFailure(error, content);
+										}
+								});
+							}
+						}
+						else{
+							
+						}
+					}
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -89,6 +144,8 @@ public class CircleItemActivity extends Activity{
 		mCommentCount = (TextView)findViewById(R.id.tv_comment_count);
 		mDescription = (TextView)findViewById(R.id.description);
 		mCreTime = (TextView)findViewById(R.id.added_time);
+		mCommentInfo = (LinearLayout)findViewById(R.id.circle_comment_ll);
+		mBtnAllComments = (Button)findViewById(R.id.btn_all_comments);
 		handler.sendEmptyMessage(1);
 		Intent intent = getIntent();
 		Bundle data = intent.getExtras();
@@ -139,6 +196,25 @@ public class CircleItemActivity extends Activity{
 	}
 	
 	/**
+	 * 添加显示最多前四条评论
+	 * @return
+	 */
+	private View addCommentInfo(CircleComment comment){
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View view = (View)inflater.inflate(R.layout.item_circle_comment,null);
+		CircleImageView userImg = (CircleImageView)view.findViewById(R.id.comment_user_img);
+		TextView username = (TextView)view.findViewById(R.id.comment_user_name);
+		TextView commentContent = (TextView)view.findViewById(R.id.comment_content);
+		TextView commentTime = (TextView)view.findViewById(R.id.comment_time);
+//		userImg.setImageBitmap();
+		username.setText("Mary");
+		commentContent.setText(comment.getComment());
+		commentTime.setText(comment.getCommentTime());
+		return view;
+	}
+	
+	
+	/**
 	 * 页面控件点击事件
 	 * @param v
 	 */
@@ -153,7 +229,7 @@ public class CircleItemActivity extends Activity{
 			String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/add_comment";
 			//获取评论内容
 			String content = mCommentContent.getText().toString();
-			//同步评论到服务器并且跳转到评论页面
+			//同步评论到服务器并刷新本页面
 			RequestParams params = new RequestParams();
 			params.put("circle_id", String.valueOf(circleId));
 			params.put("comment", content);
@@ -169,15 +245,7 @@ public class CircleItemActivity extends Activity{
 //					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 					progressDialog.dismiss();
 					Toast.makeText(CircleItemActivity.this, "评论成功", Toast.LENGTH_LONG).show();
-					try {
-						
-						JSONObject jsonObject = new JSONObject(content);
-						int commentsCount = jsonObject.getInt("comments_count");
-						mCommentCount.setText(String.valueOf(commentsCount));
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					
+					handler.sendEmptyMessage(1);
 				}
 
 				@Override
@@ -188,9 +256,9 @@ public class CircleItemActivity extends Activity{
 					progressDialog.dismiss();
 					Toast.makeText(CircleItemActivity.this, "评论失败", Toast.LENGTH_LONG).show();
 				}
-
 			});
 			break;
+		case R.id.btn_all_comments:
 		case R.id.to_comment_page:
 			intent = new Intent(CircleItemActivity.this, CircleCommentActivity.class);
 			//携带圈子id跳转到评论页面
