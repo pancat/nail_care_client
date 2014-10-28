@@ -117,6 +117,10 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name=".activity.CirclePhotoActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".activity.MeActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

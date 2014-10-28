@@ -45,18 +45,17 @@ import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
 public class CircleItemActivity extends Activity{
 
 	private LinearLayout mImgParent;
-	private TextView mImgPath;
 	//评论内容
 	private EditText mCommentContent;
 	private TextView mCommentCount;
 	
 	private TextView mDescription;
 	private TextView mCreTime;
-	
+	//当前圈子条目的id
 	private int circleId;
 	
 	private LinearLayout mCommentInfo;
-	
+	//全部评论按钮
 	private Button mBtnAllComments;
 	//当前页面显示的评论数，已有四条则不再添加
 	private int mCurrentCommentNum = 0;
@@ -131,7 +130,6 @@ public class CircleItemActivity extends Activity{
 				break;
 			}
 		}
-		
 	};
 	
 	@Override
@@ -197,7 +195,7 @@ public class CircleItemActivity extends Activity{
 	
 	/**
 	 * 添加显示最多前四条评论
-	 * @return
+	 * @return 
 	 */
 	private View addCommentInfo(CircleComment comment){
 		LayoutInflater inflater = LayoutInflater.from(this);
@@ -261,7 +259,13 @@ public class CircleItemActivity extends Activity{
 		case R.id.btn_all_comments:
 		case R.id.to_comment_page:
 			intent = new Intent(CircleItemActivity.this, CircleCommentActivity.class);
-			//携带圈子id跳转到评论页面
+			//携带圈子id跳转到所有评论页面
+			intent.putExtra("circleId", circleId);
+			startActivity(intent);
+			break;
+		case R.id.img_parent_ll:
+			intent = new Intent(CircleItemActivity.this, CirclePhotoActivity.class);
+			//携带圈子id跳转到所有图片页面
 			intent.putExtra("circleId", circleId);
 			startActivity(intent);
 			break;

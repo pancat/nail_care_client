@@ -54,7 +54,8 @@
             <LinearLayout
                 android:id="@+id/img_parent_ll"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:onClick="onClick" >
 
                 <!-- 动态添加imageview到这个LinearLayout中 -->
             </LinearLayout>
