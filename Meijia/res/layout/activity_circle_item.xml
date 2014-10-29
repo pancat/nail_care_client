@@ -59,10 +59,20 @@
 
                 <!-- 动态添加imageview到这个LinearLayout中 -->
             </LinearLayout>
-            <ImageView 
+<ImageView 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/circle_head"
+    android:background="@drawable/circle_head"/>
+<TextView 
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:background="@null"
+    android:layout_marginLeft="5dp"
+    android:layout_marginBottom="5dp"
+    android:textColor="@android:color/white"
+    android:textSize="10sp"
+    android:layout_gravity="bottom"
+    android:id="@+id/img_count"
     />
 </FrameLayout>
             <ImageView
@@ -169,6 +179,18 @@
 	        android:textSize="15sp"
 	        />
 	</LinearLayout>
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:paddingTop="5dp"
+	    android:id="@+id/progressbar_parent"
+	    >
+	    <ProgressBar 
+	        android:layout_height="30dp"
+	        android:layout_width="30dp"
+	        />
+	</RelativeLayout>
     <!-- 添加评论的信息到此LinearLayout中 -->
 </LinearLayout>
 <LinearLayout 
@@ -183,7 +205,7 @@
         android:layout_height="wrap_content"
         android:layout_width="200dp"
         android:background="@drawable/btn_send_bg_selector"
-        android:text="全部评论(0)"
+        android:text="全部评论(0条)"
         android:id="@+id/btn_all_comments"
         android:onClick="onClick"
         />

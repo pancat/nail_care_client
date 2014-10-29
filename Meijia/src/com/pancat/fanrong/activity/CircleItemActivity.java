@@ -1,15 +1,17 @@
 package com.pancat.fanrong.activity;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +24,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -57,77 +60,182 @@ public class CircleItemActivity extends Activity{
 	private LinearLayout mCommentInfo;
 	//全部评论按钮
 	private Button mBtnAllComments;
+	
+	//评论未出现时的progressbar
+	RelativeLayout mProgressParent;
+	
 	//当前页面显示的评论数，已有四条则不再添加
 	private int mCurrentCommentNum = 0;
-	
+	//圈子图片总数
+	private TextView mImgCount;
+	private int countImg = 0;
+	//获取后台数据线程
+	private Thread mThread;
 	/**
 	 * 获取评论条数并显示
 	 */
+//	private Handler handler = new Handler(){
+//
+//		@Override
+//		public void handleMessage(Message msg) {
+//			switch(msg.what){
+//			case 1:
+//				String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comments_count?circle_id="+circleId;
+//				try {
+//					String json = RestClient.getInstance().getStringFromUrl(url);
+//					if(json != null){
+//						mCommentCount.setText(json);
+//						mBtnAllComments.setText("全部评论("+json+"条)");
+//						int commentCount = Integer.valueOf(json);//评论总数
+//						if(commentCount>0){
+//							if(mCurrentCommentNum < 4){
+//								String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comment_list";
+//								RequestParams params = new RequestParams();
+//								params.put("circle_id", String.valueOf(circleId));
+//								params.put("index", String.valueOf(mCurrentCommentNum));
+//								params.put("size",String.valueOf(4-mCurrentCommentNum));
+//								RestClient.getInstance().postFromAbsoluteUrl(CircleItemActivity.this, requestUrl, params, 
+//									new AsyncHttpResponseHandler(){
+//										@Override
+//										public void onSuccess(String content) {
+//											super.onSuccess(content);
+//											try {
+//												
+//												JSONArray jsonArray = new JSONArray(content);
+//												for(int i = 0; i < jsonArray.length();i++){
+//													JSONObject jsonObject = jsonArray.getJSONObject(i);
+//													CircleComment comment = new CircleComment();
+//													comment.setId(jsonObject.getInt("comment_id"));
+//													comment.setCircleId(jsonObject.getInt("circle_id"));
+//													comment.setComment(jsonObject.getString("comment"));
+//													comment.setCommentTime(jsonObject.getString("comment_time"));
+//													comment.setUid(jsonObject.getInt("uid"));
+//													mCurrentCommentNum++;
+//													mCommentInfo.addView(addCommentInfo(comment));
+//												}
+//											} catch (JSONException e) {
+//												e.printStackTrace();
+//											}
+//										}
+//
+//										@Override
+//										public void onFailure(Throwable error, String content) {
+//											super.onFailure(error, content);
+//										}
+//								});
+//							}
+//						}
+//						else{
+//							
+//						}
+//					}
+//				} catch (ClientProtocolException e) {
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//				break;
+//			case 2:
+//				//获取圈子图片总数
+//				String imgCountUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_img_count?circle_id="+circleId;
+//				try {
+//					String json = RestClient.getInstance().getStringFromUrl(imgCountUrl);
+//					if(json != null){
+//						mImgCount = Integer.valueOf(json);
+//					}
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//	};
+	
 	private Handler handler = new Handler(){
 
 		@Override
 		public void handleMessage(Message msg) {
 			switch(msg.what){
 			case 1:
-				String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comments_count?circle_id="+circleId;
-				try {
-					String json = RestClient.getInstance().getStringFromUrl(url);
-					if(json != null){
-						
-						mCommentCount.setText(json);
-						mBtnAllComments.setText("全部评论("+json+"条)");
-						int commentCount = Integer.valueOf(json);//评论总数
-						if(commentCount>0){
-							if(mCurrentCommentNum < 4){
-								String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comment_list";
-								RequestParams params = new RequestParams();
-								params.put("circle_id", String.valueOf(circleId));
-								params.put("index", String.valueOf(mCurrentCommentNum));
-								params.put("size",String.valueOf(4-mCurrentCommentNum));
-								RestClient.getInstance().postFromAbsoluteUrl(CircleItemActivity.this, requestUrl, params, 
-									new AsyncHttpResponseHandler(){
-
-										@Override
-										public void onSuccess(String content) {
-											super.onSuccess(content);
-											try {
-												
-												JSONArray jsonArray = new JSONArray(content);
-												for(int i = 0; i < jsonArray.length();i++){
-													JSONObject jsonObject = jsonArray.getJSONObject(i);
-													CircleComment comment = new CircleComment();
-													comment.setId(jsonObject.getInt("comment_id"));
-													comment.setCircleId(jsonObject.getInt("circle_id"));
-													comment.setComment(jsonObject.getString("comment"));
-													comment.setCommentTime(jsonObject.getString("comment_time"));
-													comment.setUid(jsonObject.getInt("uid"));
-													mCurrentCommentNum++;
-													mCommentInfo.addView(addCommentInfo(comment));
-												}
-											} catch (JSONException e) {
-												e.printStackTrace();
-											}
-										}
-
-										@Override
-										public void onFailure(Throwable error, String content) {
-											super.onFailure(error, content);
-										}
-								});
-							}
-						}
-						else{
-							
-						}
-					}
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+				String commentCount = (String)msg.obj;
+				mCommentCount.setText(commentCount);
+				mBtnAllComments.setText("全部评论("+commentCount+"条)");
+				break;
+			case 2:
+				String imgCount = (String)msg.obj;
+				if(imgCount != null){
+					countImg = Integer.valueOf(imgCount);
+					mImgCount.setText("共"+countImg+"张");
+				}
+				break;
+			case 3:
+				mProgressParent.setVisibility(View.GONE);
+				List<CircleComment> commentList = (List<CircleComment>)msg.obj;
+				for(int i = 0;i<commentList.size();i++){
+					mCommentInfo.addView(addCommentInfo(commentList.get(i)));
 				}
 				break;
 			default:
 				break;
+			}
+		}
+		
+	};
+	
+	Runnable runnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			String imgCountUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_img_count?circle_id="+circleId;
+			String commentCountUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comments_count?circle_id="+circleId;
+			try {
+				//得到评论总数
+				String commentCount = RestClient.getInstance().getStringFromUrl(commentCountUrl);
+				//得到图片总数
+				String imgCount = RestClient.getInstance().getStringFromUrl(imgCountUrl);
+				handler.obtainMessage(1, commentCount).sendToTarget();
+				handler.obtainMessage(2, imgCount).sendToTarget();
+				if(mCurrentCommentNum < 4){
+					String requestUrl = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_comment_list";
+					RequestParams params = new RequestParams();
+					params.put("circle_id", String.valueOf(circleId));
+					params.put("index", String.valueOf(mCurrentCommentNum));
+					params.put("size",String.valueOf(4-mCurrentCommentNum));
+					RestClient.getInstance().postFromAbsoluteUrl(CircleItemActivity.this, requestUrl, params, 
+							new AsyncHttpResponseHandler(){
+							@Override
+							public void onSuccess(String content) {
+								super.onSuccess(content);
+								try {
+									List<CircleComment> commentList = new ArrayList<CircleComment>();
+									JSONArray jsonArray = new JSONArray(content);
+									for(int i = 0; i < jsonArray.length();i++){
+										JSONObject jsonObject = jsonArray.getJSONObject(i);
+										CircleComment comment = new CircleComment();
+										comment.setId(jsonObject.getInt("comment_id"));
+										comment.setCircleId(jsonObject.getInt("circle_id"));
+										comment.setComment(jsonObject.getString("comment"));
+										comment.setCommentTime(jsonObject.getString("comment_time"));
+										comment.setUid(jsonObject.getInt("uid"));
+										mCurrentCommentNum++;
+										commentList.add(comment);
+									}
+									handler.obtainMessage(3, commentList).sendToTarget();
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+
+							@Override
+							public void onFailure(Throwable error, String content) {
+								super.onFailure(error, content);
+							}
+					});
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	};
@@ -138,13 +246,14 @@ public class CircleItemActivity extends Activity{
 		setContentView(R.layout.activity_circle_item);
 		
 		//初始化控件
+		mProgressParent = (RelativeLayout)findViewById(R.id.progressbar_parent);
 		mCommentContent = (EditText)findViewById(R.id.comment_content);
 		mCommentCount = (TextView)findViewById(R.id.tv_comment_count);
 		mDescription = (TextView)findViewById(R.id.description);
 		mCreTime = (TextView)findViewById(R.id.added_time);
 		mCommentInfo = (LinearLayout)findViewById(R.id.circle_comment_ll);
 		mBtnAllComments = (Button)findViewById(R.id.btn_all_comments);
-		handler.sendEmptyMessage(1);
+		mImgCount =(TextView)findViewById(R.id.img_count);
 		Intent intent = getIntent();
 		Bundle data = intent.getExtras();
 		//获取从上一个页面传过来的本条圈子信息
@@ -153,11 +262,12 @@ public class CircleItemActivity extends Activity{
 		final int originalHeight = info.getHeight();
 		//获取该条圈子的id
 		circleId = info.getId();
-		
+		//启动线程获取数据
+		mThread = new Thread(runnable);
+		mThread.start();
 		//设置页面控件显示内容
 		mDescription.setText(info.getDescription().toString());
 		mCreTime.setText("added in "+info.getCreTime().toString());
-		
 		mImgParent = (LinearLayout)findViewById(R.id.img_parent_ll);
 		//设置ImageView的显示宽度和高度
 		ViewTreeObserver observer = mImgParent.getViewTreeObserver();
@@ -175,6 +285,7 @@ public class CircleItemActivity extends Activity{
 		});
 	}
 
+	
 	private final View addImageView(int width,int height,String src){
 		LinearLayout view = new LinearLayout(this);
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -243,7 +354,8 @@ public class CircleItemActivity extends Activity{
 //					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 					progressDialog.dismiss();
 					Toast.makeText(CircleItemActivity.this, "评论成功", Toast.LENGTH_LONG).show();
-					handler.sendEmptyMessage(1);
+					mThread = new Thread(runnable);
+					mThread.start();
 				}
 
 				@Override
@@ -267,6 +379,7 @@ public class CircleItemActivity extends Activity{
 			intent = new Intent(CircleItemActivity.this, CirclePhotoActivity.class);
 			//携带圈子id跳转到所有图片页面
 			intent.putExtra("circleId", circleId);
+			intent.putExtra("imgCount", countImg);
 			startActivity(intent);
 			break;
 		default:

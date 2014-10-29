@@ -9,14 +9,17 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.common.RestClient;
@@ -30,19 +33,43 @@ public class CirclePhotoActivity extends Activity{
 	private ViewPager viewPager;
 	private CirclePhotoAdapter circlePhotoAdapter;
 	private List<ScaleImageView> images = new ArrayList<ScaleImageView>();
-	private int imgCount = 0;
 	private int circleId;
+	//当前图片号
+	private TextView mCurImgNum;
+	//图片总数
+	private TextView mImgCount;
 	
+	private Handler handler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what){
+			case 1:
+				mCurImgNum.setText(String.valueOf(msg.obj));
+				break;
+			default:
+				break;
+			}
+		}
+		
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_circle_photo);
+		RelativeLayout bottomBg = (RelativeLayout)findViewById(R.id.bottom_bg);
+		bottomBg.getBackground().setAlpha(50);
+		mCurImgNum = (TextView)findViewById(R.id.cur_img_num);
+		mImgCount = (TextView)findViewById(R.id.img_count);
 		viewPager = (ViewPager)findViewById(R.id.circle_photo_viewpager);
 		circlePhotoAdapter = new CirclePhotoAdapter();
 		viewPager.setAdapter(circlePhotoAdapter);
 		//获取从上一个Activity中传来的圈子id
 		circleId = getIntent().getIntExtra("circleId", 0);
+		int imgCount = getIntent().getIntExtra("imgCount", 0);
+		mImgCount.setText(" / "+imgCount);
+		viewPager.setOnPageChangeListener(onPageChangeListener);
 		requestData();
 	}
 
@@ -81,6 +108,38 @@ public class CirclePhotoActivity extends Activity{
 		});
 	}
 	
+	OnPageChangeListener onPageChangeListener = new OnPageChangeListener(){
+
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+			
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+			
+		}
+		
+		//页面跳转完成后调用，arg0当前页面的索引号
+		@Override
+		public void onPageSelected(int arg0) {
+			Message msg = new Message();
+			msg.obj = arg0 + 1;
+			msg.what = 1;
+			handler.sendMessage(msg);
+		}
+		
+	};
+	
+	public void onClick(View v){
+		switch(v.getId()){
+		case R.id.btn_back:
+			finish();
+			break;
+		default:
+			break;
+		}
+	}
 	class CirclePhotoAdapter extends PagerAdapter{
 
 		@Override
