@@ -125,7 +125,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 					KeyEvent keyEvent) {
 				if (id == EditorInfo.IME_ACTION_DONE) {
 					mDetail.setText(mDetailmsg.getText().toString());
-					Toast.makeText(getApplication(), "yew", Toast.LENGTH_LONG).show();
+					//Toast.makeText(getApplication(), "yew", Toast.LENGTH_LONG).show();
 					detailCancel.setVisibility(View.VISIBLE);
 					mDetailmsg.setVisibility(View.GONE);
 					return true;
@@ -162,6 +162,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		   		 @Override
 		   		 public void onMapClick(LatLng arg0) {
 		   		// TODO Auto-generated method stub
+		   			mPosition.setClickable(false);
 		   		 showclick(arg0);
 		   		 }
 
@@ -222,7 +223,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 			//result.getAddress();
 		//	Toast.makeText(getApplication(), "得到文字地址是：" + result.getAddress(),Toast.LENGTH_LONG).show();
 			mPosition.setText(result.getAddress());
-			mPosition.setClickable(false);
+			
 			positionCancel.setVisibility(View.VISIBLE);
 			
 		}
@@ -274,7 +275,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 					mBaiduMap.animateMapStatus(u);
 					
 					}
-				mPosition.setClickable(false);
+			
 				mLocationClient.stop();
 				
 				mPosition.setText(location.getAddrStr());
@@ -341,6 +342,9 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				mPosition.setClickable(false);
+				//detailCancel.setVisibility(View.VISIBLE);
+				positionCancel.setVisibility(View.VISIBLE);
 				mLocationClient.start();
 			}
 		});

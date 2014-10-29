@@ -376,6 +376,7 @@ public class CircleItemActivity extends Activity{
 			startActivity(intent);
 			break;
 		case R.id.img_parent_ll:
+			
 			intent = new Intent(CircleItemActivity.this, CirclePhotoActivity.class);
 			//携带圈子id跳转到所有图片页面
 			intent.putExtra("circleId", circleId);
