@@ -42,6 +42,8 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 	private int circleId;
 	//请求数据起始索引号
 	private int mIndex = 0;
+	//每页请求条数
+	private int mPageSize = 10;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 		RequestParams params = new RequestParams();
 		params.put("circle_id", String.valueOf(circleId));
 		params.put("index", String.valueOf(mIndex));
+		params.put("size",String.valueOf(mPageSize));
 		RestClient.getInstance().postFromAbsoluteUrl(this, url, params, 
 				new AsyncHttpResponseHandler(){
 
@@ -158,7 +161,7 @@ public class CircleCommentActivity extends Activity implements IXListViewListene
 			CircleComment comment = mComments.get(position);
 			if(convertView == null){
 				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-				convertView = layoutInflater.inflate(R.layout.circle_comment_item, null);
+				convertView = layoutInflater.inflate(R.layout.item_circle_comment, null);
 				holder = new ViewHolder();
 				holder.userImg = (CircleImageView)convertView.findViewById(R.id.comment_user_img);
 				

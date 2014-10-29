@@ -1,5 +1,7 @@
 package com.pancat.fanrong.waterfall.widget;
 
+import com.pancat.fanrong.util.album.FileUtils;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;

@@ -47,7 +47,6 @@ public class CircleActivity extends Activity implements FragmentCallback{
 			Intent intent = new Intent(CircleActivity.this,CircleItemActivity.class);
 			intent.putExtras(arg);
 			startActivity(intent);
-			
 		}
 	}
 

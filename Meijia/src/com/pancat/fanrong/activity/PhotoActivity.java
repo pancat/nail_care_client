@@ -24,7 +24,7 @@ public class PhotoActivity extends Activity {
 
 	private ArrayList<View> listViews = null;
 	private ViewPager pager;
-	private MyPageAdapter adapter;
+	private PhotoAdapter adapter;
 	private int count;
 
 	public List<Bitmap> bmp = new ArrayList<Bitmap>();
@@ -98,10 +98,10 @@ public class PhotoActivity extends Activity {
 		pager = (ViewPager) findViewById(R.id.viewpager);
 		pager.setOnPageChangeListener(pageChangeListener);
 		for (int i = 0; i < bmp.size(); i++) {
-			initListViews(bmp.get(i));//
+			initListViews(bmp.get(i));
 		}
 
-		adapter = new MyPageAdapter(listViews);// 构造adapter
+		adapter = new PhotoAdapter(listViews);// 构造adapter
 		pager.setAdapter(adapter);// 设置适配器
 		Intent intent = getIntent();
 		int id = intent.getIntExtra("ID", 0);
@@ -134,13 +134,13 @@ public class PhotoActivity extends Activity {
 		}
 	};
 
-	class MyPageAdapter extends PagerAdapter {
+	class PhotoAdapter extends PagerAdapter {
 
 		private ArrayList<View> listViews;// content
 
 		private int size;// 页数
 
-		public MyPageAdapter(ArrayList<View> listViews) {// 构造函数
+		public PhotoAdapter(ArrayList<View> listViews) {// 构造函数
 															// 初始化viewpager的时候给的一个页面
 			this.listViews = listViews;
 			size = listViews == null ? 0 : listViews.size();

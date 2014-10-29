@@ -3,8 +3,8 @@
     <solid android:color="#FFFFFF"/>
     <!-- 设置边框线条 -->
     <stroke
-        android:width="0.01px"
-        android:color="#e1e1e1" />
+        android:width="2px"
+        android:color="#e2e2e2" />
     <corners android:radius="6dp"/>
 
 </shape>
