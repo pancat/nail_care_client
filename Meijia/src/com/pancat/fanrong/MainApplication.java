@@ -1,9 +1,12 @@
 package com.pancat.fanrong;
 
+
 import android.content.Context;
+
 
 import com.baidu.frontia.FrontiaApplication;
 import com.baidu.mapapi.SDKInitializer;
+
 import com.pancat.fanrong.bean.User;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
 
@@ -20,8 +23,10 @@ public class MainApplication extends FrontiaApplication {
 		appContext = getApplicationContext();
 		
 		initUserInfo();
+		
+		
 	}
-	
+
 	public void initUserInfo()
 	{
 		AuthorizeMgr mgr = AuthorizeMgr.getInstance();

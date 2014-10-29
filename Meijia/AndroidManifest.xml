@@ -55,7 +55,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="getui.permission.GetuiService" />
-
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 百度云推送 额外需要 的权限 -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
@@ -340,7 +340,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="B9e857aecb7e4e427f90e3939ebdfac2" />
+            android:value="OS56cxZEq9UWhc7mXDcqqdGi" />
 
         <service
             android:name="com.baidu.location.f"
