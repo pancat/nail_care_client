@@ -11,6 +11,8 @@ import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -40,6 +42,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,6 +96,11 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	//手机屏幕的宽度，用来设置dialog的大小
 	private int screenWidth;
 	
+	//通知栏消息管理器
+	NotificationManager mNotifyManager;
+	//通知栏消息对象
+	Notification mNotification;
+	
 	//选中图片的数据适配器
 	private SelectedImgAdapter selectedImgAdapter; 
 	private GridView selectedImgGridView;
@@ -125,6 +133,12 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		WindowManager wm = this.getWindowManager();
 		screenWidth = wm.getDefaultDisplay().getWidth();
 		container = (LinearLayout)findViewById(R.id.container);
+		//初始化通知栏消息管理器
+		mNotifyManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		//初始化消息
+		mNotification = new Notification(R.drawable.aif, "正在上传中...", System.currentTimeMillis());
+		mNotification.contentView = new RemoteViews(getPackageName(), R.layout.layout_download_notification);
+		
 		init();
 		segment = getIntent().getIntExtra("segment", 1);
 		tabHome.setClickable(false);
@@ -327,11 +341,15 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 						e.printStackTrace();
 					}
 					//设置ProgressDialog参数
-					progressDialog = new ProgressDialog(MainActivity.this);
-					progressDialog.setTitle("uploading...");
-					progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
-					progressDialog.setCancelable(false);
-					progressDialog.show();
+//					progressDialog = new ProgressDialog(MainActivity.this);
+//					progressDialog.setTitle("uploading...");
+//					progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+//					progressDialog.setCancelable(false);
+//					progressDialog.show();
+					mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
+					showNotification();
+					addPicDialog.dismiss();
+					Toast.makeText(MainActivity.this, "后台上传中...请稍后", Toast.LENGTH_LONG).show();
 					RestClient.getInstance().postFromAbsoluteUrl(MainActivity.this, requestUrl, params,
 							new AsyncHttpResponseHandler(){
 								
@@ -340,18 +358,20 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 									//圈子创建成功，继续通过圈子id上传图片
 									super.onSuccess(content);
 									finishedUploadNum++;
-									progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+									mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
+									showNotification();
 									int circleId = Integer.valueOf(content);
 									if(pathList.size() > 1){
 										for(int i = 1;i < pathList.size();i++){
 											String imgPath = pathList.get(i);
-											uploadCircleImg(circleId, imgPath); 
+											uploadCircleImg(circleId, imgPath);
 										}
 									}
 									else{
-										progressDialog.dismiss();
-										Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
-										addPicDialog.dismiss();
+										mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+										mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apz);
+										mNotification.contentView.setTextViewText(R.id.down_tv, "上传完成!");
+										showNotification();
 									}
 								}
 
@@ -359,8 +379,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 								public void onFailure(Throwable error,
 										String content) {
 									super.onFailure(error, content);
-									progressDialog.dismiss();
-									Toast.makeText(MainActivity.this, "上传失败", Toast.LENGTH_LONG).show();
+									mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+									mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apy);
+									mNotification.contentView.setTextViewText(R.id.down_tv, "上传失败!!");
+									showNotification();
 								}
 					});
 				}
@@ -391,22 +413,29 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 					public void onSuccess(String content) {
 						super.onSuccess(content);
 						finishedUploadNum++;
-						progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+						mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
+						showNotification();
 						if(finishedUploadNum == pathList.size()){
-							progressDialog.dismiss();
-							Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
-							addPicDialog.dismiss();
+							mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+							mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apz);
+							mNotification.contentView.setTextViewText(R.id.down_tv, "上传完成!");
+							showNotification();
 						}
 					}
 
 					@Override
 					public void onFailure(Throwable error, String content) {
 						super.onFailure(error, content);
-						Toast.makeText(MainActivity.this, "上传中断，上传成功"+finishedUploadNum+"，上传失败"+(pathList.size()-finishedUploadNum), Toast.LENGTH_LONG).show();
-						addPicDialog.dismiss();
+						mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+						mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apy);
+						mNotification.contentView.setTextViewText(R.id.down_tv, "上传中断，上传成功"+finishedUploadNum+"，上传失败"+(pathList.size()-finishedUploadNum));
+						showNotification();
 					}
 			
 		});
+	}
+	public void showNotification(){
+		mNotifyManager.notify(0, mNotification);
 	}
 	
 	@SuppressWarnings("unchecked")
