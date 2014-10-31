@@ -39,6 +39,9 @@ public class MultiColumnListView extends PLA_ListView {
     private static final int DEFAULT_COLUMN_NUMBER = 2;
 
     private int mColumnNumber;
+    
+    private int mColumnMargin;
+    
     private Column[] mColumns = null;
     private Column mFixedColumn = null; // column for footers & headers.
     private SparseIntArray mItems = new SparseIntArray();
@@ -84,6 +87,7 @@ public class MultiColumnListView extends PLA_ListView {
 
             mColumnPaddingLeft = a.getDimensionPixelSize(R.styleable.PinterestLikeAdapterView_plaColumnPaddingLeft, 0);
             mColumnPaddingRight = a.getDimensionPixelSize(R.styleable.PinterestLikeAdapterView_plaColumnPaddingRight, 0);
+            mColumnMargin = a.getDimensionPixelSize(R.styleable.PinterestLikeAdapterView_plaColumnMargin, 0);
             a.recycle();
         }
 
@@ -118,12 +122,19 @@ public class MultiColumnListView extends PLA_ListView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        columnWidth = (getMeasuredWidth() - mListPadding.left - mListPadding.right - mColumnPaddingLeft - mColumnPaddingRight)
+        columnWidth = (getMeasuredWidth() - mListPadding.left - mListPadding.right - mColumnPaddingLeft - mColumnPaddingRight-(mColumnMargin*(getColumnNumber()-1)))
                 / getColumnNumber();
 
         for (int index = 0; index < getColumnNumber(); ++index) {
-            mColumns[index].mColumnWidth = columnWidth;
-            mColumns[index].mColumnLeft = mListPadding.left + mColumnPaddingLeft + columnWidth * index;
+        	
+        	mColumns[index].mColumnWidth = columnWidth;
+        	if(index > 0){
+        		int columnLeft = mListPadding.left + mColumnPaddingLeft + (columnWidth+mColumnMargin) * index;;
+        		mColumns[index].mColumnLeft = columnLeft;
+        	}
+        	else{
+        		mColumns[index].mColumnLeft = mListPadding.left + mColumnPaddingLeft + columnWidth*index;
+        	}
         }
 
         mFixedColumn.mColumnLeft = mListPadding.left;

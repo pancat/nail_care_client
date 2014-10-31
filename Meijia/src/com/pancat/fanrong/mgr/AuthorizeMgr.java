@@ -1,6 +1,7 @@
 package com.pancat.fanrong.mgr;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -40,20 +41,27 @@ public class AuthorizeMgr {
 		return AuthorizeStatus.NOT_SIGN_IN;
 	}
 
-	
+
 	private AuthorizeStatus clearUserDB()
 	{
 		DatabaseOpenHelper helper = DatabaseManager.getInstance().getHelper();
 		Dao<User, Integer> dao = helper.getUserDao();
 
 		try {
+
+
+
 			List<User> list = dao.queryForAll();
+
+
 			dao.delete(list);
+
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return AuthorizeStatus.FAIL;
 		}
-		
+
 		return AuthorizeStatus.SUCCESS;
 	}
 
@@ -96,21 +104,21 @@ public class AuthorizeMgr {
 			return null;
 		}
 	}
-	
+
 	public void setUser(User user)
 	{
 		mUser = user;
 	}
-	
+
 	public User getUser() {
 		return mUser;
 	}
-	
+
 	public boolean hasLogined()
 	{
 		return mUser != null;
 	}
-	
+
 	public static boolean isLoginSuccess(String content)
 	{
 		try {
@@ -123,37 +131,41 @@ public class AuthorizeMgr {
 	}
 
 	public static boolean isLoginSuccess(JSONObject jsonObject) {
-		
+
 		Log.i("JsonObject", jsonObject.toString());
+		Log.i("JsonObject", "get json");
 		try {
-			int res_state = jsonObject.getInt("res_state");
-			Log.e("res_state", res_state + "");
+			int code = jsonObject.getInt("code");
+
+			Log.e("res_state", code + "");
 			//int error_code = jsonObject.getInt("error_code");
-			return res_state == 1;
+			return code == 1;
 		} catch (JSONException e) {
+			Log.i("JsonObject", "didnot get res_state");
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-	@SuppressWarnings("unused")
+
 	public static User parseUserFromJsonText(String content) {
 
 		try {
 			User user = new User();
 
 			JSONObject jsonObject = new JSONObject(content.toString());
-			
+
 			if (isLoginSuccess(jsonObject) == false)
 			{
 				return null;
 			}
+			Log.i("JsonObject", "get json");
 
 			int id = jsonObject.getInt("id");
 			user.setId(id);
 
-			String token = jsonObject.getString("token");
-			user.setToken(token);
+			String sessionid = jsonObject.getString("sessionid");
+			user.setSessionid(sessionid);
 
 			String username = jsonObject.getString("username");
 			user.setUsername(username);

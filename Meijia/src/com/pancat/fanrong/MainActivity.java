@@ -7,14 +7,19 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,10 +42,19 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
+import com.baidu.location.BDLocation;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.igexin.sdk.PushManager;
 import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.activity.HomeActivity;
@@ -54,6 +69,7 @@ import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
+import com.pancat.fanrong.util.MapUtil;
 import com.pancat.fanrong.util.album.Bimp;
 import com.pancat.fanrong.util.album.FileUtils;
 
@@ -75,6 +91,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private Button btnSendMoment;
 	private ImageButton btnSendCircle;
 	
+	private static Button btnAddLocation;
 	private final int FROM_CAMERA = 1;
 	private final int FROM_LOCAL_FILE = 2;
 	
@@ -88,6 +105,11 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	
 	//手机屏幕的宽度，用来设置dialog的大小
 	private int screenWidth;
+	
+	//通知栏消息管理器
+	NotificationManager mNotifyManager;
+	//通知栏消息对象
+	Notification mNotification;
 	
 	//选中图片的数据适配器
 	private SelectedImgAdapter selectedImgAdapter; 
@@ -121,6 +143,12 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		WindowManager wm = this.getWindowManager();
 		screenWidth = wm.getDefaultDisplay().getWidth();
 		container = (LinearLayout)findViewById(R.id.container);
+		//初始化通知栏消息管理器
+		mNotifyManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		//初始化消息
+		mNotification = new Notification(R.drawable.aif, "正在上传中...", System.currentTimeMillis());
+		mNotification.contentView = new RemoteViews(getPackageName(), R.layout.layout_download_notification);
+		
 		init();
 		segment = getIntent().getIntExtra("segment", 1);
 		tabHome.setClickable(false);
@@ -181,17 +209,70 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				
-//				if(!User.getInstance().isUserLogined())
-//				{
-//					Intent it=new Intent(MainActivity.this,LoginActivity.class);
-//					startActivity(it);
-//				}
-//				else{
-					openAddDialog();
-//				}
+				showpopwindow();
+					//openAddDialog();
+
 			}
 		});
 	}
+	private void showpopwindow(){
+		LayoutInflater inflater=getLayoutInflater();
+		View dropDownList=inflater.inflate(R.layout.dropdownlist, null);
+		final PopupWindow menuWindow = new PopupWindow(dropDownList,
+				LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		menuWindow.setFocusable(true);
+		menuWindow.setOutsideTouchable(true); 
+		menuWindow.update(); 
+		menuWindow.setBackgroundDrawable(new BitmapDrawable()); 
+		menuWindow.showAsDropDown(btnSendMoment, -100, 12);
+		Button sendmoment=(Button)dropDownList.findViewById(R.id.sendmomentbtn);
+		Button usersetting=(Button)dropDownList.findViewById(R.id.usersettingbtn);
+		sendmoment.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				openAddDialog();
+				menuWindow.dismiss();
+			}
+		});
+		usersetting.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {	
+				if (AuthorizeMgr.getInstance().hasLogined() == false)
+				{
+					menuWindow.dismiss();
+					Intent signInIntent = new Intent();
+					signInIntent.setClass(MainActivity.this, SignInActivity.class);
+					startActivity(signInIntent);	
+				}
+				// TODO 跳转到个人设置activity
+				
+				
+			}	
+		});
+	}
+	
+
+	public static Handler handler2 = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+		
+
+			case 1:
+				BDLocation location = (BDLocation) msg.obj;
+				// 在地图上显示
+				btnAddLocation.setText(location.getAddrStr());
+				break;
+			default:
+				break;
+			}
+		}
+
+	};
+
 	
 	/**
 	 * 弹出添加圈子图片对话框
@@ -204,16 +285,17 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		Bimp.max = 0;
 		handler.sendEmptyMessage(1);
 		addPicDialog = new AlertDialog.Builder(this).create();
-		addPicDialog.setView(getLayoutInflater().inflate(R.layout.add_circle, null));
+		addPicDialog.setView(getLayoutInflater().inflate(R.layout.dialog_add_circle, null));
 		addPicDialog.show();
 		addPicDialog.getWindow().setLayout((int) (screenWidth*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
+		addPicDialog.setCanceledOnTouchOutside(true);
 		Window addPicWindow = addPicDialog.getWindow();
-		addPicWindow.setContentView(R.layout.add_circle);
+		addPicWindow.setContentView(R.layout.dialog_add_circle);
 		LinearLayout uploadCamera = (LinearLayout)addPicWindow.findViewById(R.id.upload_camera);
 		LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
 		final TextView circleDescription = (TextView)addPicWindow.findViewById(R.id.circle_description);
 		btnSendCircle = (ImageButton)addPicWindow.findViewById(R.id.btn_send_circle);
-		Button btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
+		btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
 		selectedImgGridView = (GridView)addPicWindow.findViewById(R.id.selected_image_gridview);
 		selectedImgGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		selectedImgAdapter = new SelectedImgAdapter(this, getResources(),handler);
@@ -235,9 +317,13 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
+				MapUtil.getInstance().location();
+				btnAddLocation.setText("定位中...");
 				
 			}
 		});
+	    
+
 		
 		//照相上传图片点击事件
 		uploadCamera.setOnClickListener(new OnClickListener() {
@@ -291,11 +377,15 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 						e.printStackTrace();
 					}
 					//设置ProgressDialog参数
-					progressDialog = new ProgressDialog(MainActivity.this);
-					progressDialog.setTitle("uploading...");
-					progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
-					progressDialog.setCancelable(false);
-					progressDialog.show();
+//					progressDialog = new ProgressDialog(MainActivity.this);
+//					progressDialog.setTitle("uploading...");
+//					progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+//					progressDialog.setCancelable(false);
+//					progressDialog.show();
+					mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
+					showNotification();
+					addPicDialog.dismiss();
+					Toast.makeText(MainActivity.this, "后台上传中...请稍后", Toast.LENGTH_LONG).show();
 					RestClient.getInstance().postFromAbsoluteUrl(MainActivity.this, requestUrl, params,
 							new AsyncHttpResponseHandler(){
 								
@@ -304,18 +394,20 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 									//圈子创建成功，继续通过圈子id上传图片
 									super.onSuccess(content);
 									finishedUploadNum++;
-									progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+									mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
+									showNotification();
 									int circleId = Integer.valueOf(content);
 									if(pathList.size() > 1){
 										for(int i = 1;i < pathList.size();i++){
 											String imgPath = pathList.get(i);
-											uploadCircleImg(circleId, imgPath); 
+											uploadCircleImg(circleId, imgPath);
 										}
 									}
 									else{
-										progressDialog.dismiss();
-										Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
-										addPicDialog.dismiss();
+										mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+										mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apz);
+										mNotification.contentView.setTextViewText(R.id.down_tv, "上传完成!");
+										showNotification();
 									}
 								}
 
@@ -323,8 +415,10 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 								public void onFailure(Throwable error,
 										String content) {
 									super.onFailure(error, content);
-									progressDialog.dismiss();
-									Toast.makeText(MainActivity.this, "上传失败", Toast.LENGTH_LONG).show();
+									mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+									mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apy);
+									mNotification.contentView.setTextViewText(R.id.down_tv, "上传失败!!");
+									showNotification();
 								}
 					});
 				}
@@ -355,22 +449,29 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 					public void onSuccess(String content) {
 						super.onSuccess(content);
 						finishedUploadNum++;
-						progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
+						mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
+						showNotification();
 						if(finishedUploadNum == pathList.size()){
-							progressDialog.dismiss();
-							Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
-							addPicDialog.dismiss();
+							mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+							mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apz);
+							mNotification.contentView.setTextViewText(R.id.down_tv, "上传完成!");
+							showNotification();
 						}
 					}
 
 					@Override
 					public void onFailure(Throwable error, String content) {
 						super.onFailure(error, content);
-						Toast.makeText(MainActivity.this, "上传中断，上传成功"+finishedUploadNum+"，上传失败"+(pathList.size()-finishedUploadNum), Toast.LENGTH_LONG).show();
-						addPicDialog.dismiss();
+						mNotification.contentView.setViewVisibility(R.id.pb, View.GONE);
+						mNotification.contentView.setImageViewResource(R.id.tip_img, R.drawable.apy);
+						mNotification.contentView.setTextViewText(R.id.down_tv, "上传中断，上传成功"+finishedUploadNum+"，上传失败"+(pathList.size()-finishedUploadNum));
+						showNotification();
 					}
 			
 		});
+	}
+	public void showNotification(){
+		mNotifyManager.notify(0, mNotification);
 	}
 	
 	@SuppressWarnings("unchecked")

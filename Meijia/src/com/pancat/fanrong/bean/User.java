@@ -4,41 +4,41 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * 
+ *
  * @author trhuo
  *
  */
 @DatabaseTable(tableName="user")
 public class User {
 
-	@DatabaseField
+	@DatabaseField(id=true)
 	int id = -1;
-	
+
 	@DatabaseField
 	int age = 18;
-	
+
 	@DatabaseField
-	String token = "";
-	
+	String sessionid = "";
+
 	@DatabaseField
 	String username = "";
-	
+
 	@DatabaseField
 	String nickname = "";
-	
+
 	@DatabaseField
 	String email = "";
-	
+
 	@DatabaseField
 	String avatarUri = "";
-	
+
 	@DatabaseField
 	String address = "";
-	
+
 	@DatabaseField
 	Double Latitude = 0.0;
-	
-	@DatabaseField 
+
+	@DatabaseField
 	Double Longitude = 0.0;
 
 	public int getId() {
@@ -57,12 +57,12 @@ public class User {
 		this.age = age;
 	}
 
-	public String getToken() {
-		return token;
+	public String getSessionid() {
+		return sessionid;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setSessionid(String sessionid) {
+		this.sessionid = sessionid;
 	}
 
 	public String getUsername() {

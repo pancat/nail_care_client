@@ -3,7 +3,6 @@ package com.pancat.fanrong.fragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -23,15 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.bean.Circle;
-import com.pancat.fanrong.bean.Infos;
 import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;
@@ -73,13 +69,6 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 		getData();
 		return contextView;
 	}
-	
-	
-	@Override
-	public void onResume() {
-		Log.e(TAG, "resume");
-        super.onResume();
-    }
 	
 	
 	@Override
@@ -250,7 +239,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 			Circle circle = mInfos.get(position);
 			if(convertView == null){
 				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-				convertView = layoutInflater.inflate(R.layout.circle_item, null);
+				convertView = layoutInflater.inflate(R.layout.item_circle, null);
 				holder = new ViewHolder();
 				holder.imageView = (ScaleImageView)convertView.findViewById(R.id.news_pic);
 				holder.contentView = (TextView)convertView.findViewById(R.id.news_title);
@@ -267,7 +256,7 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 				
 				@Override
 				public void onClick(View v) {
-					//回调MomentActivity的接口
+					//回调CircleActivity的接口
 					fragmentCallback.callback(data);
 				}
 			});

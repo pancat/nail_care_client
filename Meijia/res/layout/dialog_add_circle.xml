@@ -89,10 +89,9 @@
 	    <LinearLayout
 	        android:id="@+id/upload_camera"
 	        android:layout_width="80dp"
-	        android:layout_height="wrap_content"
+	        android:layout_height="40dp"
 	        android:layout_marginLeft="15dp"
-	        android:background="@drawable/btn_send_bg_selector"
-	        
+	        android:background="@drawable/add_photo_selector"
 	        android:gravity="center" >
 
 	        <ImageView 
@@ -120,11 +119,11 @@
 	        />
 	    
 	     <LinearLayout
-	        android:id="@+id/upload_file"
-	        android:layout_width="90dp"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/btn_send_bg_selector"
-	        android:gravity="center" >
+	         android:id="@+id/upload_file"
+	         android:layout_width="90dp"
+	         android:layout_height="40dp"
+	         android:background="@drawable/add_photo_selector"
+	         android:gravity="center" >
 
 	        <ImageView 
 	            android:layout_height="wrap_content"

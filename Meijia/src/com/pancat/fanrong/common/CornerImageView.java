@@ -56,7 +56,6 @@ public class CornerImageView extends ImageView {
     public void draw(Canvas canvas) {
         canvas.saveLayer(roundRect, zonePaint, Canvas.ALL_SAVE_FLAG);
         canvas.drawRoundRect(roundRect, rect_adius, rect_adius, zonePaint);
-        //
         canvas.saveLayer(roundRect, maskPaint, Canvas.ALL_SAVE_FLAG);
         super.draw(canvas);
         canvas.restore();
