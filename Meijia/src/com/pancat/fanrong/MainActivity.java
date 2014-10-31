@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -47,6 +48,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
+import com.baidu.location.BDLocation;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.igexin.sdk.PushManager;
 import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.activity.HomeActivity;
@@ -61,6 +69,7 @@ import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.CommonPushMsgUtils;
 import com.pancat.fanrong.util.ConfigHelperUtils;
+import com.pancat.fanrong.util.MapUtil;
 import com.pancat.fanrong.util.album.Bimp;
 import com.pancat.fanrong.util.album.FileUtils;
 
@@ -82,6 +91,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	private Button btnSendMoment;
 	private ImageButton btnSendCircle;
 	
+	private static Button btnAddLocation;
 	private final int FROM_CAMERA = 1;
 	private final int FROM_LOCAL_FILE = 2;
 	
@@ -242,6 +252,28 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		});
 	}
 	
+
+	public static Handler handler2 = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+		
+
+			case 1:
+				BDLocation location = (BDLocation) msg.obj;
+				// 在地图上显示
+				btnAddLocation.setText(location.getAddrStr());
+				break;
+			default:
+				break;
+			}
+		}
+
+	};
+
+	
 	/**
 	 * 弹出添加圈子图片对话框
 	 */
@@ -263,7 +295,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
 		final TextView circleDescription = (TextView)addPicWindow.findViewById(R.id.circle_description);
 		btnSendCircle = (ImageButton)addPicWindow.findViewById(R.id.btn_send_circle);
-		Button btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
+		btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
 		selectedImgGridView = (GridView)addPicWindow.findViewById(R.id.selected_image_gridview);
 		selectedImgGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		selectedImgAdapter = new SelectedImgAdapter(this, getResources(),handler);
@@ -285,9 +317,13 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
+				MapUtil.getInstance().location();
+				btnAddLocation.setText("定位中...");
 				
 			}
 		});
+	    
+
 		
 		//照相上传图片点击事件
 		uploadCamera.setOnClickListener(new OnClickListener() {
