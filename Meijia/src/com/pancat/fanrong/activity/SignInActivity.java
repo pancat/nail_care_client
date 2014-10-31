@@ -195,6 +195,9 @@ public class SignInActivity extends Activity {
 			cancel = true;
 		}
 
+		//do not do fomat test
+		cancel=false;
+		
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
 			// form field with an error.

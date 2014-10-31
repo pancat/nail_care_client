@@ -163,6 +163,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		   		 public void onMapClick(LatLng arg0) {
 		   		// TODO Auto-generated method stub
 		   			mPosition.setClickable(false);
+		   			//Toast.makeText(getApplication(),"你点了地图" ,Toast.LENGTH_LONG).show();
 		   		 showclick(arg0);
 		   		 }
 
