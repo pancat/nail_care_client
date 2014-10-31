@@ -13,7 +13,7 @@ public class HomeItemView extends FrameLayout {
 	
 	public HomeItemView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.home_item_view, this);
+		LayoutInflater.from(context).inflate(R.layout.item_home_list, this);
 		
 		TextView title = (TextView)findViewById(R.id.title);
 		title.setText("这是一个不错的产品");

@@ -5,84 +5,79 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.adapter.HomeProductListAdapter;
-import com.pancat.fanrong.bean.Product;
-import com.pancat.fanrong.fragment.HomeFragment;
+import com.pancat.fanrong.adapter.GuessLikeAdapter;
+import com.pancat.fanrong.bean.GuessLikeProduct;
+import com.pancat.fanrong.view.ListLinearLayout;
+import com.pancat.fanrong.view.ListViewWithLoad;
+import com.pancat.fanrong.view.ListViewWithLoad.OnLoadListener;
 
 @SuppressLint("ResourceAsColor")
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity implements OnLoadListener{
 
-	private HomeFragment homeFragment;
-	private FragmentManager fragmentManager;
 	protected ScrollView scrollView;
+	private ListViewWithLoad homeList;
+	private GuessLikeAdapter guessLikeAdapter;
+	private List<GuessLikeProduct> productList;
+	
+	List<GuessLikeProduct> list;
+	
+	
+	private Handler handler = new Handler(){
 
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what){
+			case 1:
+				productList.addAll(list);
+				guessLikeAdapter.notifyDataSetChanged();
+				homeList.onLoadComplete();
+				break;
+			default:
+				break;
+			}
+		}
+		
+	};
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		scrollView = (ScrollView) findViewById(R.id.home_scroll_view);
-		// setFragment();
-		setListView();
-		
-		setScrollViewListener();
-	}
-	protected void onResume() {
-		super.onResume();
-	}
-
-	private void setScrollViewListener() {
-		scrollView.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (v.getScrollY() >= scrollView.getHeight())
-				{
-					Log.i("ScrollView", "滑动到底");
-				}
-				else if (v.getScrollY() < 0)
-				{
-					Log.i("ScrollView", "滑动到顶");
-				}
-				return false;
-			}
-		});
-	}
-
-	private void setListView() {
-		// 绑定Layout里面的ListView
-		ListView list = (ListView) findViewById(R.id.list_view);
-		list.setBackgroundColor(getResources().getColor(R.color.grey));
-
-		list.post(new Runnable() {
-			@Override
-			public void run() {
-				scrollView.scrollTo(0, 0);
-			}
-
-		});
-		// 生成动态数组，加入数据
-		List<Object> listItem = new ArrayList<Object>();
-		for (int i = 0; i < 1; i++) {
-			listItem.add(new Product(null));
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View headView = inflater.inflate(R.layout.headerview_home, null);
+		productList = new ArrayList<GuessLikeProduct>();
+		list = new ArrayList<GuessLikeProduct>();
+		for(int i = 0;i < 5;i++){
+			GuessLikeProduct product = new GuessLikeProduct();
+			product.setDescription("Dell键盘");
+			product.setDistance(10);
+			product.setIconPath("http://fangmingdesign.cn/teaching/Platform/public/img/14147364656781414736376555.jpg");
+			product.setPrice(10);
+			product.setTitle("我的键盘");
+			list.add(product);
 		}
-
-		// 添加并且显示
-		list.setAdapter(new HomeProductListAdapter(this, list, listItem));
+		productList.addAll(list);
+		homeList = (ListViewWithLoad)findViewById(R.id.home_list);
+		homeList.addHeaderView(headView);
+		guessLikeAdapter = new GuessLikeAdapter(this, productList);
+		homeList.setAdapter(guessLikeAdapter);
+		homeList.setOnLoadListener(this);
 	}
+
+	@Override
+	public void onLoad() {
+		handler.sendEmptyMessage(1);
+	}
+	
 
 
 }

@@ -3,7 +3,6 @@ package com.pancat.fanrong.fragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -23,15 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.bean.Circle;
-import com.pancat.fanrong.bean.Infos;
 import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;

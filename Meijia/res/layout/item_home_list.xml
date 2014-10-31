@@ -2,50 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="bottom"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
     android:orientation="horizontal" >
-
     <ImageView
         android:id="@+id/product_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:scaleType="fitCenter"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_margin="1dp"
+        android:scaleType="fitXY"
         android:src="@drawable/home_item_place_holder" />
 
     <RelativeLayout
         android:id="@+id/right_area"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linear1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 
-            android:layout_alignParentTop="true">
+		>
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|center"
-                android:textSize="24sp" />
+                android:textColor="@android:color/black"
+                android:text="长隆欢乐世界"
+                android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/distance"
+                android:text="9.0km"
+                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_centerVertical="true"
+                android:textColor="#999999"
+                android:layout_alignParentRight="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
         <LinearLayout
@@ -60,11 +63,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:textSize="20sp" />
+                android:text="【广州】万圣节夜场门票，提前一小时预约可当天用"
+                android:textColor="#999999"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 
             android:layout_alignParentBottom="true">
@@ -74,10 +79,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="5dp"
-                android:textSize="20sp" />
-
-        </LinearLayout>
+                android:textColor="#32b9aa"
+                android:text="155"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+			<TextView 
+			    android:layout_height="wrap_content"
+			    android:layout_width="wrap_content"
+			    android:layout_alignBottom="@id/price"
+			    android:layout_toRightOf="@id/price"
+			    android:textColor="#999999"
+			    android:textSize="13sp"
+			    android:text="元"
+			    />
+        </RelativeLayout>
     </RelativeLayout>
-
+</LinearLayout>
+<LinearLayout 
+    android:layout_height="10dp"
+    android:layout_width="fill_parent"
+    android:background="#c3c3c3"
+    ></LinearLayout>
 </LinearLayout>

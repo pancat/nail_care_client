@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
+                android:textColor="#bd7b13"
                 android:text="美妆作品" />
         </LinearLayout>
 
