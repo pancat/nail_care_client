@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.pancat.fanrong.R;
-import com.pancat.fanrong.adapter.MoreTypeViewForGVAdapter;
-import com.pancat.fanrong.common.FreeTimeTableView;
-import com.pancat.fanrong.fragment.FreeTimeTableFragment;
-import com.pancat.fanrong.fragment.FreeTimeTableFragment.onItemClickToActivity;
+import com.pancat.fanrong.customview.FreeTimeTableView;
+import com.pancat.fanrong.customview.FreeTimeTableView.OnButtonClick;
 import com.pancat.fanrong.util.LocalDateUtils;
 import com.pancat.fanrong.viewpagerindicator.IconPagerAdapter;
 import com.pancat.fanrong.viewpagerindicator.LinePageIndicator;
@@ -45,7 +43,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class OrderAuthorActivity extends FragmentActivity  implements onItemClickToActivity{
+public class OrderAuthorActivity extends FragmentActivity implements OnButtonClick {
     private static final String TAG = "OrderAuthorActivity";
 	
 	private TextView mTime;
@@ -56,8 +54,10 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
     private ImageView timeCancel;
     private ImageView positionCancel;
     private ImageView detailCancel;
+    private TextView affirmOrder;
     
-	FreeTimeTableView timeView = null;
+    private PopupWindow freeTimePopWindow = null;
+    private FreeTimeTableView timeView = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		timeCancel = (ImageView)findViewById(R.id.order_author_activity_cancel_time);
 		positionCancel = (ImageView)findViewById(R.id.order_author_activity_cancel_position);
 		detailCancel = (ImageView)findViewById(R.id.order_author_activity_cancel_detail);
+		affirmOrder = (TextView)findViewById(R.id.order_author_activity_affirm);
 		
 		//初始化不显示取消按钮
 		timeCancel.setVisibility(View.GONE);
@@ -88,16 +89,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		mMore.setVisibility(View.GONE);
 		
 		hideSoftKeyBoard(mTime);
-		
-		(LayoutInflater.from(this).inflate(R.layout.order_author_activity, null)).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				dismissWindow();
-			}
-		});
-		
+
 		setListenEvent();
 		setCancelListener();
 	}
@@ -111,7 +103,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 			@Override
 			public void onClick(View view) {
 				hideSoftKeyBoard(view);
-				showWindow(view);
+				showWindow();
 			}
 		});
 		
@@ -143,6 +135,16 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 				if(mMore.getVisibility() == View.VISIBLE)
 					mMore.setVisibility(View.GONE);
 				else mMore.setVisibility(View.VISIBLE);
+			}
+		});
+		
+		final Context context = this;
+		//提交按钮监听事件
+		affirmOrder.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(context,OrderInfoActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
@@ -180,60 +182,56 @@ public class OrderAuthorActivity extends FragmentActivity  implements onItemClic
 		});
 		
 	}
-	public void showWindow(View view){
-		Map<Integer,Map<Integer,Integer>>m = new HashMap<Integer,Map<Integer,Integer>>();
+	public void showWindow(){
+		ArrayList<Map<Integer,Integer>>m = new ArrayList<Map<Integer,Integer>>();
 		Map<Integer,Integer>ma = new HashMap<Integer,Integer>();
-		ma.put(15, MoreTypeViewForGVAdapter.IDEL);
-		ma.put(18, MoreTypeViewForGVAdapter.IDEL);
-		m.put(1, ma);
+		for(int i=9;i<18;i++)ma.put(i, FreeTimeTableView.IDLE);
+		m.add(ma);
 	
-		if(timeView == null){
-			timeView = (new FreeTimeTableView(this)).setDatas(m);
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-					FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-			params.topMargin = view.getTop()+view.getHeight()+view.getPaddingTop();
-			addContentView(timeView, params);
-		}
-		else{
-			if(timeView.getVisibility() == View.VISIBLE)
-				timeView.setVisibility(View.GONE);
-			else timeView.setVisibility(View.VISIBLE);
-		}
+		if(freeTimePopWindow == null){
+			timeView = (new FreeTimeTableView(this).setData(m));
+			timeView.setButtonClickListener(this);
 			
+			freeTimePopWindow = new PopupWindow(timeView);
+			freeTimePopWindow.setFocusable(true);
+			freeTimePopWindow.setOutsideTouchable(true);
+			freeTimePopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+			freeTimePopWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+			freeTimePopWindow.setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.blue)));
+			
+		}
+		freeTimePopWindow.update();
+		if(freeTimePopWindow.isShowing()) dismissWindow();
+		else {
+			freeTimePopWindow.showAtLocation(findViewById(R.id.order_author_activity), Gravity.BOTTOM|Gravity.LEFT, 0, 0);
+		}
 	}
 	
 	public void dismissWindow(){
-		if(timeView != null){
-			//((ViewGroup)timeView.getParent()).removeView(timeView);
-			timeView.setVisibility(View.GONE);
+		if(freeTimePopWindow != null){
+			freeTimePopWindow.dismiss();
 		}
 	}
+	
 	//隐藏软件键盘
 	private void hideSoftKeyBoard(View view)
 	{
         InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
-	
-	
-	//监听页面点击等事件
+
 	@Override
-	public void setonItemClickToActivity(int time) {
-		// TODO Auto-generated method stub
-		if(time < 0){
-			Toast.makeText(this, "你不能点击别人已经预约过的时间", Toast.LENGTH_LONG);
-			Log.d(TAG, "callback click event response");
+	public void setOnButtonClick(String time) {
+		if(time == null || time.equals("")){
+			Toast.makeText(this, "你不能点击别人已经预约过的时间,请重试!", Toast.LENGTH_LONG);
 			return ;
 		}
-		String res = "";
-		res +=timeView.getCurrentPageClickTime()+ " "+time+":00";
+		
 		if(mTime != null){
-			mTime.setText(res);
+			mTime.setText(time);
 			timeCancel.setVisibility(View.VISIBLE);
-			
 			dismissWindow();
 		}
 	}
-	
 	
 }

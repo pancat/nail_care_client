@@ -87,5 +87,12 @@
         <item name="fadeLength">1000</item>
         <item name="fadeDelay">1000</item>
     </style>
-
+    
+    <style name="WindowTitleBackground" >     
+        <item name="android:background">@color/white</item>         
+    </style>  
+    <style name="MyTheme" parent="android:Theme">  
+        <item name="android:windowTitleSize">50dp</item>
+        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>                  
+    </style>  
 </resources>

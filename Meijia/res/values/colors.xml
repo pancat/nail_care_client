@@ -22,4 +22,19 @@
     <color name="labelgrey">#666666</color>
     <color name="labelblue">#17eef1</color>
     <color name="lightgrey">#cccccc</color>
+    <color name="free_time_label_unsel">#eef3ec</color>
+    <color name="free_time_label_sel">#ffffff</color>
+    <color name="free_time_table_idle">#3dbf77</color>
+    <color name="free_time_table_busy">#f9f9f9</color>
+    <color name="free_time_border">#d6dcd2</color>
+    <color name="free_time_dotfont">#8a8a8a</color>
+    <color name="free_time_busyfont">#eedfda</color>
+    <color name="free_time_label_busyfont">#d0d0d0</color>
+    <color name="free_time_label_font">#a2aea5</color>
+    <color name="free_time_label_idlefont">#42b76b</color>
+    <color name="ce6">#eeeeee</color>
+    <color name="c96">#999999</color>
+    <color name="font_pink">#ff6e9e</color>
+    <color name="border_great">#e6e6e6</color>
+    <color name="background_order">#f9eef2</color>
 </resources>

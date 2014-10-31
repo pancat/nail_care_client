@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="@color/white"
+    android:orientation="vertical" >
+    
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:id="@+id/view_product_show_img"
+            android:src="@drawable/defaultproduct"/>
+        
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:id="@+id/view_product_show_title"
+                android:textSize="15sp"
+                android:textColor="@color/labelgrey"/>
+            <TextView android:text="@string/product_num"
+                android:id="@+id/view_product_show_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c96"/>
+            <TextView android:text="@string/product_price"
+                android:layout_width="wrap_content"
+                android:id="@+id/view_product_show_price"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c96"/>
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+</LinearLayout>

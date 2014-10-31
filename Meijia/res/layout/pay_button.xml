@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="vertical" >
+    
+	<RelativeLayout android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/white">
+	    <TextView android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:paddingLeft="20dp"
+	        android:paddingRight="20dp"
+	        android:id="@+id/pay_button_temp1"
+	        android:layout_centerVertical="true"
+	        android:layout_alignParentLeft="true"
+	        android:text="@string/pay_total_money"/>
+	    <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/pay_button_money"
+	        android:textColor="@color/font_pink"
+	        android:textSize="18sp"
+	        android:layout_centerVertical="true"
+	        android:layout_toRightOf="@id/pay_button_temp1"/>
+
+	    <TextView android:id="@+id/pay_button_pay"
+	        android:layout_width="80dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:background="@drawable/pink_btn"
+	        android:layout_margin="8dp"
+	        android:text="@string/go_pay_btn"
+	        android:textColor="@color/white"
+	        android:layout_centerVertical="true"
+	        android:gravity="center"
+	        android:textSize="15sp" />
+	    
+	</RelativeLayout>
+	
+</LinearLayout>

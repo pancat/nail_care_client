@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingBottom="10dp"
+    android:orientation="vertical" >
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        >
+        	<TableLayout android:layout_width="0dp"
+        	    android:layout_height="wrap_content"
+        	    android:layout_weight="1">
+        	    <TableRow android:layout_width="match_parent"
+        	        android:layout_height="wrap_content"
+        	        >
+        	        <TextView android:layout_width="0dp"
+        	            android:layout_height="wrap_content"
+        	            android:text="状      态:"
+        	            android:gravity="right"
+        	            android:padding="5dp"
+        	            android:layout_weight="1"/>
+        	        <TextView android:layout_width="0dp"
+        	            android:layout_height="wrap_content"
+        	            android:text="等待付款"
+        	            android:gravity="left"
+        	            android:padding="5dp"
+        	            android:layout_weight="1"
+        	            android:id="@+id/fragment_order_product_item_state"/>
+        	    </TableRow>
+        	    <TableRow android:layout_width="match_parent"
+        	        android:layout_height="wrap_content"
+        	        >
+        	        <TextView android:layout_width="0dp"
+        	            android:layout_height="wrap_content"
+        	            android:text="总      价:"
+        	            android:padding="5dp"
+        	            android:gravity="right"
+        	            android:layout_weight="1"/>
+        	        <TextView android:layout_width="0dp"
+        	            android:layout_height="wrap_content"
+        	            android:text="Y88.00"
+        	            android:padding="5dp"
+        	            android:gravity="left"
+        	            android:layout_weight="1"
+        	            android:id="@+id/fragment_order_product_item_price"/>
+        	    </TableRow>t
+        	</TableLayout>
+        	<LinearLayout android:layout_width="0dp"
+        	    android:layout_height="match_parent"
+        	    android:layout_weight="1"
+        	    android:gravity="center_vertical|right">
+        	    <TextView android:id="@+id/fragment_order_product_item_pay"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        android:text="去支付"
+        	        android:gravity="center"
+        	        android:padding="10dp"
+        	        android:background="@drawable/search_frame_jog"
+        	        />
+        	    <ImageView android:id="@+id/fragment_order_product_item_orderdetail"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="match_parent"
+        	        android:src="@drawable/mm_submenu_normal"></ImageView>
+        	</LinearLayout>
+    </LinearLayout>
+   <View android:layout_width="match_parent"
+       android:layout_height="2px"
+       android:background="@color/red"/>
+   
+   <LinearLayout android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="5dp"
+       android:orientation="horizontal"
+       >
+       <ImageView android:layout_width="50dp"
+           android:id="@+id/fragment_order_item_prdocutimg"
+           android:layout_height="50dp"
+           android:src="@drawable/defaultproduct"
+           android:scaleType="fitXY"/>
+       <LinearLayout android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical">
+           <TextView android:id="@+id/fragment_order_product_item_name"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="哈哈哈"/>
+           <TextView android:id="@+id/fragment_order_product_item_num"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="1件"/>
+       </LinearLayout>
+   </LinearLayout>
+   <View android:layout_width="match_parent"
+       android:layout_height="1dp"
+       android:background="@color/red"/>
+</LinearLayout>
