@@ -52,6 +52,7 @@
 	<string name="user_center_my_msg">我的消息</string>
 	<string name="user_center_service_call">客服电话</string>
 	<string name="user_center_feedback">意见反馈</string>
+	<string name="user_center_welcomepassager">欢迎你，游客</string>
 	<string name="service_call_no">10086</string>
 	
 <string name="product_collection">收藏</string>

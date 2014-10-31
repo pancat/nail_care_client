@@ -34,7 +34,7 @@
                     android:layout_height="96dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
-                    android:onClick="onClick"
+
                     android:src="@drawable/player"
                     app:border_color="#FF000000"
                     app:border_width="2dp" />
