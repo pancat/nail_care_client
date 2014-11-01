@@ -31,8 +31,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.pancat.fanrong.MainActivity;
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.UserCenterActivity;
 import com.pancat.fanrong.activity.SignUpActivity.UserLoginTask;
 import com.pancat.fanrong.bean.User;
 import com.pancat.fanrong.common.RestClient;
@@ -62,11 +64,18 @@ public class SignInActivity extends Activity {
 	private View mProgressView;
 	private View mLoginFormView;
 	private TextView recommend;
+	private int fromActivity;
+	final int FROM_MAINACTIVITY=1;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sign_in);
 
+		Intent it=getIntent();
+		fromActivity=it.getIntExtra("from", 0);
+
+		
 		// Set up the login form.
 		mAccount = (EditText) findViewById(R.id.account);
 		recommend=(TextView)findViewById(R.id.recommend);
@@ -113,6 +122,8 @@ public class SignInActivity extends Activity {
 		setForgetPasswordBtn();
 	}
 
+	
+	
 	private void setForgetPasswordBtn() {
 		TextView forgetPasswrodBtn = (TextView) findViewById(R.id.forget_password_btn);
 		forgetPasswrodBtn.setClickable(true);
@@ -233,11 +244,19 @@ public class SignInActivity extends Activity {
 		public void handleMessage(Message msg) {
 			showProgress(false);
 			if (msg.what == 0) {
-				finish();
+			//	finish();
 
 				//持久化保存用户登录数据
 				AuthorizeMgr.getInstance().setUser((User) msg.obj);
 				AuthorizeMgr.getInstance().persistUser((User) msg.obj);
+				if(fromActivity==FROM_MAINACTIVITY)
+				{
+				Intent it=new Intent(SignInActivity.this,MainActivity.class);
+				it.putExtra("segment", 3);
+				startActivity(it);
+				}else{
+					finish();
+				}
 			} else {
 
 				String  errstring=getString(R.string.error_incorrect_password);
@@ -381,4 +400,5 @@ public class SignInActivity extends Activity {
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
+	
 }

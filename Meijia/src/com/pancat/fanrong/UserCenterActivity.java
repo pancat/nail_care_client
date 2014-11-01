@@ -7,12 +7,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -32,6 +36,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -75,6 +80,16 @@ public class UserCenterActivity extends Activity {
 	private SelectedImgAdapter selectedImgAdapter; 
 	private GridView selectedImgGridView;
 	
+	//from net
+	 /*头像名称*/   
+    private static final String IMAGE_FILE_NAME = "faceImage.jpg";   
+      
+    /* 请求码*/   
+    private static final int IMAGE_REQUEST_CODE = 0;    
+    private static final int CAMERA_REQUEST_CODE = 1;    
+    private static final int RESULT_REQUEST_CODE = 2;    
+      //from net
+	
 	//图片存储路径
 	private final String BASE_FILE_PATH = Environment.getExternalStorageDirectory() + "/rongmeme/";
 	//拍照上传照片临时存放文件
@@ -114,22 +129,36 @@ public class UserCenterActivity extends Activity {
 			// set userimage and nickname = default
 			nickname.setText(R.string.user_center_welcomepassager);
 			//Drawable drawable=new Drawable(findViewById(R.drawable.player));
-			userimage.setImageResource(R.drawable.player);
+		//	userimage.setImageResource(R.drawable.player);
 			userimage.setOnClickListener(new OnClickListener(){
 
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					//alertdailog ask whether want to log
-					Intent it = new Intent(UserCenterActivity.this,SignInActivity.class);
-					startActivity(it);
+				 	 new AlertDialog.Builder(UserCenterActivity.this) 
+				  	.setTitle("尚未登录")
+				  	.setMessage("请问您现在要登录吗")
+				  	.setPositiveButton("是",  new android.content.DialogInterface.OnClickListener(){
+
+						@Override
+						public void onClick(DialogInterface arg0, int arg1) {
+							// TODO Auto-generated method stub
+							Intent it = new Intent(UserCenterActivity.this,SignInActivity.class);
+							startActivity(it);
+						}
+				  		
+				  	})
+				  	.setNegativeButton("否", null)
+				  	.show();
+	
 				}
 				
 			});
 		} else {
 			String nicknamestr=AuthorizeMgr.getInstance().getUser().getNickname();
 			nickname.setText(nicknamestr);
-			userimage.setImageResource(R.drawable.user);
+		//	userimage.setImageResource(R.drawable.user);
 			/*
 			Resources res=getResources();
 			Drawable drawable= res.getDrawable(R.drawable.user);
@@ -156,7 +185,7 @@ public class UserCenterActivity extends Activity {
 			super.handleMessage(msg);
 		}
 	};
-	
+
 public void showupload(){
 	DisplayMetrics dm = new DisplayMetrics();
 	getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -169,50 +198,37 @@ public void showupload(){
 			Bimp.max = 0;
 		//	handler.sendEmptyMessage(1);
 			addPicDialog = new AlertDialog.Builder(this).create();
-			addPicDialog.setView(getLayoutInflater().inflate(R.layout.add_photo, null));
+			//addPicDialog.setView(getLayoutInflater().inflate(R.layout.add_photo, null));
 			addPicDialog.show();
-			addPicDialog.getWindow().setLayout((int) (screenWidth*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
+			//addPicDialog.getWindow().setLayout((int) (screenWidth*0.95), WindowManager.LayoutParams.WRAP_CONTENT);
 			addPicDialog.setCanceledOnTouchOutside(true);
 			
 			Window addPicWindow = addPicDialog.getWindow();
 			addPicWindow.setContentView(R.layout.add_photo);
-
-			/*
-			LinearLayout uploadCamera = (LinearLayout)addPicWindow.findViewById(R.id.upload_camera);
-			LinearLayout uploadFile = (LinearLayout)addPicWindow.findViewById(R.id.upload_file);
-			final TextView circleDescription = (TextView)addPicWindow.findViewById(R.id.circle_description);
-			btnSendCircle = (ImageButton)addPicWindow.findViewById(R.id.btn_send_circle);
-			btnAddLocation = (Button)addPicWindow.findViewById(R.id.btn_add_location);
-			selectedImgGridView = (GridView)addPicWindow.findViewById(R.id.selected_image_gridview);
-			selectedImgGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-			selectedImgAdapter = new SelectedImgAdapter(this, getResources(),handler);
-			selectedImgGridView.setAdapter(selectedImgAdapter);
-			selectedImgGridView.setOnItemClickListener(new OnItemClickListener() {
-			
-						
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-						long arg3) {
-					Intent intent = new Intent(UserCenterActivity.this,PhotoActivity.class);
-					intent.putExtra("ID", arg2);
-					startActivity(intent);
-				}
-				
-			});
-		
-			
+			RelativeLayout uploadCamera = (RelativeLayout)addPicWindow.findViewById(R.id.upload_camera);
+			RelativeLayout uploadFile = (RelativeLayout)addPicWindow.findViewById(R.id.upload_file);
 			
 			//照相上传图片点击事件
 			uploadCamera.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
+					/*
 					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 					File file = new File(BASE_FILE_PATH,String.valueOf(System.currentTimeMillis())+".jpg");
 					cameraPicPath = file.getPath();
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 					
-					startActivityForResult(intent, FROM_CAMERA);
+					startActivityForResult(intent, CAMERA_REQUEST_CODE);
+					*/
+					
+					 Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  
+                     // 判断存储卡是否可以用，可用进行存储    
+                     if (hasSdcard()) {    
+                         intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,  
+                                 Uri.fromFile(new File(Environment.getExternalStorageDirectory(),IMAGE_FILE_NAME)));  
+                     }    
+                     startActivityForResult(intentFromCapture,CAMERA_REQUEST_CODE);  
 				}
 			});
 			
@@ -222,21 +238,89 @@ public void showupload(){
 				@Override
 				public void onClick(View v) {
 					//到相册选择图片
-					Intent intent = new Intent(UserCenterActivity.this,ImageGridActivity.class);
-					startActivityForResult(intent,FROM_LOCAL_FILE);
-				}
-			});
-			//圈子发送按钮点击事件
-			btnSendCircle.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-				
+				//	Intent intent = new Intent(UserCenterActivity.this,ImageGridActivity.class);
+				//	startActivityForResult(intent,IMAGE_REQUEST_CODE);
 					
+					 Intent intentFromGallery = new Intent();    
+                     intentFromGallery.setType("image/*"); // 设置文件类型    
+                     intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);  
+                   
+                  //   Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                     startActivityForResult(intentFromGallery,IMAGE_REQUEST_CODE);
 				}
 			});
-			*/
+			
 	}
+
+@Override  
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
+    // 结果码不等于取消时候  
+    if (resultCode != RESULT_CANCELED) {  
+        switch (requestCode) {  
+        case IMAGE_REQUEST_CODE:  
+        	Log.i("uri", " "+data);
+            startPhotoZoom(data.getData());  
+            break;  
+        case CAMERA_REQUEST_CODE:  
+            if (hasSdcard()) {  
+                File tempFile = new File(Environment.getExternalStorageDirectory(),IMAGE_FILE_NAME);  
+                startPhotoZoom(Uri.fromFile(tempFile));  
+            } 
+
+            break;  
+        case RESULT_REQUEST_CODE:  
+            if (data != null) {  
+                setImageToView(data);  
+            }  
+            break;  
+        }  
+    }  
+    super.onActivityResult(requestCode, resultCode, data);  
+}  
+
+private boolean hasSdcard() {
+	// TODO Auto-generated method stub
+	boolean sdCardExist = Environment.getExternalStorageState()
+			.equals(android.os.Environment.MEDIA_MOUNTED);
+	return sdCardExist;
+}
+
+public void startPhotoZoom(Uri uri) {    
+    if(uri==null){  
+        Log.i("tag", "The uri is not exist.");  
+    }  
+    Intent intent = new Intent("com.android.camera.action.CROP");    
+    intent.setDataAndType(uri, "image/*");    
+    // 设置裁剪    
+    intent.putExtra("crop", "true");    
+    // aspectX aspectY 是宽高的比例    
+    intent.putExtra("aspectX", 1);    
+    intent.putExtra("aspectY", 1);    
+    // outputX outputY 是裁剪图片宽高    
+    intent.putExtra("outputX", 320);    
+    intent.putExtra("outputY", 320);    
+    intent.putExtra("return-data", true);    
+    startActivityForResult(intent, 2);    
+}   
+
+@SuppressLint("NewApi") public void setImageToView(Intent data) {    
+    Bundle extras = data.getExtras();    
+    if (extras != null) {    
+        Bitmap photo = extras.getParcelable("data");    
+        @SuppressWarnings("deprecation")
+		Drawable drawable = new BitmapDrawable(photo);    
+          
+        //Drawable dra=new Drawable(photo);
+        Toast.makeText(getApplication(), "成功设置了头像", Toast.LENGTH_LONG).show();
+      //  userimage.setBackground(drawable);
+        //userimage.setImageDrawable(drawable);
+        userimage.setImageBitmap(photo);
+  //      userimage.refreshDrawableState();
+       // btn_crop.setBackgroundDrawable(drawable);  
+       
+    }    
+}    
 //发送头像结束
 
 
