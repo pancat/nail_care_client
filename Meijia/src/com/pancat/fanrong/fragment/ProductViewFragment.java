@@ -244,7 +244,6 @@ public class ProductViewFragment extends Fragment implements IXListViewListener{
     
     public static ProductViewFragment getFilterInstance(String content,String productType)
     {
-
     	Map<String,Object> map = new HashMap<String,Object>();
     	if(content == null){
 			map.put(FilterQueryAndParse.Q_SELECT_RIGHT, "200");

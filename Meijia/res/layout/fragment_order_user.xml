@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/blue" >
+    
+	<RelativeLayout android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    >
+	   <LinearLayout android:layout_width="match_parent"
+	       android:layout_height="wrap_content"
+	       android:paddingTop="20dp"
+	       android:paddingBottom="20dp"
+	       android:paddingLeft="10dp"
+	       android:orientation="vertical"
+	       android:id="@+id/fragment_order_user_left">
+	       <TextView android:layout_width="match_parent"
+	           android:layout_height="wrap_content"
+	           android:text="龚谦"
+	           android:id="@+id/fragment_order_user_name"/>
+	       <TextView android:layout_width="match_parent"
+	           android:layout_height="wrap_content"
+	           android:text="fjdlsfjlds"
+	           android:id="@+id/fragment_order_user_info"/>
+	   </LinearLayout>
+	    <TextView android:layout_width="wrap_content"
+	         android:layout_height="match_parent"
+	         android:text=">"
+	         android:id="@+id/fragment_order_user_button"
+	         android:layout_alignRight="@id/fragment_order_user_left"
+	         android:layout_alignBottom="@id/fragment_order_user_left"
+	         android:layout_marginRight="10dp"
+	         android:gravity="center"/>
+	</RelativeLayout>
+</LinearLayout>

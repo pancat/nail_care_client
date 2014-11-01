@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+    
+   <RelativeLayout android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="8dp">
+       <ImageView android:layout_width="30dp"
+           android:layout_height="20dp"
+           android:scaleType="fitXY"
+           android:src="@drawable/technique"
+           android:paddingRight="10dp"
+           android:id="@+id/view_allproduct_order_temp1"/>
+       <!-- 商家 -->
+      <TextView android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:gravity="center|left"
+           android:layout_toRightOf="@id/view_allproduct_order_temp1"
+           android:id="@+id/view_allproduct_order_temp2"
+           android:text="@string/product_author"
+           android:textSize="15sp"/>
+      <!-- 商家名 -->
+       <TextView android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center|left"
+           android:layout_toRightOf="@id/view_allproduct_order_temp2"
+           android:text="@string/product_author"
+           android:textColor="@color/depthred"
+           android:id="@+id/view_allproduct_order_author"
+           android:textSize="15sp"/>
+       <TextView android:id="@+id/view_allproduct_order_totalnum"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="10dp"
+           android:textSize="12sp"
+           android:textColor="@color/labelgrey"
+           android:text="@string/product_totalnum"
+           android:layout_alignParentRight="true"
+           android:layout_centerVertical="true"/>
+   </RelativeLayout>
+   <View android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/border_great"/>
+   <LinearLayout android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:id="@+id/view_allproduct_order_products">
+       
+   </LinearLayout>
+   
+   <View android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/border_great"/>
+   
+</LinearLayout>

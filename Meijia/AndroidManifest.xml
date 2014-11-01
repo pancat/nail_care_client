@@ -186,7 +186,10 @@
             android:name=".activity.NailTechnicianDetailActivity"
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
-        
+        <activity 
+            android:name=".activity.OrderInfoActivity"
+           android:theme="@style/MyTheme">
+        </activity>
         <!-- 个推SDK配置开始 -->
         <receiver
             android:name=".receiver.PushMsgGeTuiReceiver"

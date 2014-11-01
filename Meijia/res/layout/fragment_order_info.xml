@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_order"
+    android:orientation="vertical">
+    
+	<ScrollView
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+		<LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="vertical">
+		    
+		    <!-- 空白带 -->
+		    <View android:layout_width="match_parent"
+		        android:layout_height="20dp"
+		         android:background="@color/ce6"/>
+		    
+		    <!-- 订单详情栏 -->
+		 	<LinearLayout android:layout_width="match_parent"
+			     android:layout_height="wrap_content"
+			     android:background="@drawable/info_bkgs"
+			     android:paddingLeft="15dp"
+			     android:orientation="vertical">
+			     
+		 	    <!-- 最上面一条 ,这里的流动布局使用的是固定布局的嵌套-->
+		     	<LinearLayout android:layout_width="match_parent"
+		     	    android:layout_height="wrap_content"
+		     	    android:paddingTop="15dp"
+		     	    android:orientation="horizontal">
+		     	    
+		     	    <ImageView android:layout_width="wrap_content"
+		     	        android:layout_height="wrap_content"
+		     	        android:paddingRight="20dp"
+		     	        android:src="@drawable/location"/>
+		     	    <TextView android:layout_width="wrap_content"
+		     	        android:layout_height="match_parent"
+		     	        android:text="@string/order_detail"
+		     	        android:textSize="18sp"
+		     	        android:textColor="@color/c96"
+		     	        android:gravity="center|left"
+		     	        />
+		     	    
+		     	    <!-- 按钮往右 -->
+		     	    <LinearLayout android:layout_width="match_parent"
+		     	    	android:layout_height="wrap_content"
+		     	    	android:gravity="right|center">
+		     	    	
+			     	    <TextView android:id="@+id/fragment_order_info_alter"
+			     	        android:layout_width="wrap_content"
+			     	        android:layout_height="wrap_content"
+			     	        android:text="@string/alter_info"
+			     	        android:textSize="15sp"
+			     	        android:padding="5dp"
+			     	        android:layout_marginRight="15dp"
+			     	        android:textColor="@color/blue"
+			     	         />
+		     		</LinearLayout>
+		     	</LinearLayout>
+		     	
+		     	<!-- 下面列表信息 -->
+		     	<TableLayout android:layout_width="match_parent"
+		     	    android:layout_height="wrap_content"
+		     	    android:layout_marginLeft="10dp">
+		     	    
+		     	    <TableRow android:layout_width="match_parent"
+		     	        android:layout_height="wrap_content">
+		     	        <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:text="@string/user_name"
+		     	        	android:textColor="@color/c96"
+		     	        	android:textSize="15sp"/>
+		     	         <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:textColor="@color/c96"
+		     	        	android:id="@+id/fragment_order_info_username"
+		     	        	android:textSize="15sp"/>
+		     	    </TableRow>
+		     	    
+		     	    <TableRow android:layout_width="match_parent"
+		     	        android:layout_height="wrap_content">
+		     	        <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:text="@string/user_phone"
+		     	        	android:textColor="@color/c96"
+		     	        	android:textSize="15sp"/>
+		     	         <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:textColor="@color/c96"
+		     	        	android:id="@+id/fragment_order_info_phone"
+		     	        	android:textSize="15sp"/>
+		     	    </TableRow>
+		     	    <TableRow android:layout_width="match_parent"
+		     	        android:layout_height="wrap_content">
+		     	        <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:text="@string/user_addr"
+		     	        	android:textColor="@color/c96"
+		     	        	android:textSize="15sp"/>
+		     	         <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:textColor="@color/c96"
+		     	        	android:id="@+id/fragment_order_info_addr"
+		     	        	android:textSize="15sp"/>
+		     	    </TableRow>
+		     	    <TableRow android:layout_width="match_parent"
+		     	        android:layout_height="wrap_content">
+		     	        <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:text="@string/user_time"
+		     	        	android:textColor="@color/c96"
+		     	        	android:textSize="15sp"/>
+		     	         <TextView android:layout_width="wrap_content"
+		     	            android:layout_height="wrap_content"
+		     	            android:padding="5dp"
+		     	        	android:textColor="@color/c96"
+		     	        	android:id="@+id/fragment_order_info_time"
+		     	        	android:textSize="15sp"/>
+		     	    </TableRow>
+		     	</TableLayout>
+	          <View android:layout_width="match_parent"
+	              android:layout_height="30dp"/>
+		 	</LinearLayout>
+		 	
+		 	<!-- 支付方式 -->
+		 	<LinearLayout android:layout_width="match_parent"
+		 	    android:layout_height="wrap_content"
+		 	    android:paddingLeft="10dp"
+		 	    android:orientation="vertical"
+		 	    android:background="@color/white">
+			 	<TextView android:layout_width="match_parent"
+			 	    android:layout_height="wrap_content"
+			 	    android:padding="10dp"
+			 	    android:textSize="15sp"
+			 	    android:textColor="@color/labelgrey"
+			 	    android:text="@string/pay_way"/>
+			 	<View android:layout_width="match_parent"
+			 	    android:layout_height="1dp"
+			 	    android:background="@color/border_great"/>
+			 	
+			 	<!-- 微信支付 -->
+			 	<RelativeLayout android:layout_width="match_parent"
+			 	    android:layout_height="wrap_content"
+			 	    android:gravity="center"
+			 	    android:paddingTop="8dp"
+			 	    android:paddingBottom="8dp"
+			 	    >
+			 	    <ImageView android:layout_width="50dp"
+			 	        android:layout_height="50dp"
+			 	        android:src="@drawable/weixin"
+			 	        android:id="@+id/weixin_icon"/>
+			 	    <LinearLayout android:layout_width="match_parent"
+			 	        android:layout_height="match_parent"
+			 	        android:orientation="vertical"
+			 	        android:id="@+id/weixin_info"
+			 	        android:layout_toRightOf="@id/weixin_icon">
+			 	        <TextView android:layout_width="wrap_content"
+			 	            android:layout_height="wrap_content"
+			 	            android:text="微信支付"
+			 	            android:paddingTop="8dp"
+			 	            android:textSize="15sp"
+			 	            android:textColor="@color/labelgrey"/>
+			 	        <TextView android:layout_width="wrap_content"
+			 	            android:layout_height="wrap_content"
+			 	            android:text="推荐使用"
+			 	            android:paddingBottom="8dp"
+			 	            android:textSize="12sp"
+			 	            android:textColor="@color/red"/>
+			 	    </LinearLayout>
+	
+			 	    <ImageView 
+			 	        android:id="@+id/fragment_order_info_weixinpay"
+			 	        android:layout_width="45dp"
+			 	        android:layout_height="25dp"
+			 	        android:layout_alignParentRight="true"
+			 	        android:layout_centerVertical="true"
+			 	        android:paddingRight="20dp"
+			 	        android:scaleType="fitXY"
+			 	        android:src="@drawable/check_unsel" />
+			 	</RelativeLayout>
+			 	
+			 	<View android:layout_width="match_parent"
+			 	    android:layout_height="1dp"
+			 	    android:background="@color/border_great"/>
+			 	
+			 	<!-- 银行卡布局 -->
+			 	<RelativeLayout android:layout_width="match_parent"
+			 	    android:layout_height="wrap_content"
+			 	    android:gravity="center"
+			 	    android:paddingTop="8dp"
+			 	    android:paddingBottom="8dp"
+			 	    >
+			 	    <ImageView android:layout_width="50dp"
+			 	        android:layout_height="43dp"
+			 	        android:src="@drawable/bank"
+			 	        android:paddingRight="7dp"
+			 	        android:id="@+id/weixin_icon2"/>
+			 	    <LinearLayout android:layout_width="match_parent"
+			 	        android:layout_height="match_parent"
+			 	        android:orientation="vertical"
+			 	        android:layout_toRightOf="@id/weixin_icon2">
+			 	        <TextView android:layout_width="wrap_content"
+			 	            android:layout_height="wrap_content"
+			 	            android:text="银联手机支付"
+			 	            android:paddingTop="8dp"
+			 	            android:textSize="15sp"
+			 	            android:textColor="@color/labelgrey"/>
+			 	        <TextView android:layout_width="wrap_content"
+			 	            android:layout_height="wrap_content"
+			 	            android:text="支付所有银联存储蓄卡、信用卡支付"
+			 	            android:paddingBottom="8dp"
+			 	            android:textSize="12sp"
+			 	            android:textColor="@color/c96"/>
+			 	    </LinearLayout>
+	
+			 	    <ImageView
+			 	        android:id="@+id/fragment_order_info_bankpay"
+			 	        android:layout_width="45dp"
+			 	        android:layout_height="25dp"
+			 	        android:layout_alignParentRight="true"
+			 	        android:layout_centerVertical="true"
+			 	        android:paddingRight="20dp"
+			 	        android:scaleType="fitXY"
+			 	        android:src="@drawable/check_unsel" />
+			 	</RelativeLayout>
+			 	
+			 	<View android:layout_width="match_parent"
+			 	    android:layout_height="1dp"
+			 	    android:background="@color/border_great"/>
+			 	
+			 	<!-- 一些辅助功能可在此展开 -->
+			 	<TextView android:layout_width="match_parent"
+			 	    android:layout_height="wrap_content"
+			 	    android:paddingTop="8dp"
+			 	    android:paddingBottom="8dp"
+			 	    android:text="银行卡卡支付"
+			 	    android:textSize="15sp"
+			 	    android:textColor="@color/labelgrey"/>
+			</LinearLayout>
+			
+		 	<LinearLayout android:layout_width="match_parent"
+		 	    android:layout_height="wrap_content"
+		 	    android:layout_marginTop="10dp"
+		 	    android:id="@+id/fragment_order_info_products">
+		 	    
+		 	</LinearLayout>
+		 	<View android:layout_width="match_parent"
+		 	    android:layout_height="60dp"/>
+		</LinearLayout>
+	</ScrollView>
+
+</LinearLayout>

@@ -1,3 +1,4 @@
+
 package com.pancat.fanrong.activity;
 
 import java.util.regex.Matcher;
@@ -402,3 +403,4 @@ public class SignInActivity extends Activity {
 	}
 	
 }
+

@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:background="@color/white" >
-
+    android:background="@color/white">
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" 
+	    android:id="@+id/order_author_activity">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp" >
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="5dp" >
 
-            <ImageView
-                android:id="@+id/oaa_iv1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:src="@drawable/user" />
+	        <ImageView  android:id="@+id/oaa_iv1" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="center"
+	            android:src="@drawable/user"
+	            android:layout_centerVertical="true"
+	           />
 
-            <TextView
-                android:id="@+id/order_author_activity_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/oaa_iv1"
-                android:background="@drawable/search_frame_jog"
-                android:gravity="center_vertical"
-                android:hint="@string/order_time"
+	        <TextView
+	            android:id="@+id/order_author_activity_time"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_toRightOf="@id/oaa_iv1"
+	            android:gravity="center_vertical"
+				android:hint="@string/order_time"
                 android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/search_frame_jog"
                 android:textSize="18sp" />
 
             <ImageView
@@ -184,6 +186,17 @@
               
                 android:clickable="true" />
         </LinearLayout>
+
+       <!--  提交订单按钮 -->
+       <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/order_author_activity_affirm"
+        android:text="@string/affirm_order"
+        android:background="@drawable/order_button"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"/>
     </LinearLayout>
 
 </ScrollView>
