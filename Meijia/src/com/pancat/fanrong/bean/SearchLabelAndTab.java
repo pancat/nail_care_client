@@ -1,7 +1,7 @@
 package com.pancat.fanrong.bean;
 
+//搜索标签类
 public class SearchLabelAndTab {
-	
 	public static final String NAME = "name";
 	public static final String TAG = "tag";
 	public static final String HOTLABEL = "hot";

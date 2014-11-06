@@ -48,7 +48,7 @@ public class FilterQueryAndParse {
 	//新增询问字段
 	public static final String Q_LABLE = "labels";
 	
-	//询问类型常量
+	//询问类型常量Query Type
 	public static final int QT_1 = 1;
 	public static final int QT_2 = 2;
 	public static final int QT_3 = 3;
@@ -102,7 +102,7 @@ public class FilterQueryAndParse {
 	public static final String K_CRE_DATE ="cre_date";
 	public static final String K_PRICE = "price";
 	
-	//预定义询问值pre define
+	//预定义询问值pre default
 	public static final int PD_QUERY_TYPE = QT_1;
 	public static final int PD_PRODUCT_TYPE = MEIJIA;
 	public static final String PD_KEYWORD = HOT;
@@ -121,11 +121,11 @@ public class FilterQueryAndParse {
 	public static final String PD_COLOR = "";
 	public static final String PD_USER_ID = "";
 	public static final int PD_NEXT = 0;
+	
 	//服务器端返回的调试信息及反馈信息
 	public static class DEBUG{
 		public static final String ERROR = "error";
 		public static final String DEBUG_INFO = "debug_info";
-		
 		public static final int PERFECT = 0;
 		public static final int ABSENCEPARAMS = 1;
 		public static final int NORIGHTS = 2;
@@ -165,10 +165,8 @@ public class FilterQueryAndParse {
 			return FilterAndRepairDefault3(map);
 		case QT_4:
 			return FilterAndRepairDefault4(map);
-
 		case QT_5:
 			return FilterAndRepairDefault5(map);
-
 		case QT_6:
 			return FilterAndRepairDefault6(map);
 		case QT_7:
@@ -182,7 +180,6 @@ public class FilterQueryAndParse {
 		case QT_11:
 			return FilterAndRepairDefault11(map);
 		case QT_12:
-			
 			return FilterAndRepairDefault12(map);
 		case QT_13:
 			return FilterAndRepairDefault13(map);
@@ -366,7 +363,7 @@ public class FilterQueryAndParse {
 			for(int i=0; i<jsonArray.length(); i++)
 			{
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				Log.d(TAG,jsonObject.getString(SP_image_uri));
+				//Log.d(TAG,jsonObject.getString(SP_image_uri));
 				Map<String,String> map = new HashMap<String,String>();
 				map.put(Product.ID, String.valueOf(jsonObject.getInt(SP_ID)));
 				map.put(Product.TITLE, jsonObject.getString(SP_name));

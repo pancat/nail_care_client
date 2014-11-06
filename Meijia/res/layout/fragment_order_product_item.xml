@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingBottom="10dp"
+    android:layout_marginBottom="10dp"
     android:orientation="vertical" >
 
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:orientation="horizontal"
+        android:id="@+id/fragment_order_product_item_infos"
         >
+        <!--  订单的一些基本信息，状态，总价 -->
         	<TableLayout android:layout_width="0dp"
         	    android:layout_height="wrap_content"
         	    android:layout_weight="1">
@@ -19,13 +21,16 @@
         	        >
         	        <TextView android:layout_width="0dp"
         	            android:layout_height="wrap_content"
-        	            android:text="状      态:"
+        	            android:text="@string/order_state"
         	            android:gravity="right"
+        	            android:textSize="15sp"
+        	            android:textColor="@color/labelgrey"
         	            android:padding="5dp"
         	            android:layout_weight="1"/>
         	        <TextView android:layout_width="0dp"
         	            android:layout_height="wrap_content"
         	            android:text="等待付款"
+        	            android:textColor="@color/font_pink"
         	            android:gravity="left"
         	            android:padding="5dp"
         	            android:layout_weight="1"
@@ -36,41 +41,77 @@
         	        >
         	        <TextView android:layout_width="0dp"
         	            android:layout_height="wrap_content"
-        	            android:text="总      价:"
+        	            android:text="@string/order_total_price"
         	            android:padding="5dp"
         	            android:gravity="right"
+        	            android:textSize="15sp"
+        	            android:textColor="@color/labelgrey"
         	            android:layout_weight="1"/>
         	        <TextView android:layout_width="0dp"
         	            android:layout_height="wrap_content"
-        	            android:text="Y88.00"
+        	            android:text="¥88.00"
+        	            android:textColor="@color/font_pink"
         	            android:padding="5dp"
         	            android:gravity="left"
         	            android:layout_weight="1"
         	            android:id="@+id/fragment_order_product_item_price"/>
-        	    </TableRow>t
+        	    </TableRow>
         	</TableLayout>
-        	<LinearLayout android:layout_width="0dp"
+        	
+        	<!-- 去支付及选择 -->
+        	<FrameLayout android:layout_width="0dp"
         	    android:layout_height="match_parent"
         	    android:layout_weight="1"
-        	    android:gravity="center_vertical|right">
-        	    <TextView android:id="@+id/fragment_order_product_item_pay"
-        	        android:layout_width="wrap_content"
-        	        android:layout_height="wrap_content"
-        	        android:text="去支付"
-        	        android:gravity="center"
-        	        android:padding="10dp"
-        	        android:background="@drawable/search_frame_jog"
-        	        />
-        	    <ImageView android:id="@+id/fragment_order_product_item_orderdetail"
-        	        android:layout_width="wrap_content"
-        	        android:layout_height="match_parent"
-        	        android:src="@drawable/mm_submenu_normal"></ImageView>
-        	</LinearLayout>
+        	    >
+	        	<LinearLayout android:layout_width="match_parent"
+	        	    android:layout_height="match_parent"
+	        	    android:gravity="center_vertical|right">
+	        	    <TextView android:id="@+id/fragment_order_product_item_pay"
+	        	        android:layout_width="wrap_content"
+	        	        android:layout_height="wrap_content"
+	        	        android:text="@string/go_pay"
+	        	        android:gravity="center"
+	        	        android:textSize="15sp"
+	        	        android:textColor="@color/blue"
+	        	        android:padding="10dp"
+	        	        android:visibility="gone"
+	        	        android:background="@drawable/search_frame_jog"
+	        	        />
+	        	    <!--  
+	        	    <ImageView android:id="@+id/fragment_order_product_item_orderdetail"
+	        	        android:layout_width="wrap_content"
+	        	        android:layout_height="match_parent"
+	        	        android:src="@drawable/mm_submenu_normal"></ImageView>
+	        	    -->
+	        	</LinearLayout>
+	        	<!-- 选择按钮 -->
+	        	<LinearLayout android:layout_width="match_parent"
+	        	    android:layout_height="match_parent"
+	        	    android:gravity="center_vertical|right">
+	        	    <ImageView android:id="@+id/fragment_order_product_item_selorder"
+	        	        android:layout_width="wrap_content"
+	        	        android:layout_height="wrap_content"
+	        	        android:src="@drawable/check_unsel"
+	        	        android:padding="10dp"
+	        	        />
+	        	</LinearLayout>
+
+        	</FrameLayout>
     </LinearLayout>
    <View android:layout_width="match_parent"
-       android:layout_height="2px"
-       android:background="@color/red"/>
+       android:layout_height="1px"
+       android:background="@color/border_great"/>
    
+   <!-- 订单中的产品视图，现转向自定义视图 -->
+   <LinearLayout android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:id="@+id/fragment_order_product_item_product"></LinearLayout>
+   
+   <View android:layout_width="match_parent"
+       android:layout_height="10dp"
+       android:background="@color/background_order" />
+   <!-- 
    <LinearLayout android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:padding="5dp"
@@ -94,7 +135,5 @@
                android:text="1件"/>
        </LinearLayout>
    </LinearLayout>
-   <View android:layout_width="match_parent"
-       android:layout_height="1dp"
-       android:background="@color/red"/>
+    -->
 </LinearLayout>
