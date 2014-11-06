@@ -1,6 +1,9 @@
 package com.pancat.fanrong.activity;
 
+import java.util.ArrayList;
+
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.bean.Order;
 import com.pancat.fanrong.fragment.OrderInfoFragment;
 import com.pancat.fanrong.temp.SampleData;
 
@@ -22,6 +25,7 @@ public class OrderInfoActivity extends FragmentActivity {
 	private LinearLayout suspendBtn;
 	private TextView goPayBtn;
 	private OrderInfoFragment orderInfoFragment;
+	private ArrayList<Order> orders;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -33,21 +37,25 @@ public class OrderInfoActivity extends FragmentActivity {
 		
 		fragmentLayout = (LinearLayout)findViewById(R.id.activity_order_info);
 		
+		Bundle bundle = getIntent().getExtras();
+		orders = (bundle==null)?null:(ArrayList<Order>) bundle.get(Order.KEY);
+		
 		fragmentManager = getSupportFragmentManager();
 		FragmentTransaction transcation = fragmentManager.beginTransaction();
-		orderInfoFragment = OrderInfoFragment.newInstance(SampleData.getnerateSmapleOrder().get(0));
+		orderInfoFragment = OrderInfoFragment.newInstance((orders==null)?SampleData.getnerateSmapleOrder():orders);
 		transcation.add(R.id.activity_order_info, orderInfoFragment);
 		transcation.commit();
 		
 		showSuspendPayButton();
 	}
 	
+   
    private void showSuspendPayButton()
    {
 	   suspendBtn = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.pay_button, null);
 	   goPayBtn = (TextView)suspendBtn.findViewById(R.id.pay_button_pay);
 	   if(orderInfoFragment != null)
-		   ((TextView)suspendBtn.findViewById(R.id.pay_button_money)).setText(orderInfoFragment.getTotalMoney()+"");
+		   ((TextView)suspendBtn.findViewById(R.id.pay_button_money)).setText("¥"+(orderInfoFragment.getTotalMoney()+""));
 	   FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.WRAP_CONTENT);
 	   
 	   lp.gravity = Gravity.BOTTOM;

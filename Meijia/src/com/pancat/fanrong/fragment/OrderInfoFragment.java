@@ -1,10 +1,12 @@
 package com.pancat.fanrong.fragment;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Order;
 import com.pancat.fanrong.bean.Product;
+import com.pancat.fanrong.customview.AllAuthorAllProductOrderView;
 import com.pancat.fanrong.customview.AllProductOrderView;
 
 import android.os.Bundle;
@@ -22,7 +24,7 @@ public class OrderInfoFragment extends Fragment {
 	public enum PAYBTNSTATE{UNKOWN,WEIXIN,BANK};
 	
 	private LinearLayout productsView;
-	private Product product;
+	//private Product product;
 	private TextView alterBtn;
 	private TextView userNameTV;
 	private TextView userPhoneTV;
@@ -30,7 +32,7 @@ public class OrderInfoFragment extends Fragment {
 	private TextView userTimeTV;
 	private ImageView weixinBtn;
 	private ImageView bankBtn;
-	private Order order;
+	private ArrayList<Order> orders;
 	
 	private PAYBTNSTATE curIndexForPayBtn = PAYBTNSTATE.UNKOWN;
 	private int selPayImg;
@@ -38,9 +40,13 @@ public class OrderInfoFragment extends Fragment {
 	
 	public static OrderInfoFragment newInstance(Order order){
 		OrderInfoFragment instance = new OrderInfoFragment();
-		instance.product = order.getProduct();
-		instance.order = order;
-		
+		instance.orders = new ArrayList<Order>();
+		instance.orders.add(order);
+		return instance;
+	}
+	public static OrderInfoFragment newInstance(ArrayList<Order>orders){
+		OrderInfoFragment instance = new OrderInfoFragment();
+		instance.orders = orders;
 		return instance;
 	}
 	
@@ -62,14 +68,22 @@ public class OrderInfoFragment extends Fragment {
 			//selPayImg = getActivity().getResources().getDrawable(R.drawable.check_select);
 			initEventListener();
 			
-			if(product != null){
-				ArrayList<Product>ls = new ArrayList<Product>();
-				ls.add(product);
-				AllProductOrderView pvs = AllProductOrderView.getView(getActivity(), product.getProductAuthor(), ls);
-				productsView.addView(pvs);
-			}
+			AllAuthorAllProductOrderView pvs = AllAuthorAllProductOrderView.getView(getActivity(), getProducts());
+			productsView.addView(pvs);
+			
 			return v;
 	}
+	
+	private ArrayList<Product> getProducts(){
+		ArrayList<Product> products= new ArrayList<Product>();
+		for(Order order:orders){
+			for(Product p:order.getProducts()){
+				products.add(p);
+			}
+		}
+		return products;
+	}
+	
 	private void initEventListener(){
 		
 		//修改按钮监听事件
@@ -80,10 +94,13 @@ public class OrderInfoFragment extends Fragment {
 			}
 		});
 		
-		userNameTV.setText(order.getUser().getNickname());
-		userPhoneTV.setText(order.getUser().getUsername());
-		userAddrTV.setText(order.getUser().getAddress());
-		userTimeTV.setText(order.getOrderTime());
+		if((orders != null) && (!orders.isEmpty())){
+			Order order = orders.get(0);
+			userNameTV.setText(order.getUser().getNickname());
+			userPhoneTV.setText(order.getUser().getUsername());
+			userAddrTV.setText(order.getUser().getAddress());
+			userTimeTV.setText(order.getOrderTime());
+		}
 		
 		weixinBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -113,6 +130,11 @@ public class OrderInfoFragment extends Fragment {
 	}
 	
 	public double getTotalMoney(){
-		return order.getPrice() * order.getNum();
+		double money = 0;
+		for(Order order:orders)
+			money += order.getPrice();
+		DecimalFormat df = new DecimalFormat("#.00");
+		
+		return Double.valueOf(df.format(money));
 	}
 }

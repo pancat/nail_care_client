@@ -54,9 +54,9 @@ public class ProductShow extends LinearLayout {
 		productTitle.setText(product.getProductTitle());
 		//TODO 数量在这里设置为1
 		String numStr = context.getResources().getString(R.string.product_num);
-		productNum.setText(String.format(numStr, 1));
+		productNum.setText(String.format(numStr, this.product.getProductNum()));
 		
 		String priceStr = context.getResources().getString(R.string.product_price);
-		productPrice.setText(String.format(priceStr, product.getProductPrice()));
+		productPrice.setText(String.format(priceStr, (product.getProductPrice()+"")));
 	}
 }

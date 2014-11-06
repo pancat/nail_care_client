@@ -87,7 +87,7 @@ public class ProductDetailFragment extends Fragment {
 		if(product != null)
 		{
 			productDFDescription.setText(product.getProductDescription());
-			productDFPrice.setText(product.getProductPrice());
+			productDFPrice.setText(product.getProductPrice()+"");
 			imageFetcher.loadImage(product.getProductURL(), productDFImg);
 			 
 			//TODO 需要进一步更改

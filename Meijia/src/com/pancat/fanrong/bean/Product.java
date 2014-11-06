@@ -1,6 +1,7 @@
 package com.pancat.fanrong.bean;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.util.LocalDateUtils;
 import com.pancat.fanrong.util.StringUtils;
 
 import android.util.Log;
@@ -50,8 +52,9 @@ public class Product implements Serializable{
 	public static final String HOT = "hot";
 	public static final String PRICE = "price";
 	public static final String URL = "url";
+	public static final String NUM = "num";
 	
-	//产品字
+	//产品字段
 	@DatabaseField
 	private String productType = MEIJIA;
 	@DatabaseField
@@ -75,12 +78,14 @@ public class Product implements Serializable{
 	@DatabaseField(id = true)
 	private int productId = 0;
 	@DatabaseField
-	private Date productDate;
+	private String productDate;
+	@DatabaseField
+	private int productNum;
 	
 	//服务器端产品列表的相对路径
 	public static final String relativeURL="product";
 	
-	//产品字段的默认值
+	//产品字段的默认值Product Default
 	public String PD_TYPE = MEIJIA;
 	public String PD_URL = "";
 	public String PD_WIDTH = "-1";
@@ -93,6 +98,7 @@ public class Product implements Serializable{
 	public String PD_HOT = "0";
 	public String PD_ID = "0";
 	public String PD_DATE = "2014-10-20";
+	public String PD_NUM = "1";
 	
 	public Product(){
 		
@@ -114,6 +120,7 @@ public class Product implements Serializable{
 		setProductHot(getDefault(productMap, HOT, PD_HOT));
 		setProductId(getDefault(productMap, ID, PD_ID));
 		setProductPrice(getDefault(productMap, PRICE, PD_PRICE));
+		setProductNum(getDefault(productMap,NUM,PD_NUM));
 	}
 	
 	/*
@@ -138,25 +145,17 @@ public class Product implements Serializable{
 			productType = MEIJIA;
 			return ;
 		}
-		int type = 0;
-		
-		try{
-			type = Integer.parseInt(types);
-		}catch(Exception e){
-			productType = PD_TYPE;
-			return ;
-		}
-		
-		if(type <= 0 || type > 2){
-			productType = MEIJIA;
-		}
-		else if(type == 1){
+		if(types.equals(MEIFA)){
 			productType = MEIFA;
-		}
-		else{
+		}else if(types.equals(MEIJIA)){
+			productType = MEIJIA;
+		}else if(types.equals(MEIZHUANGE)){
 			productType = MEIZHUANGE;
+		}else{
+			productType = PD_TYPE;
 		}
 	}
+	
     public void setProductURL(String url)
     { 
     	productUrl = (url == null) ? "":url;
@@ -220,14 +219,7 @@ public class Product implements Serializable{
     }
     public void  setProductDate(String date)
     {  
-    	try{
-    		productDate = StringUtils.getDateByString(date);
-    		Log.d(TAG, "the format for date isn't right"+"--v: "+date);
-    	}catch(Exception e)
-    	{
-    		//TODO
-    		productDate = StringUtils.getDateByString(PD_DATE);
-    	}
+    	this.productDate = date;
     }
     public void setProductPrice(String prices){
     	double price = Double.valueOf(PD_PRICE);
@@ -237,7 +229,18 @@ public class Product implements Serializable{
     		price = Double.valueOf(PD_PRICE);
     	}
     	productPrice = price >= 0 ? price: Double.valueOf(PD_PRICE);
+    	DecimalFormat df = new DecimalFormat("#.00");
+    	productPrice = Double.valueOf(df.format(productPrice));
     }
+    public void setProductNum(String num){
+    	try{
+    		productNum = Integer.valueOf(num);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		Log.d(TAG, "product Num字段必须为数字");
+    	}
+    }
+    
 	public String getProductType(){
 		return  productType;
 	}
@@ -269,15 +272,23 @@ public class Product implements Serializable{
     	return productId ;
     }
     public String  getProductDate() {
-    	return productDate.toString();
-    }
-    public Date getProductate(){
     	return productDate;
     }
-    public String getProductPrice(){
-    	return String.valueOf(productPrice) ;
+    public Date getProductdate(){
+    	//Log
+    	Date date = LocalDateUtils.getDateFromAllString(productDate);
+    	Log.d(TAG, date.toString());
+    	
+    	return date;
     }
-
+    public double getProductPrice(){
+    	return productPrice;
+    }
+    
+    public int getProductNum(){
+    	return productNum;
+    }
+    
    /*
 	@Override
 	public String toString() {

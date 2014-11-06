@@ -299,7 +299,7 @@ public class ProductViewFragment extends Fragment implements IXListViewListener{
 			//设置作者头像的图片
 			vh.productAuthorImg.setImageResource(R.drawable.user);
 			
-			vh.productPrice.setText(product.getProductPrice());
+			vh.productPrice.setText("¥"+product.getProductPrice());
 			vh.productTitle.setText(product.getProductTitle());
 			vh.productHotNum.setText("2");
 			vh.productHot.setImageResource(R.drawable.heart_gray);

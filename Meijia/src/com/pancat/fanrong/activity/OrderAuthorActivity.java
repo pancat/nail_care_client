@@ -5,15 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.bean.Order;
 import com.pancat.fanrong.common.User;
 import com.pancat.fanrong.customview.FreeTimeTableView;
 import com.pancat.fanrong.customview.FreeTimeTableView.OnButtonClick;
 import com.pancat.fanrong.util.LocalDateUtils;
-import com.pancat.fanrong.viewpagerindicator.IconPagerAdapter;
-import com.pancat.fanrong.viewpagerindicator.LinePageIndicator;
-import com.pancat.fanrong.viewpagerindicator.TabPageIndicator;
-import com.pancat.fanrong.viewpagerindicator.TitlePageIndicator;
-import com.pancat.fanrong.viewpagerindicator.UnderlinePageIndicator;
 
 import android.app.Activity;
 import android.content.Context;
@@ -404,6 +400,29 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 		});
 	}
 	
+	//一些必须的参数是否为空,为空返回null,否则返回Order对象
+	private Order isNeedAreaNull(){
+		String time = mTime.getText().toString();
+		String position = mPosition.getText().toString();
+		String detail = mDetail.getText().toString();
+		String more = mMore.getText().toString();
+		if(isNullForString(time) || isNullForString(position) || isNullForString(detail)){
+			Log.d(TAG, "有信息为空");
+			Toast.makeText(this, "必填信息不能为空", Toast.LENGTH_LONG).show();
+			return null;
+		}
+		Order order = new Order();
+		order.setOrderTime(time);
+		order.setTime(LocalDateUtils.getDate(0));
+		order.setUser(new User());
+		//order.setProduct();
+		return order;
+	}
+	
+	private boolean isNullForString(String s){
+		if((s == null) || s.equals("")) return true;
+		return false;
+	}
 	private void setCancelListener()
 	{
 		timeCancel.setOnClickListener(new OnClickListener() {
@@ -438,6 +457,8 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 		});
 		
 	}
+	
+	//显示时间窗口
 	public void showWindow(){
 		ArrayList<Map<Integer,Integer>>m = new ArrayList<Map<Integer,Integer>>();
 		Map<Integer,Integer>ma = new HashMap<Integer,Integer>();
@@ -476,6 +497,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
         inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
+	//时间表点击回调事件
 	@Override
 	public void setOnButtonClick(String time) {
 		if(time == null || time.equals("")){
@@ -489,6 +511,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 			dismissWindow();
 		}
 	}
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
