@@ -39,6 +39,7 @@ import com.pancat.fanrong.db.DatabaseOpenHelper;
 import com.pancat.fanrong.handler.HandlerFactory;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
 import com.pancat.fanrong.http.RequestParams;
+import com.pancat.fanrong.util.HttpUtil;
 
 @SuppressLint("NewApi") 
 public class AdBannerFragment extends Fragment implements OnPageChangeListener {
@@ -108,6 +109,7 @@ public class AdBannerFragment extends Fragment implements OnPageChangeListener {
 					try {
 						int productID = itemObj.getInt("p_id");
 						String imgUrl = itemObj.getString("image_uri");
+						imgUrl=HttpUtil.URL_PATH+imgUrl;
 						String desc = itemObj.getString("p_describe");
 						if (imgUrl == "null")
 						{

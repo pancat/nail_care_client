@@ -23,7 +23,7 @@ public class MainApplication extends FrontiaApplication {
 		appContext = getApplicationContext();
 		
 		initUserInfo();
-		
+		 
 		
 	}
 
@@ -34,6 +34,13 @@ public class MainApplication extends FrontiaApplication {
 		if (user != null)
 		{
 			mgr.setUser(user);
+	     new Thread(new Runnable() {
+		    public void run() {
+			 //   	//从网络上获取最新的用户信息
+			    	AuthorizeMgr.setLastUserInfomationFromSer();
+			    }
+		     }).start();
+			
 		}
 	}
 

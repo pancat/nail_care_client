@@ -8,6 +8,7 @@ import com.pancat.fanrong.R;
 import com.pancat.fanrong.common.User;
 import com.pancat.fanrong.customview.FreeTimeTableView;
 import com.pancat.fanrong.customview.FreeTimeTableView.OnButtonClick;
+import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.LocalDateUtils;
 import com.pancat.fanrong.viewpagerindicator.IconPagerAdapter;
 import com.pancat.fanrong.viewpagerindicator.LinePageIndicator;
@@ -16,10 +17,14 @@ import com.pancat.fanrong.viewpagerindicator.TitlePageIndicator;
 import com.pancat.fanrong.viewpagerindicator.UnderlinePageIndicator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,13 +53,19 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MapViewLayoutParams;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
 import com.baidu.mapapi.model.LatLng;
@@ -88,10 +99,14 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 	private BaiduMap mBaiduMap=null;
 	boolean isFirstLoc = true;
 	private UiSettings us;
-    
+	 private ImageView locationicon;
+	private Marker mMarkerA;
     private PopupWindow freeTimePopWindow = null;
     private FreeTimeTableView timeView = null;
-	
+	private boolean isfirstloc=true;
+    
+	BitmapDescriptor bdA = BitmapDescriptorFactory
+			.fromResource(R.drawable.icon_gcoding);
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -99,6 +114,8 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 		setContentView(R.layout.order_author_activity);
 		
 		initView();
+		
+		mLocationClient.start();
 	}
 
 	//添加响应事件
@@ -168,7 +185,7 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 		        int screenHeigh = dm.heightPixels;
 		        LayoutParams lp=mMapView.getLayoutParams();
 		        lp.height=(int) (screenHeigh*0.40);
-		        lp.width=(int) (screenWidth*0.75);
+		        lp.width=(int) (screenWidth);
 		        mMapView.setLayoutParams(lp);
 		        
 		    	mBaiduMap = mMapView.getMap();
@@ -180,6 +197,15 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 		   			mPosition.setClickable(false);
 		   			//Toast.makeText(getApplication(),"你点了地图" ,Toast.LENGTH_LONG).show();
 		   		 showclick(arg0);
+
+					mBaiduMap.setMyLocationEnabled(false);
+					// 显示地图标志
+					LatLng llA = arg0;
+					if (mMarkerA != null)
+						mMarkerA.remove();
+					OverlayOptions ooA = new MarkerOptions().position(llA)
+							.icon(bdA).zIndex(9).draggable(true);
+					mMarkerA = (Marker) (mBaiduMap.addOverlay(ooA));
 		   		 }
 
 		   		 @Override
@@ -202,7 +228,33 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 				option.setNeedDeviceDirect(true);
 				mLocationClient.setLocOption(option);
 				
-				  mLocationClient.start();
+			//	  mLocationClient.start();
+				
+				Resources rs=getApplication().getResources();
+				Drawable dr=rs.getDrawable(R.drawable.icon_geo);
+			//	bitmap bm=BitmapFactory.decodeResource(R.drawable.icon_geo, 1);
+				 locationicon=new ImageView(this);
+				 
+		    	locationicon.setImageDrawable(dr);
+				locationicon.setImageResource(R.drawable.icon_geo);
+				locationicon.setVisibility(View.VISIBLE);
+
+				Point pt=new Point(70,lp.height-50);
+				MapViewLayoutParams params=new MapViewLayoutParams.Builder().point(pt).align(
+						MapViewLayoutParams.ALIGN_LEFT, MapViewLayoutParams.ALIGN_BOTTOM).width(60).height(60).build();
+			
+				
+				locationicon.setLayoutParams(params);
+				locationicon.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						mLocationClient.start();
+					}
+					
+				});
+				mMapView.addView(locationicon);
 	}
 	
 	private void showclick(LatLng latlng) {
@@ -264,40 +316,37 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 				// 此处设置开发者获取到的方向信息，顺时针0-360
 				.direction(100).latitude(location.getLatitude())
 				.longitude(location.getLongitude()).build();
-				
-				
-
-			
 				us = mBaiduMap.getUiSettings();
 				us.setCompassEnabled(true);
-				// us.setZoomGesturesEnabled(false);
-				// us.setCompassPosition(pt);
-				// point pt=new point(Point);
 				us.setCompassPosition(new Point(60, 60));
 				mBaiduMap.setMyLocationEnabled(true);
 				
 				mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(new MapStatus.Builder().zoom(15).build()));
 				// 在地图上显示
 				mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, false, null){	
-				});
-				
-				mBaiduMap.setMyLocationData(locData);
+				});//设置定位图层参数
+				// 显示地图标志
+				LatLng llA = new LatLng(location.getLatitude(),
+						location.getLongitude());
+				if (mMarkerA != null)
+					mMarkerA.remove();
+				OverlayOptions ooA = new MarkerOptions().position(llA)
+						.icon(bdA).zIndex(9).draggable(true);
+				mMarkerA = (Marker) (mBaiduMap.addOverlay(ooA));
 
-				if (isFirstLoc) {
-					//isFirstLoc = false;
-					LatLng ll = new LatLng(location.getLatitude(),
-							location.getLongitude());
-					MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-					mBaiduMap.animateMapStatus(u);
-					
-					}
-			
+				LatLng ll = new LatLng(location.getLatitude(),
+						location.getLongitude());
+				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+				mBaiduMap.animateMapStatus(u);
 				mLocationClient.stop();
-				
+				if( !isfirstloc){
 				mPosition.setText(location.getAddrStr());
 				positionCancel.setVisibility(View.VISIBLE);
+				mPosition.setClickable(false);
 				
-				
+				}else{
+					isfirstloc=false;
+				}
 				break;
 			default:
 				break;
@@ -318,21 +367,6 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 			msg.what=1;
 			msg.obj=location;
 			handler.sendMessage(msg);
-			
-			String address = location.getAddrStr();
-
-			
-			//应该改为写到sqlite里去
-			// 写到shared里
-			User.getInstance().setCommonAddress(location.getLatitude(),
-					location.getLongitude(), location.getAddrStr());
-
-			Log.i("locat", "addr"+address);
-
-			glableaddress = address;
-		//	Toast.makeText(getApplicationContext(), "地址是:"+ address, Toast.LENGTH_LONG).show();
-
-			if (location == null)
 				return;
 		
 		}
@@ -358,10 +392,34 @@ public class OrderAuthorActivity extends FragmentActivity  implements OnButtonCl
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				mPosition.setClickable(false);
+				//mPosition.setClickable(false);
+				
+				final String commonaddress=AuthorizeMgr.getInstance().getUser().getAddress();
 				//detailCancel.setVisibility(View.VISIBLE);
-				positionCancel.setVisibility(View.VISIBLE);
-				mLocationClient.start();
+				
+				//mLocationClient.start();
+				//ask whether use common address
+				//Log.i("commonaddress", commonaddress)
+			
+				new AlertDialog.Builder(OrderAuthorActivity.this)
+				 .setTitle("常用地址") 
+				 .setMessage(commonaddress)
+				 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+					  public void onClick(DialogInterface dialog, int id) {
+						  		mPosition.setText(commonaddress);
+						  		positionCancel.setVisibility(View.VISIBLE);
+						  		mPosition.setClickable(false);
+			           }
+				 }).setPositiveButton("No", new DialogInterface.OnClickListener() {
+					  public void onClick(DialogInterface dialog, int id) {
+					  	
+		           }		 
+				 } ).show();
+			
+					
+				
+				
+				
 			}
 		});
 		

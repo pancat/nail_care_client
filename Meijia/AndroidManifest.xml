@@ -190,6 +190,10 @@
             android:name=".activity.OrderInfoActivity"
            android:theme="@style/MyTheme">
         </activity>
+         <activity
+            android:name=".activity.CropImageActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
         <!-- 个推SDK配置开始 -->
         <receiver
             android:name=".receiver.PushMsgGeTuiReceiver"
@@ -347,7 +351,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3Ry1xcgwvpAumwd0fNzlbP7Z" />
+            android:value="yi9t41q3EiViVruko4iIoX10" />
 
         <service
             android:name="com.baidu.location.f"

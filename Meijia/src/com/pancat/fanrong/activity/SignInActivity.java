@@ -262,16 +262,6 @@ public class SignInActivity extends Activity {
 
 				String  errstring=getString(R.string.error_incorrect_password);
 				Spannable spn = new SpannableString(errstring);
-
-
-			//	Parcel p = Parcel.obtain();
-			//	p.writeInt(Color.GREEN);
-			//	p.setDataPosition(0);
-			//	BackgroundColorSpan bcs = new BackgroundColorSpan(p);
-
-			//	spn.setSpan(bcs, 0, errstring.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
 				TextView recommend=(TextView)findViewById(R.id.recommend);
 				recommend.setText(spn);
 				recommend.setVisibility(View.VISIBLE);
@@ -311,7 +301,6 @@ public class SignInActivity extends Activity {
 		boolean b=false;
 		if(email.contains("@")){
 			//判断email是否合法
-
 			Pattern p=Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");
 		    Matcher m=p.matcher(email);
 		    b=m.matches();
