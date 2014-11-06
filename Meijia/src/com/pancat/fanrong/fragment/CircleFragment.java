@@ -37,6 +37,7 @@ import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.util.PhoneUtils;
 import com.pancat.fanrong.view.LoadingFooter;
 import com.pancat.fanrong.view.LoadingFooter.OnLoadListener;
+import com.pancat.fanrong.view.LoadingFooter.State;
 import com.pancat.fanrong.view.PageStaggeredGridView;
 
 
@@ -74,7 +75,7 @@ public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRef
 			
 			@Override
 			public void onLoad() {
-				// TODO Auto-generated method stub
+				mGridView.setState(State.Loading);
 				addItemToContainer(2);
 			}
 		});
@@ -174,6 +175,7 @@ public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRef
 		protected void onPostExecute(List<Circle> result) {
 			if(mType == 1){
 				//执行上拉刷新时
+				mGridView.setState(LoadingFooter.State.Idle);
 				if(result != null && result.size() > 0){
 					mCircles.clear();
 					addLists(result);
@@ -188,7 +190,12 @@ public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRef
 				//执行下拉加载时
 				addLists(result);
 				mAdapter.notifyDataSetChanged();
-				mGridView.setState(LoadingFooter.State.Idle);
+				if(result.size()>=0 & result.size()<mPageSize){
+					mGridView.setState(LoadingFooter.State.TheEnd);
+				}
+				else{
+					mGridView.setState(LoadingFooter.State.Idle);
+				}
 			}
 		}
 		

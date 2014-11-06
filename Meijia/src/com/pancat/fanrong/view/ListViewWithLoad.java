@@ -26,7 +26,6 @@ public class ListViewWithLoad extends ListView implements OnScrollListener{
 	
 	private LayoutInflater inflater;
 	
-	private ProgressBar loadingBar;
 	
 	private TextView noData;
 	private TextView loadFull;
