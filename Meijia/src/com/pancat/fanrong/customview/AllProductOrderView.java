@@ -24,9 +24,9 @@ public class AllProductOrderView extends LinearLayout{
 	private LinearLayout productView;
 	private LayoutInflater inflater;
 	
-	public static AllProductOrderView getView(Context context,String author,ArrayList<Product>products){
+	public static AllProductOrderView getView(Context context,ArrayList<Product>products){
 		AllProductOrderView view = new AllProductOrderView(context);
-		view.setDatas(author, products);
+		view.setDatas(products);
 		return view;
 	}
 	
@@ -44,9 +44,9 @@ public class AllProductOrderView extends LinearLayout{
 		productView = (LinearLayout)tv.findViewById(R.id.view_allproduct_order_products);
 	}
 	
-	public void setDatas(String author,ArrayList<Product>products){
+	public void setDatas(ArrayList<Product>products){
 		if(products.size() ==0 ) return ;
-		this.author = author;
+		this.author = products.get(0).getProductAuthor();
 		this.products = products;
 		
 		viewAuthor.setText(author);
