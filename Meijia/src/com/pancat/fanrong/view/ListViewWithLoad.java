@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class ListViewWithLoad extends ListView implements OnScrollListener{
 
@@ -26,6 +27,12 @@ public class ListViewWithLoad extends ListView implements OnScrollListener{
 	private LayoutInflater inflater;
 	
 	private ProgressBar loadingBar;
+	
+	private TextView noData;
+	private TextView loadFull;
+	private TextView more;
+	private ProgressBar loading;
+	
 	//是否正在加载
 	private boolean isLoading;
 	//是否全部加载
@@ -57,6 +64,10 @@ public class ListViewWithLoad extends ListView implements OnScrollListener{
 	private void initView(Context context) {
 		inflater = LayoutInflater.from(context);
 		footerView = inflater.inflate(R.layout.listview_footer, null);
+		loadFull = (TextView) footerView.findViewById(R.id.loadFull);
+		noData = (TextView) footerView.findViewById(R.id.noData);
+		more = (TextView) footerView.findViewById(R.id.more);
+		loading = (ProgressBar) footerView.findViewById(R.id.loading);
 		this.addFooterView(footerView);
 		this.setOnScrollListener(this);
 	}
@@ -126,6 +137,29 @@ public class ListViewWithLoad extends ListView implements OnScrollListener{
 		}
 		}catch (Exception e) {
 		}
+	}
+	
+	public void setResultSize(int resultSize) {
+		if (resultSize == 0) {
+			isLoadFull = true;
+			loadFull.setVisibility(View.GONE);
+			loading.setVisibility(View.GONE);
+			more.setVisibility(View.GONE);
+			noData.setVisibility(View.VISIBLE);
+		} else if (resultSize > 0 && resultSize < pageSize) {
+			isLoadFull = true;
+			loadFull.setVisibility(View.VISIBLE);
+			loading.setVisibility(View.GONE);
+			more.setVisibility(View.GONE);
+			noData.setVisibility(View.GONE);
+		} else if (resultSize == pageSize) {
+			isLoadFull = false;
+			loadFull.setVisibility(View.GONE);
+			loading.setVisibility(View.VISIBLE);
+			more.setVisibility(View.VISIBLE);
+			noData.setVisibility(View.GONE);
+		}
+
 	}
 	
 }

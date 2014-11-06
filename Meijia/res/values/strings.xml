@@ -54,7 +54,7 @@
 	<string name="user_center_welcomepassager">Passenger</string>
 	<string name="service_call_no">10086</string>
 	
-<string name="product_collection">收藏</string>
+	<string name="product_collection">收藏</string>
 	<string name="product_application_price">么么价  : </string>
 	<string name="product_shop_price">店面价 : </string>
 	<string name="test_price">5.00</string>
@@ -79,12 +79,18 @@
     <string name="alter_info">修    改</string>
     <string name="pay_way">支付方式</string>
     <string name="product_num">数 量: %1$d</string>
-    <string name="product_price">价 格 : %1$s</string>
+    <string name="product_price">价 格 : ¥%1$s</string>
     <string name="product_author">商 家 : </string>
     <string name="product_totalnum">共 %1$d 件</string>
     <string name="pay_total_money">合 计 : </string>
     <string name="go_pay_btn">去付款</string>
-
+    <string name="order_state">状&#160;&#160;&#160;&#160;&#160;&#160;态:</string>
+    <string name="order_total_price">总&#160;&#160;&#160;&#160;&#160;&#160;价:</string>
+    <string name="go_pay">去支付</string>
+    <string name="order_cancel">取消</string>
+    <string name="order_del">删除</string>
+    <string name="order_selall">选择全部</string>
+    
 	<string name="sendmoment">圈子分享</string>
     <string name="usersetting">个人设置</string>
     

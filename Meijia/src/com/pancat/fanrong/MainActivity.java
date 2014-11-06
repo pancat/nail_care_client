@@ -2,8 +2,10 @@ package com.pancat.fanrong;
 
 
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +19,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -49,12 +53,6 @@ import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.location.BDLocation;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.model.LatLng;
 import com.igexin.sdk.PushManager;
 import com.pancat.fanrong.activity.CircleActivity;
 import com.pancat.fanrong.activity.HomeActivity;
@@ -72,6 +70,7 @@ import com.pancat.fanrong.util.ConfigHelperUtils;
 import com.pancat.fanrong.util.MapUtil;
 import com.pancat.fanrong.util.album.Bimp;
 import com.pancat.fanrong.util.album.FileUtils;
+import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
 
 @SuppressWarnings("deprecation")
@@ -117,8 +116,6 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	
 	//图片存储路径
 	private final String BASE_FILE_PATH = Environment.getExternalStorageDirectory() + "/rongmeme/";
-	//拍照上传照片临时存放文件
-//	private final String TEMP_PHOTO_PATH = BASE_FILE_PATH + "temp.jpg";
 	private String cameraPicPath;
 	
 	//消息推送的配置选项
@@ -153,7 +150,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		segment = getIntent().getIntExtra("segment", 1);
 		if(segment==1)
 		tabHome.setClickable(false);
-		
+		addView();
 		initMsgPush();//消息推送初始化
 	}
 	
@@ -174,6 +171,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		}
 		else if(segment == 4){
 			intent.setClass(MainActivity.this, CircleActivity.class);
+//			intent.setClass(MainActivity.this, TestActivity.class);
 			subActivity = getLocalActivityManager().startActivity("subActivity4", intent);
 		}
 		container.addView(subActivity.getDecorView());
@@ -193,7 +191,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		addView();
+//		addView();
 	}
 
 	private void init(){
@@ -321,7 +319,6 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			public void onClick(View v) {
 				MapUtil.getInstance().location();
 				btnAddLocation.setText("定位中...");
-				
 			}
 		});
 	    
@@ -378,12 +375,6 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}
-					//设置ProgressDialog参数
-//					progressDialog = new ProgressDialog(MainActivity.this);
-//					progressDialog.setTitle("uploading...");
-//					progressDialog.setMessage(finishedUploadNum+" / "+pathList.size());
-//					progressDialog.setCancelable(false);
-//					progressDialog.show();
 					mNotification.contentView.setTextViewText(R.id.down_tv, "上传中..."+finishedUploadNum+" / "+pathList.size());
 					showNotification();
 					addPicDialog.dismiss();
@@ -472,9 +463,22 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			
 		});
 	}
+	
+	/**
+	 * 在通知栏显示通知
+	 */
 	public void showNotification(){
 		mNotifyManager.notify(0, mNotification);
 	}
+	
+	private Options getBitmapOptions(int inSampleSize){
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inPurgeable = true;
+		options.inSampleSize = inSampleSize;
+		return options;
+	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -484,6 +488,21 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		if(resultCode == Activity.RESULT_OK){
 			if(requestCode == FROM_CAMERA){
 				//图片从相机获取
+				Bitmap bitmap = BitmapFactory.decodeFile(cameraPicPath,getBitmapOptions(5));
+				Bitmap resizeBitmap = ImageResizer.decodeSampledBitmapFromFile(cameraPicPath, 480, 800);
+				File file = new File(cameraPicPath);
+				if(file.exists()){
+					file.delete();
+				}
+				try {
+					BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+					resizeBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+					bos.flush();
+					bos.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				selectedImgGridView.setVisibility(View.VISIBLE);
 				if (Bimp.drr.size() < 9) {
 					Bimp.drr.add(cameraPicPath);
@@ -566,6 +585,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			btnTabMoment.setImageResource(R.drawable.icon_tab_mass_unfold);
 			
 			intent.setClass(MainActivity.this, CircleActivity.class);
+//			intent.setClass(MainActivity.this, TestActivity.class);
 			subActivity = getLocalActivityManager().startActivity(
 					"subActivity4", intent);
 			container.addView(subActivity.getDecorView());

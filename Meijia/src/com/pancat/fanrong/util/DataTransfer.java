@@ -2,6 +2,7 @@ package com.pancat.fanrong.util;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
@@ -33,4 +34,15 @@ public class DataTransfer {
 		
 		return map;
 	}
+	
+	/*
+	public static Bundle getBundle(String key,List<Object> list){
+		Bundle bundle = new Bundle();
+		String rekey = "__sys__" + key;
+		int i = 0;
+		for(Object obj:list){
+			String k = rekey + i;
+			bundle.put
+		}
+	}*/
 }

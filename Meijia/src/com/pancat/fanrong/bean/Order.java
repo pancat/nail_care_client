@@ -1,6 +1,8 @@
 package com.pancat.fanrong.bean;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +24,8 @@ public class Order implements Serializable{
 	public static final String OTIME = "order_time";
 	public static final String OSTATE = "order_state";
 	public static final String OPRICE = "order_price";
-	public static final String OOLDPRICE = "order_old_price";
 	public static final String OPAYWAY = "order_payway";
 	public static final String OUSER = "order_user";
-	public static final String ONUM = "order_num";
 	public static final String OORDERTIME = "oordertime"; //协定时间
 	
 	//订单的状态依次是 待付款,正在支付,已支付,等待确认，已取消，已过期，未知
@@ -39,7 +39,7 @@ public class Order implements Serializable{
 	private int id;
 	
 	@DatabaseField
-    private Product product;
+    private ArrayList<Product> product;
 	
 	@DatabaseField
 	private Date time;
@@ -51,17 +51,12 @@ public class Order implements Serializable{
 	private double price;
 	
 	@DatabaseField
-	private double oldPrice;
-	
-	@DatabaseField
 	private PAYWAY payWay;
 	
 	@DatabaseField
 	private User user;
 	
-    @DatabaseField
-    private int num;
-    
+	@DatabaseField
     private String orderTime;
     
     public Order(){
@@ -70,11 +65,9 @@ public class Order implements Serializable{
     
     public Order(Map<String,Object>map){
     	setId(map.get(OID));
-    	setNum(map.get(ONUM));
     	setProduct(map.get(OPRODUCT));
     	setState(map.get(OSTATE));
     	setPrice(map.get(OPRICE));
-    	setOldPrice(map.get(OOLDPRICE));
     	setPayWay(map.get(OPAYWAY));
     	setUser(map.get(OUSER));
     	setTime(map.get(OTIME));
@@ -90,12 +83,19 @@ public class Order implements Serializable{
     }
     public void setProduct(Object product){
     	try{
-    		this.product = (Product)product;
+    		Product tmp_product = (Product)product;
+    		this.product = new ArrayList<Product>();
+    		this.product.add(tmp_product);
     	}catch(Exception e){
-    		e.printStackTrace();
-    		Log.d(TAG, "对象非Product");
+    		try{
+    			this.product = (ArrayList<Product>)product;
+    		}catch(Exception es){
+    			es.printStackTrace();
+    			Log.d(TAG, OPRODUCT+" 字段不是Product类型或者ArrayList<Product>类型");
+    		}
     	}
     }
+    
     public void setTime(Object time){
     	try{
     		this.time = StringUtils.getDateByString(time.toString());
@@ -115,14 +115,19 @@ public class Order implements Serializable{
 		}
     }
     public void setPrice(Object price){
-    	if(price == null) this.price = Double.valueOf(product.getProductPrice());
+    	if(price == null) this.price = Double.valueOf(__getPrice());
     	else this.price = Double.valueOf(price.toString());
     }
-    public void setOldPrice(Object oldprice){
-    	//TODO 暂未设置旧价
-    	if(oldprice == null) this.oldPrice = this.price;
-    	else this.oldPrice = Double.valueOf(oldprice.toString());
+    private double __getPrice(){
+    	if(product == null) return 0.00;
+    	
+    	double res = 0;
+    	for(int i=0; i<product.size(); i++)
+    		res += product.get(i).getProductPrice() * product.get(i).getProductNum();
+    	DecimalFormat df = new DecimalFormat("#.00");
+    	return Double.valueOf(df.format(res));
     }
+    
     public void setPayWay(Object payway){
     	try{
     		this.payWay = (PAYWAY)payway;
@@ -140,15 +145,6 @@ public class Order implements Serializable{
 			Log.d(TAG, "user 对象不对");
 		}
     }
-    public void setNum(Object num){
-    	try{
-    		this.num = Integer.valueOf(num.toString());
-    	}catch(Exception e){
-    		e.printStackTrace();
-    		this.num = 1;
-    		Log.d(TAG, "num 不是整型字符串");
-    	}
-    }
     public void setOrderTime(Object orderTime){
     	if(orderTime != null){
     		this.orderTime = orderTime.toString();
@@ -159,8 +155,12 @@ public class Order implements Serializable{
     	return id;
     }
     public Product getProduct(){
+    	return (product==null)?null:product.get(0);
+    }
+    public ArrayList<Product> getProducts(){
     	return product;
     }
+    
     public Date getTime(){
     	return time;
     }
@@ -170,14 +170,8 @@ public class Order implements Serializable{
     public double getPrice(){
     	return price;
     }
-    public double getOldPrice(){
-    	return oldPrice;
-    }
     public User getUser(){
     	return user;
-    }
-    public int getNum(){
-    	return num;
     }
     public PAYWAY getPayWay(){
     	return payWay;

@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.bean.Circle;
@@ -68,7 +69,6 @@ public class DatabaseManager {
 		if(circle != null){
 			try {
 				dao.create(circle);
-				System.out.println("0000");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -80,11 +80,17 @@ public class DatabaseManager {
 		List<Circle> circleList = new ArrayList<Circle>();
 		QueryBuilder<Circle, Integer> query = dao.queryBuilder();
 		try {
-			circleList = query.query();
+			circleList = (ArrayList<Circle>) query.query();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return circleList;
+	}
+	
+	public void deleteCircleList() throws SQLException{
+		Dao<Circle,Integer> dao = getHelper().getCircleDao();
+		DeleteBuilder<Circle, Integer> deleteBuild = dao.deleteBuilder();
+		deleteBuild.delete();
 	}
 	
 	//增加产品

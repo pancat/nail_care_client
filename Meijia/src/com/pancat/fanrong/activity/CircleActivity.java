@@ -15,7 +15,7 @@ import com.pancat.fanrong.fragment.CircleFragment;
 
 public class CircleActivity extends Activity implements FragmentCallback{
 	
-	private CircleFragment momentFragment;
+	private CircleFragment circleFragment;
 	private FragmentManager fragmentManager;
 	
 	@Override
@@ -30,13 +30,13 @@ public class CircleActivity extends Activity implements FragmentCallback{
 		fragmentManager = getFragmentManager();
 		//开启一个Fragment事务
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		if(momentFragment == null){
+		if(circleFragment == null){
 			//如果MessageFragment为空，则创建一个并添加到界面上
-			momentFragment = new CircleFragment();
-			transaction.add(R.id.content, momentFragment);
+			circleFragment = new CircleFragment();
+			transaction.add(R.id.content, circleFragment);
 		}
 		else{
-			transaction.show(momentFragment);
+			transaction.show(circleFragment);
 		}
 		transaction.commit();
 	}

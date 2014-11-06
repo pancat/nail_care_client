@@ -192,6 +192,7 @@ public abstract class PLA_AbsListView extends PLA_AdapterView<ListAdapter> imple
     Rect mSelectorRect = new Rect();
 
     /**
+     * 回收箱用于存储当前不用的views以备下次使用
      * The data set used to store unused views that should be reused during the
      * next layout to avoid creating new ones
      */

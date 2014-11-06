@@ -1,13 +1,12 @@
 package com.pancat.fanrong.adapter;
 
-import java.sql.Array;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +14,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.GuessLikeProduct;
-import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
 
 public class GuessLikeAdapter extends BaseAdapter{
-
+	private static final int[] COLORS = {R.color.holo_blue_light, R.color.holo_green_light, R.color.holo_orange_light, R.color.holo_purple_light, R.color.holo_red_light};
 	private Context mContext;
 	private LayoutInflater mInflater;
 	private List<GuessLikeProduct> mProductList;
+	private Drawable mDefaultImageDrawable;
+	private Resources mResource;
 	
 	public GuessLikeAdapter(Context context,List<GuessLikeProduct> productList) {
 		mContext = context;
+		mResource = context.getResources();
 		mInflater = LayoutInflater.from(context);
 		mProductList = productList;
 	}
@@ -63,8 +66,15 @@ public class GuessLikeAdapter extends BaseAdapter{
 		else{
 			holder = (ViewHolder)convertView.getTag();
 		}
-		ImageFetcher fetcher = new ImageFetcher(mContext, 240);
-		fetcher.loadImage(item.getIconPath(), holder.productIcon);
+		mDefaultImageDrawable = new ColorDrawable(mResource.getColor(COLORS[position % COLORS.length]));
+		DisplayImageOptions options = new DisplayImageOptions.Builder()
+		.showImageOnLoading(mDefaultImageDrawable)
+		.showImageOnFail(mDefaultImageDrawable)
+		.cacheInMemory(true)
+		.cacheOnDisc(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
+		ImageLoader.getInstance().displayImage(item.getIconPath(), holder.productIcon, options);
 		holder.title.setText(item.getTitle());
 		holder.distance.setText(item.getDistance()+"km");
 		holder.description.setText(item.getDescription());

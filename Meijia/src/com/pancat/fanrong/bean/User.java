@@ -1,5 +1,10 @@
 package com.pancat.fanrong.bean;
 
+import java.io.Serializable;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -8,8 +13,9 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author trhuo
  *
  */
+@SuppressWarnings("serial")
 @DatabaseTable(tableName="user")
-public class User {
+public class User implements Serializable{
 
 	@DatabaseField(id=true)
 	int id = -1;
@@ -120,4 +126,5 @@ public class User {
 	public void setLongitude(Double longitude) {
 		Longitude = longitude;
 	}
+
 }
