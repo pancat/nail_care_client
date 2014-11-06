@@ -1,7 +1,7 @@
 package com.pancat.fanrong.fragment;
 
-
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,55 +17,78 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.AdapterView;
 
+import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.CircleActivity;
+import com.pancat.fanrong.adapter.CardsAnimationAdapter;
+import com.pancat.fanrong.adapter.CircleAdapter;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.common.FragmentCallback;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.util.PhoneUtils;
-import com.pancat.fanrong.waterfall.bitmaputil.ImageFetcher;
-import com.pancat.fanrong.waterfall.view.XListView;
-import com.pancat.fanrong.waterfall.view.XListView.IXListViewListener;
-import com.pancat.fanrong.waterfall.widget.ScaleImageView;
+import com.pancat.fanrong.view.LoadingFooter;
+import com.pancat.fanrong.view.LoadingFooter.OnLoadListener;
+import com.pancat.fanrong.view.PageStaggeredGridView;
+
+
+
 
 
 @SuppressLint("NewApi")
-public class CircleFragment extends Fragment implements IXListViewListener{
+public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
-	public final String TAG = "MomentFragment";
+	public final String TAG = "CircleFragment";
 	private View contextView;
-	private ImageFetcher mImageFetcher;
-	private XListView mAdapterView = null;
-	private CircleAdapter mAdapter = null;
-	private int mIndex = 0;
-	private ContentTask task = new ContentTask(getActivity(),2);
+	private CircleAdapter mAdapter;
+	private int mPageIndex = 0;
+	private int mPageSize = 10;
+	private ContentTask task;
 	private FragmentCallback fragmentCallback;
-	private List<Circle> mInfos = new ArrayList<Circle>();
+	private List<Circle> mCircles = new ArrayList<Circle>();
+	private SwipeRefreshLayout mSwipeLayout;
+	private PageStaggeredGridView mGridView;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.e(TAG, "createview");
-		contextView = inflater.inflate(R.layout.fragment_circle, container, false);
-				
-		mAdapterView = (XListView)contextView.findViewById(R.id.list);
-		mAdapterView.setPullLoadEnable(true);
-		mAdapterView.setXListViewListener(this);
-		mAdapter = new CircleAdapter(getActivity(), mAdapterView);
-		
-		mImageFetcher = new ImageFetcher(getActivity(), 240);
-		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
-		mImageFetcher.setExitTasksEarly(false);
-		mAdapterView.setAdapter(mAdapter);
+		contextView = inflater.inflate(R.layout.fragment_circles, container, false);
+		task = new ContentTask(getActivity(),1);
+		mSwipeLayout = (SwipeRefreshLayout)contextView.findViewById(R.id.swipe_container);	
+		mGridView = (PageStaggeredGridView)contextView.findViewById(R.id.grid_view);
+		mAdapter = new CircleAdapter(getActivity(), mGridView, mCircles,fragmentCallback);
+		AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
+        animationAdapter.setAbsListView(mGridView);
+        mGridView.setAdapter(animationAdapter);
+        mGridView.setLoadListener(new OnLoadListener() {
+			
+			@Override
+			public void onLoad() {
+				// TODO Auto-generated method stub
+				addItemToContainer(2);
+			}
+		});
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            	
+            }
+        });
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 		getData();
 		return contextView;
 	}
@@ -77,38 +100,37 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 		fragmentCallback = (CircleActivity)activity;
 	}
 
-	@Override
-	public void onRefresh() {
-		mIndex = 0;
-		addItemToContainer(mIndex, 1);
-	}
-
-	@Override
-	public void onLoadMore() {
-		addItemToContainer(mIndex, 2);
-	}
 	
 	private void getData(){
 		//首次进入页面是刷新数据
-		mInfos = DatabaseManager.getInstance(getActivity()).getCircles();
+		List<Circle> result = DatabaseManager.getInstance(getActivity()).getCircles();
+		addLists(result);
 		mAdapter.notifyDataSetChanged();
+		mSwipeLayout.setRefreshing(true);
 		onRefresh();
 	}
+	
 	
 	
 	/**
 	 * 添加内容到列表中
 	 * @param pageIndex	页数索引
-	 * @param type 刷新类型
+	 * @param type 刷新类型 1为下拉刷新，2为上拉加载
 	 */
-	private void addItemToContainer(int index,int type){
+	private void addItemToContainer(int type){
 		if(task.getStatus() != Status.RUNNING){
-			String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_circles?index="+mIndex;
-			
-//			String url = "http://www.duitang.com/album/1733789/masn/p/"+pageIndex+"/10/";
-			Log.d("MainActivity", "current url:" + url);
+			String url = "http://54.213.141.22/teaching/Platform/index.php/circle_service/get_circle_list?index="+mPageIndex+"&size="+mPageSize;
 			ContentTask task = new ContentTask(getActivity(), type);
 			task.execute(url);
+		}
+	}
+	
+	
+	public void addLists(List<Circle> result){
+		if(result.size() > 0){
+			for(int i =0; i < result.size();i++){
+				mCircles.add(result.get(i));
+			}
 		}
 	}
 	
@@ -137,10 +159,8 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 			
 			try {
 				String param = params[0];
-				return parseNewsJSON(param);
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+				return parseCirclesJSON(param);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
@@ -154,24 +174,33 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 		protected void onPostExecute(List<Circle> result) {
 			if(mType == 1){
 				//执行上拉刷新时
-				mAdapter.addItemTop(result);
-				mAdapter.notifyDataSetChanged();
-				mAdapterView.stopRefresh();
+				if(result != null && result.size() > 0){
+					mCircles.clear();
+					addLists(result);
+					mAdapter.notifyDataSetChanged();
+					mSwipeLayout.setRefreshing(false);
+				}
+				else{
+					mSwipeLayout.setRefreshing(false);
+				}
 			}
 			else if(mType == 2){
 				//执行下拉加载时
-				mAdapterView.stopLoadMore();
-				mAdapter.addItemLast(result);
+				addLists(result);
 				mAdapter.notifyDataSetChanged();
+				mGridView.setState(LoadingFooter.State.Idle);
 			}
 		}
 		
 		@SuppressWarnings("static-access")
-		public List<Circle> parseNewsJSON(String url) throws ClientProtocolException, IOException{
+		public List<Circle> parseCirclesJSON(String url) throws ClientProtocolException, IOException, SQLException{
 			List<Circle> circles = new ArrayList<Circle>();
 			String json = "";
 			//判断是否连接网络
 			if(PhoneUtils.isNetworkConnected(mContext)){
+				if(mPageIndex == 0){
+					DatabaseManager.getInstance(getActivity()).deleteCircleList();
+				}
 				//从url中获取json字符串
 				json = RestClient.getInstance().getStringFromUrl(url);
 			}
@@ -198,85 +227,25 @@ public class CircleFragment extends Fragment implements IXListViewListener{
 						circles.add(circle);
 						DatabaseManager.getInstance(getActivity()).addCircle(circle);
 					}
-					mIndex += jsonArray.length();
+					mPageIndex += mPageSize;
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
 			return circles;
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		//下拉刷新操作实现
+//		mAdapter.notifyDataSetChanged();
+//		mIndex = 0;
+		mPageIndex = 0;
+		addItemToContainer(1);
+		
 	}  
 	
-	class CircleAdapter extends BaseAdapter{
-
-		private Context mContext;
-		private XListView mListView;
-		
-		public CircleAdapter(Context context,XListView xListView){
-			mContext = context;
-			mListView = xListView;
-		}
-		
-		
-		@Override
-		public int getCount() {
-			return mInfos.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return mInfos.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder;
-			Circle circle = mInfos.get(position);
-			if(convertView == null){
-				LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-				convertView = layoutInflater.inflate(R.layout.item_circle, null);
-				holder = new ViewHolder();
-				holder.imageView = (ScaleImageView)convertView.findViewById(R.id.news_pic);
-				holder.contentView = (TextView)convertView.findViewById(R.id.news_title);
-				convertView.setTag(holder);
-			}
-			holder = (ViewHolder)convertView.getTag();
-			holder.imageView.setImageWidth(circle.getWidth());
-			holder.imageView.setImageHeight(circle.getHeight());
-			holder.contentView.setText(circle.getDescription());
-			mImageFetcher.loadImage(circle.getPath(), holder.imageView);
-			final Bundle data = new Bundle();
-			data.putSerializable("circle", circle);
-			convertView.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					//回调CircleActivity的接口
-					fragmentCallback.callback(data);
-				}
-			});
-			return convertView;
-		}
-		
-		class ViewHolder{
-			ScaleImageView imageView;
-			TextView contentView;
-			TextView timeView;
-		}
-		
-		public void addItemTop(List<Circle> data){
-			mInfos.clear();
-			mInfos.addAll(data);
-		}
-		
-		public void addItemLast(List<Circle> data){
-			mInfos.addAll(data);
-		}
-	}
+	
 
 }

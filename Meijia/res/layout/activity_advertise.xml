@@ -4,9 +4,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-<TextView 
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:text="this is advertise activity"
-    />
+        <RelativeLayout 
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:background="@drawable/head"
+        >
+        <Button 
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/btn_back_selector"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:id="@+id/btn_back"
+            android:layout_marginLeft="5dp"
+            android:onClick="onClick"
+            />
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/tv_title"
+            android:layout_centerInParent="true"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:text="正在加载中..."
+            />
+    </RelativeLayout>
+    
+    <WebView
+        android:id="@+id/webView_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
