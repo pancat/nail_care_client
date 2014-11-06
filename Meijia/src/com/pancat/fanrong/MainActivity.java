@@ -148,10 +148,12 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 		//初始化消息
 		mNotification = new Notification(R.drawable.aif, "正在上传中...", System.currentTimeMillis());
 		mNotification.contentView = new RemoteViews(getPackageName(), R.layout.layout_download_notification);
-		
-		init();
+	
+		init();	
 		segment = getIntent().getIntExtra("segment", 1);
+		if(segment==1)
 		tabHome.setClickable(false);
+		
 		initMsgPush();//消息推送初始化
 	}
 	
@@ -543,6 +545,7 @@ public class MainActivity extends ActivityGroup implements OnClickListener{
 			{
 				Intent signInIntent = new Intent();
 				signInIntent.setClass(MainActivity.this, SignInActivity.class);
+				signInIntent.putExtra("from", 1);
 				startActivity(signInIntent);
 				break;
 			}

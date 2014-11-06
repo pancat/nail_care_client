@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dip"
             android:layout_marginTop="10dip"
-            android:text="发送圈子"
+            android:text="设置头像"
             android:textColor="#0087cb"
             android:textSize="20dip" />
 
@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/add_photo_selector"
-            android:onClick="onClick"
             android:paddingLeft="25dip" >
 
             <ImageView
@@ -70,7 +69,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/add_photo_selector"
-            android:onClick="onClick"
             android:paddingLeft="25dip" >
 
             <ImageView
