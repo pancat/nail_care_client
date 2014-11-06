@@ -38,7 +38,7 @@ public class OrderInfoActivity extends FragmentActivity {
 		fragmentLayout = (LinearLayout)findViewById(R.id.activity_order_info);
 		
 		Bundle bundle = getIntent().getExtras();
-		orders = (ArrayList<Order>) bundle.get(Order.KEY);
+		orders = (bundle==null)?null:(ArrayList<Order>) bundle.get(Order.KEY);
 		
 		fragmentManager = getSupportFragmentManager();
 		FragmentTransaction transcation = fragmentManager.beginTransaction();
@@ -55,7 +55,7 @@ public class OrderInfoActivity extends FragmentActivity {
 	   suspendBtn = (LinearLayout)LayoutInflater.from(this).inflate(R.layout.pay_button, null);
 	   goPayBtn = (TextView)suspendBtn.findViewById(R.id.pay_button_pay);
 	   if(orderInfoFragment != null)
-		   ((TextView)suspendBtn.findViewById(R.id.pay_button_money)).setText("¥"+(orderInfoFragment.getTotalMoney()+"0000000").substring(0, 4));
+		   ((TextView)suspendBtn.findViewById(R.id.pay_button_money)).setText("¥"+(orderInfoFragment.getTotalMoney()+""));
 	   FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.WRAP_CONTENT);
 	   
 	   lp.gravity = Gravity.BOTTOM;
