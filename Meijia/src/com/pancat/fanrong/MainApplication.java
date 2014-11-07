@@ -57,7 +57,7 @@ public class MainApplication extends FrontiaApplication {
 	}
 	
 	public static void initImageLoader(Context context){
-		File cacheDir = StorageUtils.getOwnCacheDirectory(context,"imageloader/cache");
+		File cacheDir = StorageUtils.getOwnCacheDirectory(context,"rongmeme/cache");
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
         .threadPriority(Thread.NORM_PRIORITY - 2)
         .denyCacheImageMultipleSizesInMemory()

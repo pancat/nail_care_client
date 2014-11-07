@@ -17,7 +17,6 @@ public class Bimp {
 	
 	//图片sd地址  上传服务器时把图片调用下面方法压缩后 保存到临时文件夹 图片压缩后小于100KB，失真度不明显
 	public static List<String> drr = new ArrayList<String>();
-	
 
 	public static Bitmap revitionImageSize(String path) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(

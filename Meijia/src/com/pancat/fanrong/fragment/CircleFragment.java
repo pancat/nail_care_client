@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.activity.CircleActivity;
@@ -52,10 +54,13 @@ public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRef
 	private CircleAdapter mAdapter;
 	private int mPageIndex = 0;
 	private int mPageSize = 10;
+	
 	private ContentTask task;
 	private FragmentCallback fragmentCallback;
 	private List<Circle> mCircles = new ArrayList<Circle>();
+	@ViewInject(R.id.swipe_container)
 	private SwipeRefreshLayout mSwipeLayout;
+	@ViewInject(R.id.grid_view)
 	private PageStaggeredGridView mGridView;
 	
 	@SuppressWarnings("deprecation")
@@ -64,9 +69,8 @@ public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRef
 			Bundle savedInstanceState) {
 		Log.e(TAG, "createview");
 		contextView = inflater.inflate(R.layout.fragment_circles, container, false);
+		ViewUtils.inject(this,contextView);
 		task = new ContentTask(getActivity(),1);
-		mSwipeLayout = (SwipeRefreshLayout)contextView.findViewById(R.id.swipe_container);	
-		mGridView = (PageStaggeredGridView)contextView.findViewById(R.id.grid_view);
 		mAdapter = new CircleAdapter(getActivity(), mGridView, mCircles,fragmentCallback);
 		AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(mGridView);
@@ -110,8 +114,6 @@ public class CircleFragment extends Fragment implements SwipeRefreshLayout.OnRef
 		mSwipeLayout.setRefreshing(true);
 		onRefresh();
 	}
-	
-	
 	
 	/**
 	 * 添加内容到列表中

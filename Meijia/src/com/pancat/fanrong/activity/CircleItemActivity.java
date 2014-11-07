@@ -11,6 +11,7 @@ import org.w3c.dom.Comment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,10 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.bean.Circle;
 import com.pancat.fanrong.bean.CircleComment;
@@ -49,28 +54,40 @@ public class CircleItemActivity extends Activity{
 
 	private LinearLayout mImgParent;
 	//评论内容
+	@ViewInject(R.id.comment_content)
 	private EditText mCommentContent;
+	@ViewInject(R.id.tv_comment_count)
 	private TextView mCommentCount;
-	
+	@ViewInject(R.id.description)
 	private TextView mDescription;
+	@ViewInject(R.id.added_time)
 	private TextView mCreTime;
 	//当前圈子条目的id
 	private int circleId;
-	
+	@ViewInject(R.id.circle_comment_ll)
 	private LinearLayout mCommentInfo;
 	//全部评论按钮
+	@ViewInject(R.id.btn_all_comments)
 	private Button mBtnAllComments;
 	
 	//评论未出现时的progressbar
+	@ViewInject(R.id.progressbar_parent)
 	RelativeLayout mProgressParent;
 	
 	//当前页面显示的评论数，已有四条则不再添加
 	private int mCurrentCommentNum = 0;
 	//圈子图片总数
+	@ViewInject(R.id.img_count)
 	private TextView mImgCount;
 	private int countImg = 0;
 	//获取后台数据线程
 	private Thread mThread;
+	//图片加载选项
+	DisplayImageOptions options = new DisplayImageOptions.Builder()
+	.cacheInMemory(true)
+	.cacheOnDisc(true)
+	.bitmapConfig(Bitmap.Config.RGB_565)
+	.build();
 	
 	private Handler handler = new Handler(){
 
@@ -163,16 +180,8 @@ public class CircleItemActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_circle_item);
-		
+		ViewUtils.inject(this);
 		//初始化控件
-		mProgressParent = (RelativeLayout)findViewById(R.id.progressbar_parent);
-		mCommentContent = (EditText)findViewById(R.id.comment_content);
-		mCommentCount = (TextView)findViewById(R.id.tv_comment_count);
-		mDescription = (TextView)findViewById(R.id.description);
-		mCreTime = (TextView)findViewById(R.id.added_time);
-		mCommentInfo = (LinearLayout)findViewById(R.id.circle_comment_ll);
-		mBtnAllComments = (Button)findViewById(R.id.btn_all_comments);
-		mImgCount =(TextView)findViewById(R.id.img_count);
 		Intent intent = getIntent();
 		Bundle data = intent.getExtras();
 		//获取从上一个页面传过来的本条圈子信息
@@ -217,8 +226,7 @@ public class CircleItemActivity extends Activity{
 		ImageView imageView = new ImageView(this);
 		imageView.setLayoutParams(vlp);
 		imageView.setScaleType(ScaleType.CENTER_CROP);
-		ImageFetcher fetcher = new ImageFetcher(this, 720);
-		fetcher.loadImage(src, imageView);
+		ImageLoader.getInstance().displayImage(src, imageView);
 		view.addView(imageView);
 		return view;
 	}

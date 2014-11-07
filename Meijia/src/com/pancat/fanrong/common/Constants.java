@@ -6,6 +6,10 @@ package com.pancat.fanrong.common;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import android.graphics.Bitmap;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
 /**
  * 常量类
  * @author trhuo
@@ -20,7 +24,7 @@ public class Constants {
 
 	public static final String BASE_URL = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_svr/index.php/";
 	
-
+	
 	//显示的列数
 	public static final int COLUMN_count = 2;
 
