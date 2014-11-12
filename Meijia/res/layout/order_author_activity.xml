@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView 
+<com.pancat.fanrong.view.MyScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/order_author_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="5dp"
@@ -13,6 +14,13 @@
 	    android:orientation="vertical" 
 	    android:id="@+id/order_author_activity">
 
+         <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/headlinear"
+	        android:orientation="vertical"
+	      >
+	        
 	    <RelativeLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -171,12 +179,17 @@
             android:background="@drawable/search_frame_jog"
             android:maxLines="6"
             android:minLines="3" />
+        
+        </LinearLayout>
         <!-- 在这里输入百度地图视图相关总局代码，id=order_author_activity_map -->
         <!-- @empark -->
-
+	
+		
+		
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/maplinearout"
             android:gravity="center" >
 
             <com.baidu.mapapi.map.MapView
@@ -199,4 +212,4 @@
         android:layout_marginTop="10dp"/>
     </LinearLayout>
 
-</ScrollView>
+</com.pancat.fanrong.view.MyScrollView>

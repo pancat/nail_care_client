@@ -195,7 +195,7 @@
         </activity>
          <activity
             android:name=".activity.CropImageActivity"
-            android:theme="@style/AppTheme" >
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <!-- 个推SDK配置开始 -->
         <receiver

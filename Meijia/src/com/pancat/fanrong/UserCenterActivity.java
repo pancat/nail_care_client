@@ -1,5 +1,6 @@
 package com.pancat.fanrong;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,6 +17,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -45,28 +47,20 @@ import com.pancat.fanrong.activity.SignInActivity;
 import com.pancat.fanrong.activity.TestLocation;
 import com.pancat.fanrong.adapter.SelectedImgAdapter;
 import com.pancat.fanrong.common.CircleImageView;
+import com.pancat.fanrong.common.Constants;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
 import com.pancat.fanrong.util.HttpUtil;
 import com.pancat.fanrong.util.album.Bimp;
+import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
 public class UserCenterActivity extends Activity {
-
-	private Button btnSendMoment;
-	private ImageButton btnSendCircle;
-	private static Button btnAddLocation;
 
 	private final int FROM_CAMERA = 1;
 	private final int FROM_LOCAL_FILE = 2;
 
 	private AlertDialog addPicDialog;
-	private AlertDialog sendDialog;
-	private ProgressDialog progressDialog;
-
-	private int finishedUploadNum = 0;
-	private static String address = null;
 	private int buttonHeight;
 	private Button callBtn, loginBtn;
-	private List<String> pathList;
 	private static boolean hasuserimage = false;
 
 	// 手机屏幕的宽度，用来设置dialog的大小
@@ -75,7 +69,7 @@ public class UserCenterActivity extends Activity {
 	// 选中图片的数据适配器
 	private SelectedImgAdapter selectedImgAdapter;
 	private GridView selectedImgGridView;
-
+	private File userimagefile;
 	// from net
 	/* 头像名称 */
 	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
@@ -85,12 +79,7 @@ public class UserCenterActivity extends Activity {
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESULT_REQUEST_CODE = 2;
 	// from net
-
-	// 图片存储路径
-	private final String BASE_FILE_PATH = Environment
-			.getExternalStorageDirectory() + "/rongmeme/";
-	// 拍照上传照片临时存放文件
-	// private final String TEMP_PHOTO_PATH = BASE_FILE_PATH + "temp.jpg";
+	
 	private String cameraPicPath;
 
 	private TextView nickname;
@@ -104,9 +93,10 @@ public class UserCenterActivity extends Activity {
 		userimage = (CircleImageView) findViewById(R.id.usercircleimage);
 		callBtn = (Button) findViewById(R.id.service_btn);
 		loginBtn = (Button) findViewById(R.id.login_btn);
+		Log.i("user-image-path",Constants.USER_IMAGE_PATH);
 		setButtonListener();
-
-		ViewTreeObserver vto2 = callBtn.getViewTreeObserver();
+		userimagefile=new File(MainApplication.getAppContext().getExternalFilesDir("userimage"),IMAGE_FILE_NAME);
+		 ViewTreeObserver vto2 = callBtn.getViewTreeObserver();
 		vto2.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
@@ -196,17 +186,17 @@ public class UserCenterActivity extends Activity {
 			// data.length);
 			// userimage.setImageBitmap(bitmap);
 
-			File file = new File(MainApplication.getAppContext()
-					.getExternalFilesDir("image"), IMAGE_FILE_NAME);
+			//File file = new File(MainApplication.getAppContext()
+				//	.getExternalFilesDir("userimage"), IMAGE_FILE_NAME);
 			// Log.i("externailfilesdir",
 			// MainApplication.getAppContext().getExternalFilesDir("good").toString());
-			if (file.exists()) {
+			if (userimagefile.exists()) {
 				Log.i("fileexist", "yes");
-				Log.i("fielpath", file.getPath());
-				Log.i("fileabsolutepath", file.getAbsolutePath());
+				Log.i("fielpath", userimagefile.getPath());
+				Log.i("fileabsolutepath", userimagefile.getAbsolutePath());
 				// Drawable
 				// userfaceimage=Drawable.createFromPath(MainApplication.getAppContext().getExternalFilesDir("image")+"/"+IMAGE_FILE_NAME);
-				Bitmap imageBitmap = BitmapFactory.decodeFile(file.getPath());
+				Bitmap imageBitmap = BitmapFactory.decodeFile(userimagefile.getPath());
 				userimage.setImageBitmap(imageBitmap);
 			}
 
@@ -278,12 +268,13 @@ public class UserCenterActivity extends Activity {
 				Log.i("this getfile", MainApplication.getAppContext()
 						.getFilesDir().toString());
 				// 判断存储卡是否可以用，可用进行存储
+			//	File file=new File(MainApplication.getAppContext().getExternalFilesDir("userimage"),IMAGE_FILE_NAME);
+			//	cameraPicPath = userimagefile.getPath();
 				if (hasSdcard()) {
 					intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-							.fromFile(new File(MainApplication.getAppContext()
-									.getExternalFilesDir("userimage"),
-									IMAGE_FILE_NAME)));
+							.fromFile(userimagefile));
 				}
+
 				startActivityForResult(intentFromCapture, CAMERA_REQUEST_CODE);
 			}
 		});
@@ -313,69 +304,109 @@ public class UserCenterActivity extends Activity {
 			case IMAGE_REQUEST_CODE:
 				Log.i("uri", " " + data);
 				Intent ittocrop = new Intent(this, CropImageActivity.class);
-				ittocrop.setData(data.getData());
+
+				final BitmapFactory.Options options = new BitmapFactory.Options();  
+			    options.inJustDecodeBounds = true;  
+			    
+			    Uri uri = data.getData();
+			    String[] proj = { MediaStore.Images.Media.DATA }; 
+			    Cursor actualimagecursor = managedQuery(uri,proj,null,null,null);	     
+			    int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);	     
+			    actualimagecursor.moveToFirst();	     
+			    String img_path = actualimagecursor.getString(actual_image_column_index);    
+			    File fileb = new File(img_path);
+			    Log.i("uri to filepath",fileb.getPath());
+			    BitmapFactory.decodeFile(fileb.getPath(), options);  
+			 // Calculate inSampleSize  
+			    options.inSampleSize =  ImageResizer.calculateInSampleSize(options,300,300);
+			  
+			    // Decode bitmap with inSampleSize set  
+			    options.inJustDecodeBounds = false;  			      
+			    Bitmap bm = BitmapFactory.decodeFile(fileb.getPath(), options);  
+			    
+			    
+			 //   File filex=new File(MainApplication.getAppContext().getExternalFilesDir("userimage"),IMAGE_FILE_NAME);
+				if (userimagefile.exists()) {
+					userimagefile.delete();
+				}
+				try {
+					BufferedOutputStream bos = new BufferedOutputStream(
+							new FileOutputStream(userimagefile));
+					bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+					Log.i("resize", "压缩成功");
+					bos.flush();
+					bos.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//然后把压缩后的文件的path转换成uri传给剪裁activiy
+				Uri uri2=Uri.fromFile(userimagefile);
+				ittocrop.setData(uri2);
 				// 使用自定义剪裁，尚未完成
-				// startActivityForResult(ittocrop,1);
+				 startActivityForResult(ittocrop,RESULT_REQUEST_CODE);
 				// 使用系统自带剪裁
-				startPhotoZoom(data.getData());
+				//startPhotoZoom(data.getData());
 				break;
 			case CAMERA_REQUEST_CODE:
-				// Bitmap bm = (Bitmap) data.getExtras().get("data");
-				// Log.i( "data=???", data.getData().toString());
-				if (hasSdcard()) {
-					Log.i("filepath", Environment.getExternalStorageDirectory()
-							+ "/bitmap/");
-					File tempFile = new File(MainApplication.getAppContext()
+				// 图片从相机获取
+		//	File filea = new File(cameraPicPath);
+			
+				
+				Bitmap resizeBitmap = ImageResizer.decodeSampledBitmapFromFile(userimagefile.getPath(), 300, 300);		
+				if (userimagefile.exists()) {
+					userimagefile.delete();
+				}
+				try {
+					BufferedOutputStream bos = new BufferedOutputStream(
+							new FileOutputStream(userimagefile));
+					resizeBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+					Log.i("resize", "压缩成功");
+					bos.flush();
+					bos.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			
+			if (hasSdcard()) {
+				File tempFile = new File(MainApplication.getAppContext()
 							.getExternalFilesDir("userimage"), IMAGE_FILE_NAME);
-					if (!tempFile.exists()) {
+			
+				if (!tempFile.exists()) {
 						try {
-							tempFile.createNewFile();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						tempFile.createNewFile();
+					} catch (IOException e) {
+					
+						e.printStackTrace();
 					}
+					
+				}
+					
 					Intent ittocrop2 = new Intent(this, CropImageActivity.class);
-					ittocrop2.setData(Uri.fromFile(tempFile));
+					ittocrop2.setData(Uri.fromFile(userimagefile));
 					// 使用自定义剪裁，尚未完成
-					// startActivityForResult(ittocrop2,1);
+					 startActivityForResult(ittocrop2,RESULT_REQUEST_CODE);
 					// 使用系统自带剪裁
-					startPhotoZoom(Uri.fromFile(tempFile));
+					//startPhotoZoom(Uri.fromFile(tempFile));
 				}
 
 				break;
 			case RESULT_REQUEST_CODE:
-				if (data != null) {
-					addPicDialog.dismiss();
-					setImageToView(data);
-					// 写入文件
-
-					Bitmap bmap = data.getParcelableExtra("data");
-					// 图像保存到文件中
-					FileOutputStream foutput = null;
-					File file = new File(MainApplication.getAppContext()
-							.getExternalFilesDir("image"), IMAGE_FILE_NAME);
-					try {
-						foutput = new FileOutputStream(file);
-						bmap.compress(Bitmap.CompressFormat.JPEG, 100, foutput);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} finally {
-						if (null != foutput) {
-							try {
-								foutput.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
+				addPicDialog.dismiss();
+				/**
+				 * 开启一个后台程序把头像上传到服务器
+				 */
+				
+				
 				break;
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	
 	private boolean hasSdcard() {
 		// TODO Auto-generated method stub
 		boolean sdCardExist = Environment.getExternalStorageState().equals(

@@ -15,8 +15,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -129,7 +131,18 @@ public class TestLocation extends Activity {
 		locationicon.setImageResource(R.drawable.icon_geo);
 		locationicon.setVisibility(View.VISIBLE);
 		// 百度要求的初始化
-
+		mMapView.setOnTouchListener(new OnTouchListener() {         
+            @Override  
+            public boolean onTouch(View v, MotionEvent event) {  
+            	Toast.makeText(getApplication(),"你触摸了mapview" ,Toast.LENGTH_LONG).show();
+                if(event.getAction() == MotionEvent.ACTION_UP){  
+                    //scrollview.requestDisallowInterceptTouchEvent(false);  
+                }else{  
+                    //scrollview.requestDisallowInterceptTouchEvent(true);  
+                }  
+                return false;  
+            }  
+        });  
 
 		// mBaiduMap.setBuildingsEnabled(false);
 		// Toast.makeText(getApplication(),"是否允许楼块"+
@@ -402,7 +415,7 @@ public class TestLocation extends Activity {
 				mLocationClient.stop();
 				
 				
-			    commonAddress=location.getCity()+" "+location.getStreet()+" "+location.getStreetNumber()+" ";
+			    commonAddress=address;
 				commonLatitude=location.getLatitude();
 				commonLongitude=location.getLongitude();
 			
@@ -487,6 +500,7 @@ private OnClickListener saveaddrlistener=new OnClickListener() {
 		public void onClick(View arg0) {
 			// TODO Auto-generated method stub
 			// write common address into user table
+			 commonAddress=addresstext.getText().toString();
 			commondetail=addressdetail.getText().toString();
 			//commonAddress+=detail;
 			setAddressIntoUser();

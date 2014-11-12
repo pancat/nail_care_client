@@ -41,7 +41,7 @@
         android:paddingRight="5dp"
         android:textSize="15sp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -50,20 +50,33 @@
         android:padding="10dp" >
 
         <ImageView
+            android:id="@+id/loc_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_location" />
 
         <Button
+          android:layout_toRightOf="@id/loc_img"
             android:id="@+id/btn_add_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:background="@null"
             android:onClick="onClick"
-            android:text="Add your location"
+            android:text="@string/circle_add_location"
             android:textColor="#6c6c6c" />
-    </LinearLayout>
+        
+            <ImageView
+                android:id="@+id/cancle_location"
+                android:layout_width="20dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content"   
+                android:layout_alignParentRight="true"
+                  android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:scaleType="center"
+                android:src="@drawable/cancel" />
+    </RelativeLayout>
     
     <!-- 显示选择的图片的GridView -->
     <GridView 
