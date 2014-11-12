@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.http.AsyncHttpResponseHandler;
@@ -38,6 +41,12 @@ public class CirclePhotoActivity extends Activity{
 	private TextView mCurImgNum;
 	//图片总数
 	private TextView mImgCount;
+	
+	DisplayImageOptions options = new DisplayImageOptions.Builder()
+	.cacheInMemory(true)
+	.cacheOnDisc(true)
+	.bitmapConfig(Bitmap.Config.RGB_565)
+	.build();
 	
 	private Handler handler = new Handler(){
 
@@ -91,8 +100,7 @@ public class CirclePhotoActivity extends Activity{
 								Log.i("img info", jsonObject.toString());
 								String path = jsonObject.getString("path");
 								imageView.setScaleType(ScaleType.FIT_CENTER);
-								ImageFetcher fetcher = new ImageFetcher(CirclePhotoActivity.this, 720);
-								fetcher.loadImage(path, imageView);
+								ImageLoader.getInstance().displayImage(path, imageView);
 								images.add(imageView);
 							}
 							circlePhotoAdapter.notifyDataSetChanged();

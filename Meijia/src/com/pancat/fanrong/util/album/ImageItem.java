@@ -12,5 +12,7 @@ public class ImageItem implements Serializable {
 	public String imageId;
 	public String thumbnailPath;
 	public String imagePath;
+	//相片所属相册名称
+	public String albumName;
 	public boolean isSelected = false;
 }

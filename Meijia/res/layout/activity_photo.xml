@@ -22,7 +22,7 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/bt_quxiao" />
+            android:background="@drawable/btn_cancel_selector" />
 
         <Button
             android:id="@+id/photo_bt_del"

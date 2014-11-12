@@ -28,33 +28,34 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="18sp"
-            android:textColor="@color/white"
             android:text="所有图片"
             android:id="@+id/album_name"
             android:layout_centerInParent="true"
+            android:textColor="@android:color/white"
+            />
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_cancel_selector"
+            android:id="@+id/btn_cancel"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:onClick="onClick"
             />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"      
-        android:orientation="vertical"
-        android:layout_weight="1.0" >
+<GridView
+    android:id="@+id/gridview"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:horizontalSpacing="4dip"
+    android:numColumns="3"
+    android:padding="4dip"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="4dip" />
 
-        <GridView
-            android:id="@+id/gridview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:numColumns="3"
-            android:scrollbars="none"
-            android:horizontalSpacing="3dp"
-            android:verticalSpacing="3dp"
-		>
-        </GridView>
-
-        
-    </LinearLayout>
 <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"

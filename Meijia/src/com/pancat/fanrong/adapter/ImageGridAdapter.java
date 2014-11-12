@@ -17,6 +17,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.util.album.Bimp;
 import com.pancat.fanrong.util.album.BitmapCache;
@@ -96,7 +98,7 @@ public class ImageGridAdapter extends BaseAdapter{
 		if(convertView == null){
 			holder = new ViewHolder();
 			convertView = View.inflate(activity, R.layout.item_image_grid, null);
-			holder.iv = (ImageView) convertView.findViewById(R.id.image);
+			holder.image = (ImageView) convertView.findViewById(R.id.image);
 			holder.selected = (ImageView) convertView
 					.findViewById(R.id.isselected);
 			holder.text = (TextView) convertView
@@ -106,8 +108,8 @@ public class ImageGridAdapter extends BaseAdapter{
 			holder = (ViewHolder)convertView.getTag();
 		}
 		final ImageItem item = dataList.get(position);
-		holder.iv.setTag(item.imagePath);
-		cache.displayBmp(holder.iv, item.thumbnailPath, item.imagePath,
+		holder.image.setTag(item.imagePath);
+		cache.displayBmp(holder.image, item.thumbnailPath, item.imagePath,
 				callback);
 		if (item.isSelected) {
 			holder.selected.setImageResource(R.drawable.icon_data_select);  
@@ -117,7 +119,7 @@ public class ImageGridAdapter extends BaseAdapter{
 			holder.text.setBackgroundColor(0x00000000);
 		}
 		
-		holder.iv.setOnClickListener(new OnClickListener() {
+		holder.image.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -161,7 +163,7 @@ public class ImageGridAdapter extends BaseAdapter{
 	}
 
 	class ViewHolder{
-		private ImageView iv;
+		private ImageView image;
 		private ImageView selected;
 		private TextView text;
 	}

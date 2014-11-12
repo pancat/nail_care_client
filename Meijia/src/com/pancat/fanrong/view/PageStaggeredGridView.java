@@ -8,7 +8,11 @@ import android.util.AttributeSet;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
-
+/**
+ * 带上拉加载功能的StaggeredGridView
+ * @author trh
+ *
+ */
 public class PageStaggeredGridView extends StaggeredGridView implements OnScrollListener{
 
 	

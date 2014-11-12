@@ -131,7 +131,7 @@ public class AlbumHelper {
 			int numOfSongsColumn = cur.getColumnIndex(Albums.NUMBER_OF_SONGS);
 
 			do {
-				// Get the field values
+				//得到对应字段的值
 				_id = cur.getInt(_idColumn);
 				album = cur.getString(albumColumn);
 				albumArt = cur.getString(albumArtColumn);
@@ -218,6 +218,7 @@ public class AlbumHelper {
 				ImageItem imageItem = new ImageItem();
 				imageItem.imageId = _id;
 				imageItem.imagePath = path;
+				imageItem.albumName = bucketName;
 				imageItem.thumbnailPath = thumbnailList.get(_id);
 				bucket.imageList.add(imageItem);
 
@@ -245,7 +246,6 @@ public class AlbumHelper {
 
 	/**
 	 * 得到图片集
-	 * 
 	 * @param refresh
 	 * @return
 	 */
@@ -322,6 +322,7 @@ public class AlbumHelper {
 				imageItem.imageId = _id;
 				imageItem.imagePath = path;
 				imageItem.thumbnailPath = thumbnailList.get(_id);
+				imageItem.albumName = bucketName;
 				imageItemList.add(imageItem);
 
 			} while (cur.moveToNext());

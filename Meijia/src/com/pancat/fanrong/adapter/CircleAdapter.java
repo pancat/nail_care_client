@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.bitmap.BitmapCommonUtils;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.PauseOnScrollListener;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pancat.fanrong.R;
@@ -38,7 +46,7 @@ public class CircleAdapter extends BaseAdapter{
 	private List<Circle> circles;
 	private FragmentCallback mFragmentCallback;
 	private Context mContext;
-
+	
 	public CircleAdapter(Context context,StaggeredGridView listView,List<Circle> mCircles,FragmentCallback fragmentCallback){
 		mContext = context;
 		mResource = context.getResources();
@@ -71,10 +79,7 @@ public class CircleAdapter extends BaseAdapter{
 		if(convertView == null){
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.item_circle, null);
-			holder.image = (ScaleImageView)convertView.findViewById(R.id.news_pic);
-			holder.description = (TextView)convertView.findViewById(R.id.news_title);
-			holder.userImg = (CircleImageView)convertView.findViewById(R.id.user_img);
-			holder.username = (TextView)convertView.findViewById(R.id.username);
+			ViewUtils.inject(holder,convertView);
 			convertView.setTag(holder);
 		}
 		else{
@@ -83,6 +88,7 @@ public class CircleAdapter extends BaseAdapter{
 		mDefaultImageDrawable = new ColorDrawable(mResource.getColor(COLORS[position % COLORS.length]));
 		holder.image.setImageHeight(circle.getHeight());
 		holder.image.setImageWidth(circle.getWidth());
+		
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 			.showImageOnLoading(mDefaultImageDrawable)
 			.showImageOnFail(mDefaultImageDrawable)
@@ -108,9 +114,13 @@ public class CircleAdapter extends BaseAdapter{
 	
 	
 	class ViewHolder{
+		@ViewInject(R.id.news_pic)
 		ScaleImageView image;
+		@ViewInject(R.id.news_title)
 		TextView description;
+		@ViewInject(R.id.user_img)
 		CircleImageView userImg;
+		@ViewInject(R.id.username)
 		TextView username;
 	}
 	

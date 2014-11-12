@@ -21,6 +21,8 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.pancat.fanrong.MainActivity;
 import com.pancat.fanrong.R;
 import com.pancat.fanrong.adapter.ImageGridAdapter;
@@ -36,11 +38,13 @@ public class ImageGridActivity extends Activity{
 	public static final String SELECTED_IMAGE_LIST = "selected_image_list";
 	
 	List<ImageItem> dataList;
-	
+	@ViewInject(R.id.gridview)
 	private GridView gridView;
 	private ImageGridAdapter adapter;
 	private AlbumHelper helper;
+	@ViewInject(R.id.bt)
 	private Button btnFinish;
+	@ViewInject(R.id.album_name)
 	private TextView albumName;
 	
 	Handler handler = new Handler(){
@@ -62,6 +66,7 @@ public class ImageGridActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_grid);
+		ViewUtils.inject(this);
 		initData();
 		initView();
 	}
@@ -72,7 +77,6 @@ public class ImageGridActivity extends Activity{
 	private void initData(){
 		helper = AlbumHelper.getHelper();
 		helper.init(getApplicationContext());
-//		dataList = (List<ImageItem>)getIntent().getSerializableExtra(EXTRA_IMAGE_LIST);
 		dataList = helper.getAllImage();
 	}
 
@@ -80,9 +84,6 @@ public class ImageGridActivity extends Activity{
 	 * 初始化视图
 	 */
 	private void initView(){
-		albumName = (TextView)findViewById(R.id.album_name);
-		btnFinish = (Button)findViewById(R.id.bt);
-		gridView = (GridView)findViewById(R.id.gridview);
 		gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		adapter = new ImageGridAdapter(ImageGridActivity.this,dataList,handler);
 		gridView.setAdapter(adapter);
@@ -138,6 +139,9 @@ public class ImageGridActivity extends Activity{
 			Intent intent = new Intent(ImageGridActivity.this,ImageBucketActivity.class);
 			startActivityForResult(intent, 1);
 			break;
+		case R.id.btn_cancel:
+			finish();
+			break;
 		default:
 			break;
 		}
@@ -150,6 +154,7 @@ public class ImageGridActivity extends Activity{
 		
 		if(resultCode == Activity.RESULT_OK){
 			dataList = (List<ImageItem>)data.getSerializableExtra(EXTRA_IMAGE_LIST);
+			albumName.setText(dataList.get(0).albumName);
 			adapter = new ImageGridAdapter(this, dataList, handler);
 			gridView.setAdapter(adapter);
 			adapter.setTextCallback(new TextCallback() {

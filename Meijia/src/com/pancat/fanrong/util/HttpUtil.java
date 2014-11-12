@@ -22,7 +22,6 @@ public class HttpUtil {
 	  URL_PATH+=url0;
       InputStream inputStream = null;  
       try {  
-            
           URL url = new URL(URL_PATH);  
           if(url!=null) {  
               HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();  
@@ -32,7 +31,7 @@ public class HttpUtil {
               int resonpseCode = httpURLConnection.getResponseCode();  
               if(resonpseCode == 200){  
                   inputStream = httpURLConnection.getInputStream();  
-              }  
+              }
           }  
       } catch (MalformedURLException e) {  
           // TODO Auto-generated catch block  
@@ -51,9 +50,9 @@ public class HttpUtil {
 	  URL_PATH+=url0;
       byte [] data = null;  
       InputStream inputStream = null;  
-//不需要关闭的输出流，直接写入内存中。  
+      //不需要关闭的输出流，直接写入内存中。  
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();  
-try {  
+      try {  
             
           URL url = new URL(URL_PATH);  
           if(url!=null) {  
