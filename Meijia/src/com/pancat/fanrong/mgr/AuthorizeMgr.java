@@ -1,20 +1,19 @@
 package com.pancat.fanrong.mgr;
 
+import java.io.File;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.Message;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 
 import com.j256.ormlite.dao.Dao;
 import com.pancat.fanrong.MainApplication;
 import com.pancat.fanrong.bean.User;
+import com.pancat.fanrong.common.Constants;
 import com.pancat.fanrong.common.RestClient;
 import com.pancat.fanrong.db.DatabaseManager;
 import com.pancat.fanrong.db.DatabaseOpenHelper;
@@ -66,6 +65,10 @@ public class AuthorizeMgr {
 		AuthorizeStatus ret = AuthorizeStatus.SUCCESS;
 		if (clearUserDB() == AuthorizeStatus.FAIL) {
 			ret = AuthorizeStatus.FAIL;
+		}
+		File file=new File(Constants.USER_IMAGE_PATH);
+		if(file.exists()){
+			file.delete();
 		}
 		setUser(null);
 		return ret;

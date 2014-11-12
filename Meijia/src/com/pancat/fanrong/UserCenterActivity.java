@@ -2,19 +2,15 @@ package com.pancat.fanrong;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -36,11 +32,10 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pancat.fanrong.activity.CropImageActivity;
 import com.pancat.fanrong.activity.SignInActivity;
@@ -48,8 +43,10 @@ import com.pancat.fanrong.activity.TestLocation;
 import com.pancat.fanrong.adapter.SelectedImgAdapter;
 import com.pancat.fanrong.common.CircleImageView;
 import com.pancat.fanrong.common.Constants;
+import com.pancat.fanrong.common.RestClient;
+import com.pancat.fanrong.http.AsyncHttpResponseHandler;
+import com.pancat.fanrong.http.RequestParams;
 import com.pancat.fanrong.mgr.AuthorizeMgr;
-import com.pancat.fanrong.util.HttpUtil;
 import com.pancat.fanrong.util.album.Bimp;
 import com.pancat.fanrong.waterfall.bitmaputil.ImageResizer;
 
@@ -81,7 +78,7 @@ public class UserCenterActivity extends Activity {
 	// from net
 	
 	private String cameraPicPath;
-
+ 	private String nick=null;
 	private TextView nickname;
 	private CircleImageView userimage;
 
@@ -162,8 +159,14 @@ public class UserCenterActivity extends Activity {
 					.getNickname();
 
 			// AuthorizeMgr.setLastUserInfomationFromSer();
+			
+			if(nicknamestr.isEmpty())
+			{
+				nickname.setText("Click to set nickname");
+			}else{
 			nickname.setText(nicknamestr);
-
+			}
+	
 			Log.i("userimage", AuthorizeMgr.getInstance().getUser()
 					.getAvatarUri());
 			if (!hasuserimage)
@@ -191,15 +194,21 @@ public class UserCenterActivity extends Activity {
 			// Log.i("externailfilesdir",
 			// MainApplication.getAppContext().getExternalFilesDir("good").toString());
 			if (userimagefile.exists()) {
-				Log.i("fileexist", "yes");
-				Log.i("fielpath", userimagefile.getPath());
-				Log.i("fileabsolutepath", userimagefile.getAbsolutePath());
 				// Drawable
 				// userfaceimage=Drawable.createFromPath(MainApplication.getAppContext().getExternalFilesDir("image")+"/"+IMAGE_FILE_NAME);
 				Bitmap imageBitmap = BitmapFactory.decodeFile(userimagefile.getPath());
 				userimage.setImageBitmap(imageBitmap);
 			}
-
+			//设置昵称事件
+			nickname.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					// upload user image
+					showSetNickname();
+				}
+			});
+			//设置头像事件
 			userimage.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
@@ -221,7 +230,71 @@ public class UserCenterActivity extends Activity {
 			super.handleMessage(msg);
 		}
 	};
+	public void showSetNickname() {
+		// TODO Auto-generated method stub
 
+
+	    final EditText et = new EditText(this);  
+	    new AlertDialog.Builder(this)  
+	    .setIcon(android.R.drawable.btn_star)
+	    .setInverseBackgroundForced(true)
+	    .setView(et)  
+	    .setTitle("设置昵称")
+	    .setNegativeButton("确定", new DialogInterface.OnClickListener() {  
+	        public void onClick(DialogInterface dialog, int which) {  
+	        		//设置昵称
+	        	 nick=et.getText().toString();
+	        	
+	        	String url = "user/update_nickname";
+	    		RequestParams params = new RequestParams();
+	    		params.put("id",String.valueOf( AuthorizeMgr.getInstance().getUser().getId()));
+	    		params.put("sessionid",  AuthorizeMgr.getInstance().getUser().getSessionid());
+	    		params.put("nickname", nick);// 不用md5登录
+
+	    		RestClient.getInstance().post(MainApplication.getAppContext(), url,
+	    				params, adBannerReadyHandler);
+	        }  
+	        })  
+	    .setPositiveButton("取消", null)  
+	    .show();
+	}
+
+	final AsyncHttpResponseHandler adBannerReadyHandler = new AsyncHttpResponseHandler() {
+
+		@Override
+		public void onFailure(Throwable error, String content) {
+			super.onFailure(error, content);
+			Log.i("change nickname", "change nickname fail");
+		
+		}
+
+		@Override
+		public void onSuccess(String content) {
+			Log.i("change nickname", "change nickname success");
+			Log.i("change nickname", content);
+			super.onSuccess(content);
+			
+			Message msg = new Message();
+			msg.what =  1;
+			handlers.handleMessage(msg);
+		
+		}
+	};
+	Handler handlers=new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			if(msg.what==1){
+				AuthorizeMgr.getInstance().getUser().setNickname(nick);
+				nickname.setText(AuthorizeMgr.getInstance().getUser().getNickname());
+			}
+			
+			super.handleMessage(msg);
+			
+		}
+		
+	};
 	public void showupload() {
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);

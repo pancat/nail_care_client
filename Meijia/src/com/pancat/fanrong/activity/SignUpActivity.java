@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pancat.fanrong.R;
+import com.pancat.fanrong.common.Constants;
 
 /**
  * A login screen that offers login via email/password.
@@ -302,8 +303,8 @@ public class SignUpActivity extends Activity {
              HttpClient httpClient = new DefaultHttpClient();
 
              //��������������������ĵ�ַ
-             String validateUrl = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_test/index.php/user/register";
-
+          //  String validateUrl = "http://ec2-54-169-66-69.ap-southeast-1.compute.amazonaws.com/nail_care_svr/index.php/user/register";
+            String  validateUrl =Constants.BASE_URL+"user/register";
          //    System.out.println(validateUrl);
              //�������ӳ�ʱ
              httpClient.getParams().setParameter(CoreConnectionPNames.
@@ -408,11 +409,6 @@ public class SignUpActivity extends Activity {
 			//	BackgroundColorSpan bcs = new BackgroundColorSpan(p);
 
 		//		spn.setSpan(bcs, 0, errstring.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-
-
-
 			//	mPasswordView.setError(getString(R.string.error_incorrect_password));
 			//	mPasswordView.setError("good");
 			}
